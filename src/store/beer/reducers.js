@@ -1,5 +1,5 @@
 const initialState = {
-  testing: []
+  beerList: []
 };
 
 const reducer = (state = initialState, action) => {
@@ -7,7 +7,7 @@ const reducer = (state = initialState, action) => {
     case "GET_BEER_SUCCESS":
       return {
         ...state,
-        testing: action.payload
+        beerList: action.payload
       };
     case "GET_BEER_ERROR":
       return console.log(action.payload);

@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { IoIosMore } from "react-icons/all";
 
-import Navigation from "./Navigation";
+import Navigation from "../containers/Navigation";
 
 const useStyles = makeStyles(theme => ({
   root: {

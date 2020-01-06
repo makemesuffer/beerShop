@@ -1,17 +1,17 @@
 import React from "react";
 
 import Header from "../components/Header";
-import Input from "../components/Input";
-import Catalog from "../containers/Catalog";
+import Search from "../containers/Search";
+import BeerList from "../containers/BeerList";
 
 // eslint-disable-next-line react/prefer-stateless-function
-class LandingPage extends React.Component {
+class LandingPage extends React.PureComponent {
   render() {
     return (
       <>
         <Header />
-        <Input />
-        <Catalog />
+        <Search />
+        <BeerList />
       </>
     );
   }
