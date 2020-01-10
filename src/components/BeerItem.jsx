@@ -8,6 +8,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import { Link as RouterLink } from "react-router-dom";
 
 const useStyles = makeStyles({
   card: {
@@ -21,7 +22,7 @@ const useStyles = makeStyles({
 
 export default function BeerItem(props) {
   const classes = useStyles();
-  const { beer } = props;
+  const { beer, id } = props;
   return (
     <Card className={classes.card}>
       <CardActionArea>
@@ -35,12 +36,19 @@ export default function BeerItem(props) {
             {beer.name.length > 20 ? `${beer.name.slice(0, 20)}...` : beer.name}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            {beer.tagline}
+            {beer.tagline.length > 40
+              ? `${beer.tagline.slice(0, 40)}...`
+              : beer.tagline}
           </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary">
+        <Button
+          component={RouterLink}
+          to={`/beers/${id}`}
+          size="small"
+          color="primary"
+        >
           Open
         </Button>
         <Button size="small" color="primary">
@@ -57,5 +65,6 @@ BeerItem.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
     tagline: PropTypes.string
-  }).isRequired
+  }).isRequired,
+  id: PropTypes.number.isRequired
 };

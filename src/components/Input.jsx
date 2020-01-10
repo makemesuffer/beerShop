@@ -12,7 +12,6 @@ const useStyles = makeStyles(theme => ({
       width: 600
     }
   },
-  grid: {}, // TODO: rewrite brat
   search: {
     color: "gray",
     height: "25px",
@@ -25,13 +24,7 @@ export default function Input(props) {
   const { handleClick } = props;
   const classes = useStyles();
   return (
-    <Grid
-      container
-      className={classes.grid}
-      direction="row"
-      justify="center"
-      alignItems="flex-end"
-    >
+    <Grid container direction="row" justify="center" alignItems="flex-end">
       <form
         className={classes.root}
         noValidate

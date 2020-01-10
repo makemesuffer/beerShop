@@ -1,8 +1,14 @@
 import React from "react";
 
+import Header from "../components/Header";
+
 class FavoritesPage extends React.PureComponent {
   render() {
-    return <h1> Favorites pivas </h1>;
+    return (
+      <>
+        <Header />
+      </>
+    );
   }
 }
 

@@ -1,35 +1,51 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import Grid from "@material-ui/core/Grid";
+import InfiniteScroll from "react-infinite-scroller";
+import ClipLoader from "react-spinners/ClipLoader";
 
-import getBeerList from "../store/beer/actions";
-import BeerItem from "../components/BeerItem";
+import { continueBeerList } from "../store/beer/actions";
+import BeerGrid from "../components/BeerGrid";
+
+let page = 1;
 
 class BeerList extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hasMoreBeers: true
+    };
+  }
+
+  handleLoad = () => {
+    page += 1;
+    // eslint-disable-next-line react/prop-types,react/destructuring-assignment
+    this.props.continueBeerList(page);
+  };
+
   render() {
+    const { hasMoreBeers } = this.state;
     const { beerList } = this.props;
-    // TODO: Another component, grid layout. BeerList => BeerGrid => BeerItem
-    return (
-      <Grid
-        container
-        spacing={2}
-        style={{
-          maxWidth: "1200px",
-          justifyContent: "center",
-          margin: "0 auto",
-          marginTop: "2%"
-        }}
-      >
-        {beerList.map(elem => {
-          return (
-            <Grid style={{ textAlign: "center" }} key={elem.id} item xs={4}>
-              <BeerItem beer={elem} />
-            </Grid>
-          );
-        })}
-      </Grid>
-    );
+    if (beerList.length !== 0) {
+      return (
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={() => {
+            this.handleLoad(page);
+          }}
+          hasMore={hasMoreBeers}
+          loader={
+            <div style={{ textAlign: "center" }} key={0}>
+              <ClipLoader size={100} color="#123abc" />
+            </div>
+          }
+          threshold={100}
+        >
+          <BeerGrid beerList={beerList} />;
+        </InfiniteScroll>
+      );
+    }
+    return <> </>;
   }
 }
 
@@ -43,4 +59,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { getBeerList })(BeerList);
+export default connect(mapStateToProps, { continueBeerList })(BeerList);

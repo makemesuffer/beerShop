@@ -9,6 +9,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         beerList: action.payload
       };
+    case "UPDATE_BEER_SUCCESS":
+      return {
+        ...state,
+        beerList: [...state.beerList, ...action.payload]
+      };
     case "GET_BEER_ERROR":
       return console.log(action.payload);
     default:
