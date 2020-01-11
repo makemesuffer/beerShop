@@ -5,8 +5,18 @@ import PropTypes from "prop-types";
 import TitleDescription from "../components/TitleDescription";
 import { continueBeerList } from "../store/beer/actions";
 import PropertiesPairing from "../components/PropertiesPairing";
+import BrewingInfo from "../components/BrewingInfo";
 
 class SingleBeer extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  createData = (name, value, description) => {
+    return { name, value, description };
+  };
+
   render() {
     const { beerList, id } = this.props;
     const beer = beerList.filter(elem => {
@@ -15,7 +25,8 @@ class SingleBeer extends React.PureComponent {
     return (
       <>
         <TitleDescription beer={beer[0]} />
-        <PropertiesPairing beer={beer[0]} />
+        <PropertiesPairing beer={beer[0]} createData={this.createData} />
+        <BrewingInfo beer={beer[0]} createData={this.createData} />
       </>
     );
   }
