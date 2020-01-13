@@ -52,7 +52,7 @@ class Search extends React.PureComponent {
 
 const mapStateToProps = state => {
   return {
-    beerList: state.beerList
+    beerList: state.beer.beerList
   };
 };
 

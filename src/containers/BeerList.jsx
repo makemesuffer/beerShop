@@ -2,9 +2,10 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroller";
-import ClipLoader from "react-spinners/ClipLoader";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { continueBeerList } from "../store/beer/actions";
+import { addFavorite, removeFavorite } from "../store/favorite/actions";
 import BeerGrid from "../components/BeerGrid";
 
 let page = 1;
@@ -23,9 +24,19 @@ class BeerList extends React.PureComponent {
     this.props.continueBeerList(page);
   };
 
+  handleAdd = id => {
+    // eslint-disable-next-line react/destructuring-assignment
+    this.props.addFavorite(id);
+  };
+
+  handleRemove = id => {
+    // eslint-disable-next-line react/destructuring-assignment
+    this.props.removeFavorite(id);
+  };
+
   render() {
     const { hasMoreBeers } = this.state;
-    const { beerList } = this.props;
+    const { beerList, favorites } = this.props;
     if (beerList.length !== 0) {
       return (
         <InfiniteScroll
@@ -36,12 +47,18 @@ class BeerList extends React.PureComponent {
           hasMore={hasMoreBeers}
           loader={
             <div style={{ textAlign: "center" }} key={0}>
-              <ClipLoader size={100} color="#123abc" />
+              <CircularProgress />
             </div>
           }
           threshold={100}
         >
-          <BeerGrid beerList={beerList} />;
+          <BeerGrid
+            favorites={favorites}
+            beerList={beerList}
+            handleAdd={this.handleAdd}
+            handleRemove={this.handleRemove}
+          />
+          ;
         </InfiniteScroll>
       );
     }
@@ -50,13 +67,21 @@ class BeerList extends React.PureComponent {
 }
 
 BeerList.propTypes = {
-  beerList: PropTypes.arrayOf(PropTypes.object).isRequired
+  beerList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  addFavorite: PropTypes.func.isRequired,
+  removeFavorite: PropTypes.func.isRequired,
+  favorites: PropTypes.arrayOf(PropTypes.number).isRequired
 };
 
 const mapStateToProps = state => {
   return {
-    beerList: state.beerList
+    beerList: state.beer.beerList,
+    favorites: state.favorites.favorites
   };
 };
 
-export default connect(mapStateToProps, { continueBeerList })(BeerList);
+export default connect(mapStateToProps, {
+  continueBeerList,
+  addFavorite,
+  removeFavorite
+})(BeerList);

@@ -2,7 +2,7 @@ const initialState = {
   beerList: []
 };
 
-const reducer = (state = initialState, action) => {
+const beerReducer = (state = initialState, action) => {
   switch (action.type) {
     case "GET_BEER_SUCCESS":
       return {
@@ -21,4 +21,4 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-export default reducer;
+export default beerReducer;

@@ -10,7 +10,7 @@ import * as serviceWorker from "./serviceWorker";
 
 import App from "./App";
 import theme from "./styles/theme";
-import reducer from "./store/beer/reducers";
+import reducer from "./store/reducer";
 import "./index.css";
 
 const store = createStore(reducer, applyMiddleware(thunk, logger));
