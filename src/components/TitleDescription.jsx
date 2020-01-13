@@ -27,7 +27,8 @@ const useStyles = makeStyles(theme => ({
     marginTop: 20,
     display: "grid",
     gridTemplateColumns: "3.5fr 1fr",
-    gridColumnGap: 30
+    gridColumnGap: 30,
+    marginBottom: -150
   },
   imageContainer: {
     marginTop: -160
@@ -47,7 +48,7 @@ export default function TitleDescription(props) {
         Add to Favorites
       </Button>
       <div className={classes.grid}>
-        {beer.description}
+        <span className={classes.description}>{beer.description}</span>
         <div className={classes.imageContainer}>
           <img src={beer.image_url} alt="pivasik" className={classes.image} />
         </div>

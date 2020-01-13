@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes, { object } from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
@@ -27,17 +27,25 @@ const useStyles = makeStyles({
   tableContainer: {
     marginTop: 30,
     marginBottom: 30
+  },
+  methods: {
+    marginTop: 50
   }
 });
 
 export default function BrewingInfo(props) {
-  const { beer, createData } = props;
+  const { beer, createData, createSykaData } = props;
   const classes = useStyles();
   const rows = [
     createData("Water", `${beer.volume.value} ${beer.volume.unit}`),
     createData("Malt", beer.ingredients.malt),
     createData("Hops", beer.ingredients.hops),
     createData("Yeast", beer.ingredients.yeast)
+  ];
+  const rowa = [
+    createSykaData("Mash", beer.method.mash_temp),
+    createSykaData("Fermentation", beer.method.fermentation),
+    createSykaData("Twist", beer.method.twist)
   ];
   return (
     <div className={classes.container}>
@@ -85,7 +93,39 @@ export default function BrewingInfo(props) {
         </div>
         <div>
           <Typography variant="h5">Method</Typography>
-          <p>ZAvtra sha vpadly</p>
+          {rowa.map((row, inda) => {
+            return (
+              <div key={row.name} className={classes.methods}>
+                <Typography variant="h6">{row.name}</Typography>
+                {Array.isArray(row.value) ? (
+                  row.value.map((elem, index) => {
+                    return (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <p key={index}>
+                        {/* eslint-disable-next-line no-nested-ternary */}
+                        {inda === 0 ? (
+                          <span>
+                            {elem.duration} minutes at {elem.temp.value}{" "}
+                            {elem.temp.unit === "celsius" ? "C" : "F"}
+                          </span>
+                        ) : inda === 1 ? (
+                          <span>
+                            {" "}
+                            Perform at {elem.temp.value}{" "}
+                            {elem.temp.unit === "celsius" ? "C" : "F"}
+                          </span>
+                        ) : (
+                          <span>{elem}</span>
+                        )}
+                      </p>
+                    );
+                  })
+                ) : (
+                  <p>{row.value}</p>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -103,7 +143,29 @@ BrewingInfo.propTypes = {
       malt: PropTypes.arrayOf(PropTypes.object),
       hops: PropTypes.arrayOf(PropTypes.object),
       yeast: PropTypes.string
-    }).isRequired
+    }).isRequired,
+    method: PropTypes.shape({
+      mash_temp: PropTypes.arrayOf(PropTypes.object),
+      fermentation: PropTypes.objectOf(PropTypes.object),
+      // eslint-disable-next-line react/no-typos
+      twist: PropTypes.oneOfType([PropTypes.null, PropTypes.arrayOf(object)])
+    })
   }).isRequired,
-  createData: PropTypes.func.isRequired
+  createData: PropTypes.func.isRequired,
+  createSykaData: PropTypes.func.isRequired
 };
+
+/*
+{Array.isArray(row.value) ? (row.value.map((elem, index) =>{
+                  return (
+                    <>
+<p key={index}>
+  {elem.duration} minutes at {elem.temp.value} {elem.temp.unit === "celsius" ? "C" : "F"}
+</p>
+<>
+);
+})
+) : (
+  <p>{row.value}</p>
+)}
+ */
