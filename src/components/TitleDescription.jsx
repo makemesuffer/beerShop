@@ -49,6 +49,7 @@ export default function TitleDescription(props) {
         variant="contained"
         color="primary"
         onClick={
+          // FIXME move to a single method
           favorites.includes(beer.id)
             ? () => {
                 handleRemove(beer.id);

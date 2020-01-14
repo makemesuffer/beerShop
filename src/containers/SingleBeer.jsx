@@ -17,6 +17,7 @@ class SingleBeer extends React.PureComponent {
     return { name, value, description };
   };
 
+  // FIXME refactor the method below
   createSykaData = (name, value) => {
     // eslint-disable-next-line no-param-reassign
     if (value === null) value = "NO INFO";

@@ -38,6 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function PropertiesPairing(props) {
   const { beer, createData } = props;
+  // FIXME move to container & pass as props
   const rows = [
     createData("ABV", beer.abv, "ABV stands for alcohol"),
     createData("IBU", beer.ibu, "IBU stands for bitterness"),

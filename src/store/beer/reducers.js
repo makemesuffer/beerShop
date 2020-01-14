@@ -1,5 +1,6 @@
 const initialState = {
-  beerList: []
+  beerList: [],
+  value: ""
 };
 
 const beerReducer = (state = initialState, action) => {
@@ -15,7 +16,23 @@ const beerReducer = (state = initialState, action) => {
         beerList: [...state.beerList, ...action.payload]
       };
     case "GET_BEER_ERROR":
-      return console.log(action.payload);
+      // FIXME add an error to state & display error
+      return console.error(action.payload);
+    case "GET_BEER_NAME_SUCCESS":
+      return {
+        ...state,
+        beerList: action.payload
+      };
+    case "GET_VALUE_SUCCESS":
+      return {
+        ...state,
+        value: action.payload
+      };
+    case "CONTINUE_BEER_SUCCESS":
+      return {
+        ...state,
+        beerList: [...state.beerList, ...action.payload]
+      };
     default:
       return state;
   }

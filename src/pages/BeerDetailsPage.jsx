@@ -4,6 +4,7 @@ import SingleBeer from "../containers/SingleBeer";
 
 class BeerDetailsPage extends React.PureComponent {
   render() {
+    // FIXME: withRouter
     const id = Number(window.location.href.split("/").pop());
     return (
       <>
