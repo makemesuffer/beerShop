@@ -36,16 +36,34 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function TitleDescription(props) {
-  const { beer } = props;
+  const { beer, handleAdd, favorites, handleRemove } = props;
   const classes = useStyles();
+  const haveInFav = favorites.includes(beer.id);
   return (
     <div className={classes.container}>
       <Typography variant="h3" className={classes.title}>
         {beer.name}
       </Typography>
       <Typography className={classes.tagline}>{beer.tagline}</Typography>
-      <Button variant="contained" color="primary">
-        Add to Favorites
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={
+          // FIXME move to a single method
+          favorites.includes(beer.id)
+            ? () => {
+                handleRemove(beer.id);
+              }
+            : () => {
+                handleAdd(beer.id);
+              }
+        }
+      >
+        {haveInFav ? (
+          <span>Remove from Favorites</span>
+        ) : (
+          <span>Add to Favorites</span>
+        )}
       </Button>
       <div className={classes.grid}>
         <span className={classes.description}>{beer.description}</span>
@@ -62,8 +80,10 @@ TitleDescription.propTypes = {
     image_url: PropTypes.string,
     name: PropTypes.string,
     tagline: PropTypes.string,
-    description: PropTypes.string
-  }).isRequired
+    description: PropTypes.string,
+    id: PropTypes.number
+  }).isRequired,
+  handleAdd: PropTypes.func.isRequired,
+  handleRemove: PropTypes.func.isRequired,
+  favorites: PropTypes.arrayOf(PropTypes.number).isRequired
 };
-
-//

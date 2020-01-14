@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Input(props) {
-  const { handleClick } = props;
+  const { handleSubmit, handleChange } = props;
   const classes = useStyles();
   return (
     <Grid container direction="row" justify="center" alignItems="flex-end">
@@ -29,15 +29,20 @@ export default function Input(props) {
         className={classes.root}
         noValidate
         autoComplete="off"
-        onSubmit={handleClick}
+        onSubmit={handleSubmit}
       >
-        <TextField id="standard-basic" label="Search beers..." />
+        <TextField
+          id="standard-basic"
+          label="Search beers..."
+          onChange={handleChange}
+        />
       </form>
-      <GoSearch className={classes.search} onClick={handleClick} />
+      <GoSearch className={classes.search} onClick={handleSubmit} />
     </Grid>
   );
 }
 
 Input.propTypes = {
-  handleClick: PropTypes.func.isRequired
+  handleSubmit: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired
 };

@@ -14,6 +14,9 @@ const Routes = () => {
       <Route exact path={routes.favorites}>
         <FavoritesPage />
       </Route>
+      <Route path={routes.favPagination}>
+        <FavoritesPage />
+      </Route>
       <Route path={routes.beer}>
         <BeerDetailsPage />
       </Route>

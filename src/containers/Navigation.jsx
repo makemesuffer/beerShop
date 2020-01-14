@@ -17,9 +17,7 @@ class Navigation extends React.PureComponent {
   render() {
     const { showMenu } = this.state;
     return (
-      <>
-        <Sidebar showMenu={showMenu} handleNavigation={this.handleNavigation} />
-      </>
+      <Sidebar showMenu={showMenu} handleNavigation={this.handleNavigation} />
     );
   }
 }

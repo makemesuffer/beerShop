@@ -32,7 +32,7 @@ const useStyles = makeStyles({
     marginTop: 50
   }
 });
-
+// FIXME split into several components
 export default function BrewingInfo(props) {
   const { beer, createData, createSykaData } = props;
   const classes = useStyles();

@@ -22,7 +22,8 @@ const useStyles = makeStyles({
 
 export default function BeerItem(props) {
   const classes = useStyles();
-  const { beer, id } = props;
+  const { beer, id, handleAdd, handleRemove, favorites } = props;
+  const haveInFav = favorites.includes(beer.id);
   return (
     <Card className={classes.card}>
       <CardActionArea>
@@ -51,8 +52,24 @@ export default function BeerItem(props) {
         >
           Open
         </Button>
-        <Button size="small" color="primary">
-          Favorite
+        <Button
+          size="small"
+          color="primary"
+          onClick={
+            favorites.includes(beer.id)
+              ? () => {
+                  handleRemove(beer.id);
+                }
+              : () => {
+                  handleAdd(beer.id);
+                }
+          }
+        >
+          {haveInFav ? (
+            <span>Remove from Favorites</span>
+          ) : (
+            <span>Add to Favorites</span>
+          )}
         </Button>
       </CardActions>
     </Card>
@@ -66,5 +83,8 @@ BeerItem.propTypes = {
     name: PropTypes.string,
     tagline: PropTypes.string
   }).isRequired,
-  id: PropTypes.number.isRequired
+  id: PropTypes.number.isRequired,
+  handleAdd: PropTypes.func.isRequired,
+  handleRemove: PropTypes.func.isRequired,
+  favorites: PropTypes.arrayOf(PropTypes.number).isRequired
 };
