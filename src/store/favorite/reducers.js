@@ -4,7 +4,8 @@ const initialState = {
 };
 
 const favoriteReducer = (state = initialState, action) => {
-  let index;
+  let ids;
+  let beers;
   switch (action.type) {
     case "ADD_FAVORITE_SUCCESS":
       return {
@@ -14,14 +15,12 @@ const favoriteReducer = (state = initialState, action) => {
     case "ADD_FAVORITE_ERROR":
       return console.log(action.payload);
     case "REMOVE_FAVORITE_SUCCESS":
-      index = [...state.favorites].indexOf(action.payload);
-      // FIXME don't mutate state
-      state.favorites.splice(index, 1);
-      state.favoritesBeers.splice(index, 1);
+      ids = state.favorites.filter(id => id !== action.payload);
+      beers = state.favoritesBeers.filter(beer => beer.id !== action.payload);
       return {
         ...state,
-        favorites: [...state.favorites],
-        favoritesBeers: [...state.favoritesBeers]
+        favorites: ids,
+        favoritesBeers: beers
       };
     case "REMOVE_FAVORITE_ERROR":
       return console.log(action.payload);

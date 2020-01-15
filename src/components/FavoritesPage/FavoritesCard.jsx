@@ -49,10 +49,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function FavoritesCard(props) {
-  const { favoritesBeers, currentPage } = props;
-  // FIXME move to props
-  const index = currentPage === 1 ? 0 : (currentPage - 1) * 5;
-  const beers = favoritesBeers.slice(index, index + 5);
+  const { beers, handleRemove } = props;
   const classes = useStyles();
   return (
     <div>
@@ -85,7 +82,13 @@ export default function FavoritesCard(props) {
                   >
                     Open
                   </Button>
-                  <Button size="small" color="primary">
+                  <Button
+                    size="small"
+                    color="primary"
+                    onClick={() => {
+                      handleRemove(elem.id);
+                    }}
+                  >
                     Remove Favorite
                   </Button>
                 </CardActions>
@@ -94,7 +97,7 @@ export default function FavoritesCard(props) {
           })
         ) : (
           <Typography variant="h4" className={classes.noFav}>
-            Нет любимого пива
+            Net lubimogo piva(english)
           </Typography>
         )}
       </div>
@@ -103,6 +106,6 @@ export default function FavoritesCard(props) {
 }
 
 FavoritesCard.propTypes = {
-  favoritesBeers: PropTypes.arrayOf(PropTypes.object).isRequired,
-  currentPage: PropTypes.number.isRequired
+  beers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handleRemove: PropTypes.func.isRequired
 };

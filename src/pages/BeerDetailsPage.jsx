@@ -1,11 +1,14 @@
 import React from "react";
+import { withRouter } from "react-router";
+import PropTypes from "prop-types";
+
 import Header from "../components/Header";
-import SingleBeer from "../containers/SingleBeer";
+import SingleBeer from "../containers/BeerDetailsPage/SingleBeer.container";
 
 class BeerDetailsPage extends React.PureComponent {
   render() {
-    // FIXME: withRouter
-    const id = Number(window.location.href.split("/").pop());
+    const { location } = this.props;
+    const id = Number(location.pathname.split("/").pop());
     return (
       <>
         <Header />
@@ -15,4 +18,8 @@ class BeerDetailsPage extends React.PureComponent {
   }
 }
 
-export default BeerDetailsPage;
+BeerDetailsPage.propTypes = {
+  location: PropTypes.objectOf(PropTypes.string).isRequired
+};
+
+export default withRouter(BeerDetailsPage);

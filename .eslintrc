@@ -16,6 +16,10 @@
       "error", {
         "semi": true
       }
-    ]
+    ],
+    "react/destructuring-assignment": "off",
+    "no-param-reassign": "off",
+    "no-nested-ternary": "off",
+    "no-prototype-builtins": "off"
   }
 }

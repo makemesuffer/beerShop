@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function InfoPortal(props) {
+export default function InfoPortalContainer(props) {
   const { description } = props;
   const classes = useStyles();
   const [show, setShow] = React.useState(false);
@@ -62,6 +62,6 @@ export default function InfoPortal(props) {
   );
 }
 
-InfoPortal.propTypes = {
+InfoPortalContainer.propTypes = {
   description: PropTypes.string.isRequired
 };

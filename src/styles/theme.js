@@ -1,7 +1,5 @@
 import { createMuiTheme } from "@material-ui/core";
 
-// Creates a Theme for MUI accessible by entire App
-// TODO: replace color patterns
 const theme = createMuiTheme({
   palette: {
     primary: { main: "#437cca", hover: "#4e97c6" },
