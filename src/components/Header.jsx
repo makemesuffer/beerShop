@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { IoIosMore } from "react-icons/all";
 
-import Navigation from "../containers/Navigation";
+import NavigationContainer from "../containers/Navigation.container";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,7 +34,7 @@ export default function ButtonAppBar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Navigation />
+          <NavigationContainer />
           <Box className={classes.navigation}>
             <Typography variant="h6" className={classes.logo}>
               Beer сatalog

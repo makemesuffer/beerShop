@@ -26,36 +26,16 @@ const useStyles = makeStyles(theme => ({
 
 export default function FavoritesPagination(props) {
   const {
-    currentPage,
-    favoritesBeers,
+    pageArray,
+    paginationFinal,
     currentPageDecrement,
     currentPageIncrement,
-    setCurrentPage
+    setCurrentPage,
+    currentPage
   } = props;
   const classes = useStyles();
 
-  // FIXME move it to function and pass it to props
-  const predel = Math.ceil(favoritesBeers.length / 5);
-  const pageArray = [];
-  for (let i = 0; i < predel; i += 1) {
-    pageArray.push(i + 1);
-  }
-
-  let paginationFinal = [];
-
-  if (pageArray.length > 5) {
-    if (currentPage === 1) {
-      paginationFinal = pageArray.slice(currentPage - 1, currentPage + 3);
-    } else if (currentPage === pageArray.length) {
-      paginationFinal = pageArray.slice(currentPage - 3, currentPage + 1);
-    } else {
-      paginationFinal = pageArray.slice(currentPage - 2, currentPage + 2);
-    }
-  } else {
-    paginationFinal = [...pageArray];
-  }
-
-  if (favoritesBeers.length < 6) return null;
+  if (paginationFinal.length <= 1) return null;
   return (
     <div className={classes.grid}>
       <Card className={classes.card}>
@@ -115,8 +95,9 @@ export default function FavoritesPagination(props) {
 }
 
 FavoritesPagination.propTypes = {
+  pageArray: PropTypes.arrayOf(PropTypes.number).isRequired,
   currentPage: PropTypes.number.isRequired,
-  favoritesBeers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  paginationFinal: PropTypes.number.isRequired,
   currentPageIncrement: PropTypes.func.isRequired,
   currentPageDecrement: PropTypes.func.isRequired,
   setCurrentPage: PropTypes.func.isRequired

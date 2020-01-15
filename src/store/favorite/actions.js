@@ -1,13 +1,13 @@
-import getSingleBeer from "../../dataAccess/getExactBeer";
+import { getSingleBeer } from "../../dataAccess/beerRepository/helpers";
+import actionTypes from "./actionTypes";
 
-// FIXME move types to constants
 const addFavoriteSuccess = response => ({
-  type: "ADD_FAVORITE_SUCCESS",
+  type: actionTypes.ADD_FAVORITE_SUCCESS,
   payload: response
 });
 
 const addFavoriteError = error => ({
-  type: "ADD_FAVORITE_ERROR",
+  type: actionTypes.ADD_FAVORITE_ERROR,
   payload: error
 });
 
@@ -20,12 +20,12 @@ export const addFavorite = beer => dispatch => {
 };
 
 const removeFavoriteSuccess = response => ({
-  type: "REMOVE_FAVORITE_SUCCESS",
+  type: actionTypes.REMOVE_FAVORITE_SUCCESS,
   payload: response
 });
 
 const removeFavoriteError = error => ({
-  type: "REMOVE_FAVORITE_ERROR",
+  type: actionTypes.REMOVE_FAVORITE_ERROR,
   payload: error
 });
 
@@ -38,12 +38,12 @@ export const removeFavorite = beer => dispatch => {
 };
 
 const getFavoritesSuccess = response => ({
-  type: "GET_FAVORITES_SUCCESS",
+  type: actionTypes.GET_FAVORITES_SUCCESS,
   payload: response
 });
 
 const getFavoritesError = error => ({
-  type: "GET_FAVORITES_ERROR",
+  type: actionTypes.GET_FAVORITES_ERROR,
   payload: error
 });
 

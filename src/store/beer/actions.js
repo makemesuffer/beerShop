@@ -1,19 +1,26 @@
-import { getSearchResult, getScrollResult } from "../../dataAccess/getAllBeers";
-import { getBeerByName, continueBeer } from "../../dataAccess/getBeerByName";
-// TODO add isLoading state; + spinners
+import {
+  getSearchResult,
+  getScrollResult,
+  getBeerByName,
+  continueBeer,
+  getBeerByFilters
+} from "../../dataAccess/beerRepository/helpers";
 
-// FIXME Get details about single page beer
+import actionTypes from "./actionTypes";
 
 const updateBeerSuccess = response => ({
-  type: "UPDATE_BEER_SUCCESS",
+  type: actionTypes.UPDATE_BEER_SUCCESS,
   payload: response
 });
 
 const getBeerSuccess = response => ({
-  type: "GET_BEER_SUCCESS",
+  type: actionTypes.GET_BEER_SUCCESS,
   payload: response
 });
-const getBeerError = error => ({ type: "GET_BEER_ERROR", payload: error });
+const getBeerError = error => ({
+  type: actionTypes.GET_BEER_ERROR,
+  payload: error
+});
 
 export const getBeerList = () => async dispatch => {
   try {
@@ -34,7 +41,7 @@ export const continueBeerList = page => async dispatch => {
 };
 
 const getBeerNameSuccess = response => ({
-  type: "GET_BEER_NAME_SUCCESS",
+  type: actionTypes.GET_BEER_NAME_SUCCESS,
   payload: response
 });
 
@@ -48,7 +55,7 @@ export const getBeerName = name => async dispatch => {
 };
 
 const getValueSuccess = response => ({
-  type: "GET_VALUE_SUCCESS",
+  type: actionTypes.GET_VALUE_SUCCESS,
   payload: response
 });
 
@@ -61,7 +68,7 @@ export const getInputValue = value => dispatch => {
 };
 
 const continueBeerSuccess = response => ({
-  type: "CONTINUE_BEER_SUCCESS",
+  type: actionTypes.CONTINUE_BEER_SUCCESS,
   payload: response
 });
 
@@ -69,6 +76,30 @@ export const continueBeerName = (name, page) => async dispatch => {
   try {
     const response = await continueBeer(name, page);
     dispatch(continueBeerSuccess(response.data));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const setBeerList = bool => ({
+  type: actionTypes.SET_BEER_LIST,
+  payload: bool
+});
+
+export const setFilters = bool => ({
+  type: actionTypes.SET_FILTERS,
+  payload: bool
+});
+
+const filterBeerSuccess = response => ({
+  type: actionTypes.FILTER_BEER_SUCCESS,
+  payload: response
+});
+
+export const filterBeer = (name, abv, ibu, ebc) => async dispatch => {
+  try {
+    const response = await getBeerByFilters(name, abv, ibu, ebc);
+    dispatch(filterBeerSuccess(response.data));
   } catch (e) {
     console.log(e);
   }

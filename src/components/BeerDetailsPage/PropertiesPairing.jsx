@@ -9,7 +9,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 
-import InfoPortal from "../containers/InfoPortal";
+import InfoPortalContainer from "../../containers/BeerDetailsPage/InfoPortal.container";
 
 const useStyles = makeStyles(theme => ({
   grid: {
@@ -37,12 +37,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function PropertiesPairing(props) {
-  const { beer, createData } = props;
-  // FIXME move to container & pass as props
+  const { beer, createTableData } = props;
   const rows = [
-    createData("ABV", beer.abv, "ABV stands for alcohol"),
-    createData("IBU", beer.ibu, "IBU stands for bitterness"),
-    createData("EBC", beer.ebc, "EBC stands for color")
+    createTableData("ABV", beer.abv, "ABV stands for alcohol"),
+    createTableData("IBU", beer.ibu, "IBU stands for bitterness"),
+    createTableData("EBC", beer.ebc, "EBC stands for color")
   ];
   const classes = useStyles();
   return (
@@ -58,7 +57,7 @@ export default function PropertiesPairing(props) {
                 <TableRow key={row.name}>
                   <TableCell component="th" scope="row">
                     {row.name}
-                    <InfoPortal description={row.description} />
+                    <InfoPortalContainer description={row.description} />
                   </TableCell>
                   <TableCell align="right">
                     <span className={classes.dot}>{row.value}</span>
@@ -99,5 +98,5 @@ PropertiesPairing.propTypes = {
     ebc: PropTypes.number,
     food_pairing: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
-  createData: PropTypes.func.isRequired
+  createTableData: PropTypes.func.isRequired
 };

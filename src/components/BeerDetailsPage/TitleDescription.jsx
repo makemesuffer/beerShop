@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function TitleDescription(props) {
-  const { beer, handleAdd, favorites, handleRemove } = props;
+  const { beer, favorites, handleFavorite } = props;
   const classes = useStyles();
   const haveInFav = favorites.includes(beer.id);
   return (
@@ -48,16 +48,9 @@ export default function TitleDescription(props) {
       <Button
         variant="contained"
         color="primary"
-        onClick={
-          // FIXME move to a single method
-          favorites.includes(beer.id)
-            ? () => {
-                handleRemove(beer.id);
-              }
-            : () => {
-                handleAdd(beer.id);
-              }
-        }
+        onClick={() => {
+          handleFavorite(beer.id);
+        }}
       >
         {haveInFav ? (
           <span>Remove from Favorites</span>
@@ -83,7 +76,6 @@ TitleDescription.propTypes = {
     description: PropTypes.string,
     id: PropTypes.number
   }).isRequired,
-  handleAdd: PropTypes.func.isRequired,
-  handleRemove: PropTypes.func.isRequired,
+  handleFavorite: PropTypes.func.isRequired,
   favorites: PropTypes.arrayOf(PropTypes.number).isRequired
 };

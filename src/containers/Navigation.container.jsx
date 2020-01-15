@@ -2,7 +2,7 @@ import * as React from "react";
 
 import Sidebar from "../components/Sidebar";
 
-class Navigation extends React.PureComponent {
+class NavigationContainer extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,4 +22,4 @@ class Navigation extends React.PureComponent {
   }
 }
 
-export default Navigation;
+export default NavigationContainer;

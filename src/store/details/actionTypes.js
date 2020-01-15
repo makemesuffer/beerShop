@@ -1,0 +1,3 @@
+export default {
+  GET_BEER_DETAILS_SUCCESS: "GET_BEER_DETAILS_SUCCESS"
+};

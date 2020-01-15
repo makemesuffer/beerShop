@@ -18,7 +18,7 @@ const useStyles = makeStyles({
 
 export default function BeerGrid(props) {
   const classes = useStyles();
-  const { beerList, handleAdd, handleRemove, favorites } = props;
+  const { beerList, handleFavorite, favorites } = props;
   return (
     <Grid container spacing={2} className={classes.container}>
       {beerList.map(elem => {
@@ -27,8 +27,7 @@ export default function BeerGrid(props) {
             <BeerItem
               beer={elem}
               id={elem.id}
-              handleAdd={handleAdd}
-              handleRemove={handleRemove}
+              handleFavorite={handleFavorite}
               favorites={favorites}
             />
           </Grid>
@@ -40,7 +39,6 @@ export default function BeerGrid(props) {
 
 BeerGrid.propTypes = {
   beerList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  handleAdd: PropTypes.func.isRequired,
-  handleRemove: PropTypes.func.isRequired,
+  handleFavorite: PropTypes.func.isRequired,
   favorites: PropTypes.arrayOf(PropTypes.number).isRequired
 };
