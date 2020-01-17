@@ -1,18 +1,26 @@
 import actionTypes from "./actionTypes";
 
 const initialState = {
-  thisBeer: []
+  thisBeer: [], // item rename!!!
+  isBusy: true,
+  error: null
 };
 
 const detailsReducer = (state = initialState, action) => {
-  if (action.type === actionTypes.GET_BEER_DETAILS_SUCCESS) {
-    console.log(action.payload);
-    return {
-      ...state,
-      thisBeer: action.payload
-    };
+  switch (action.type) {
+    case actionTypes.GET_BEER_DETAILS_SUCCESS:
+      return {
+        ...state,
+        thisBeer: action.payload
+      };
+    case actionTypes.SET_STATUS:
+      return {
+        ...state,
+        isBusy: action.payload
+      };
+    default:
+      return state;
   }
-  return state;
 };
 
 export default detailsReducer;

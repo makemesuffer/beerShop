@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function FavoritesCard(props) {
-  const { beers, handleRemove } = props;
+  const { beers, handleRemove, favoritesBeers } = props;
   const classes = useStyles();
   return (
     <div>
@@ -57,7 +57,7 @@ export default function FavoritesCard(props) {
         Your favorite beers
       </Typography>
       <div className={classes.cardGrid}>
-        {beers.length > 0 ? (
+        {favoritesBeers.length > 0 ? (
           beers.map(elem => {
             return (
               <Card key={elem.id} className={classes.card}>
@@ -107,5 +107,6 @@ export default function FavoritesCard(props) {
 
 FavoritesCard.propTypes = {
   beers: PropTypes.arrayOf(PropTypes.object).isRequired,
-  handleRemove: PropTypes.func.isRequired
+  handleRemove: PropTypes.func.isRequired,
+  favoritesBeers: PropTypes.arrayOf(PropTypes.object).isRequired
 };

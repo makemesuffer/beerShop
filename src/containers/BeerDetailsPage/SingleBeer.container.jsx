@@ -4,9 +4,10 @@ import PropTypes from "prop-types";
 
 import TitleDescription from "../../components/BeerDetailsPage/TitleDescription";
 import { addFavorite, removeFavorite } from "../../store/favorite/actions";
-import getBeerDetails from "../../store/details/actions";
+import { getBeerDetails, setStatus } from "../../store/details/actions";
 import PropertiesPairing from "../../components/BeerDetailsPage/PropertiesPairing";
 import BrewingInfo from "../../components/BeerDetailsPage/BrewingInfo";
+import Loader from "../../components/Loader";
 
 class SingleBeerContainer extends React.PureComponent {
   constructor(props) {
@@ -16,6 +17,9 @@ class SingleBeerContainer extends React.PureComponent {
 
   componentDidMount() {
     const { id } = this.props;
+    // Добавил, чтобы показать лоудер (?)
+
+    this.props.setStatus(false);
     this.props.getBeerDetails(id);
   }
 
@@ -41,7 +45,7 @@ class SingleBeerContainer extends React.PureComponent {
   render() {
     const { favorites, details } = this.props;
     if (!details.length) {
-      return null;
+      return <Loader />;
     }
     return (
       <>
@@ -70,19 +74,22 @@ SingleBeerContainer.propTypes = {
   favorites: PropTypes.arrayOf(PropTypes.number).isRequired,
   removeFavorite: PropTypes.func.isRequired,
   getBeerDetails: PropTypes.func.isRequired,
-  details: PropTypes.arrayOf(PropTypes.object).isRequired
+  details: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setStatus: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
   return {
     beerList: state.beer.beerList,
     favorites: state.favorites.favorites,
-    details: state.details.thisBeer
+    details: state.details.thisBeer,
+    isBusy: state.details.isBusy
   };
 };
 
 export default connect(mapStateToProps, {
   addFavorite,
   removeFavorite,
-  getBeerDetails
+  getBeerDetails,
+  setStatus
 })(SingleBeerContainer);

@@ -1,18 +1,32 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import debounce from "lodash/debounce";
 
 import {
-  getBeerList,
-  getBeerName,
-  getInputValue,
+  setValueSuccess,
   setFilters,
-  filterBeer
+  getBeer,
+  setFiltersValue
 } from "../../store/beer/actions";
 import Input from "../../components/LandingPage/Input";
 import Filters from "../../components/LandingPage/Filters";
 
 class SearchContainer extends React.PureComponent {
+  filterResult = debounce(() => {
+    const { value } = this.props;
+    const { colorValue, bitternessValue, alcoholValue } = this.state;
+    this.props.setFiltersValue([alcoholValue, bitternessValue, colorValue]);
+    this.props.getBeer(null, value, alcoholValue, bitternessValue, colorValue);
+  }, 500);
+
+  getResults = debounce(() => {
+    const { value } = this.state;
+    this.props.setValueSuccess(value);
+    if (value === "") this.props.getBeer();
+    this.props.getBeer(null, value);
+  }, 500);
+
   constructor(props) {
     super(props);
     this.state = {
@@ -25,24 +39,20 @@ class SearchContainer extends React.PureComponent {
 
   handleSubmit = e => {
     e.preventDefault();
-    const { value } = this.state;
-    this.props.getInputValue(value);
-    if (value === "") this.props.getBeerList();
-    else this.props.getBeerName(value);
+    this.getResults();
   };
 
   handleChange = e => {
     this.setState({ value: e.target.value });
+    this.getResults();
   };
 
-  handleSliderChange = (event, valya) => {
+  handleSliderChange = (event, value) => {
     const name = event.target.offsetParent.title;
-    this.setState({ [name]: valya });
-    const { value, colorValue, bitternessValue, alcoholValue } = this.state;
-    this.props.filterBeer(value, alcoholValue, bitternessValue, colorValue);
+    this.setState({ [name]: value });
+    this.filterResult();
   };
 
-  // FIXME one container -- one component
   render() {
     const { alcoholValue, bitternessValue, colorValue, value } = this.state;
 
@@ -67,24 +77,24 @@ class SearchContainer extends React.PureComponent {
 }
 
 SearchContainer.propTypes = {
-  getInputValue: PropTypes.func.isRequired,
-  getBeerList: PropTypes.func.isRequired,
-  getBeerName: PropTypes.func.isRequired,
+  setValueSuccess: PropTypes.func.isRequired,
   showFilters: PropTypes.bool.isRequired,
-  filterBeer: PropTypes.func.isRequired
+  getBeer: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+  setFiltersValue: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
   return {
     beerList: state.beer.beerList,
-    showFilters: state.beer.showFilters
+    showFilters: state.beer.showFilters,
+    value: state.beer.value
   };
 };
 
 export default connect(mapStateToProps, {
-  getBeerList,
-  getBeerName,
-  getInputValue,
+  setValueSuccess,
   setFilters,
-  filterBeer
+  getBeer,
+  setFiltersValue
 })(SearchContainer);

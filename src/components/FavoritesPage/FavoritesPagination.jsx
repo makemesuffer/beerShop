@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, Redirect } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   grid: {
@@ -35,7 +35,10 @@ export default function FavoritesPagination(props) {
   } = props;
   const classes = useStyles();
 
-  if (paginationFinal.length <= 1) return null;
+  if (paginationFinal.length <= 1) {
+    return <Redirect to={`/favorites/${currentPage}`} />;
+  }
+
   return (
     <div className={classes.grid}>
       <Card className={classes.card}>
@@ -97,7 +100,7 @@ export default function FavoritesPagination(props) {
 FavoritesPagination.propTypes = {
   pageArray: PropTypes.arrayOf(PropTypes.number).isRequired,
   currentPage: PropTypes.number.isRequired,
-  paginationFinal: PropTypes.number.isRequired,
+  paginationFinal: PropTypes.arrayOf(PropTypes.number).isRequired,
   currentPageIncrement: PropTypes.func.isRequired,
   currentPageDecrement: PropTypes.func.isRequired,
   setCurrentPage: PropTypes.func.isRequired
