@@ -12,28 +12,23 @@ const initialState = {
 };
 
 const beerReducer = (state = initialState, action) => {
-  let show;
-  let update;
   switch (action.type) {
     case actionTypes.GET_BEER_SUCCESS:
-      show = state.value !== "";
       return {
         ...state,
         beerList: action.payload,
         page: 2,
-        showFilters: show, // FIXME: Вынеси логику в контейнеры
+        showFilters: state.value !== "",
         hasMoreBeers: true
       };
     case actionTypes.UPDATE_BEER_SUCCESS:
-      update = action.payload.length !== 0;
       return {
         ...state,
         beerList: [...state.beerList, ...action.payload],
         page: state.page + 1,
-        hasMoreBeers: update
+        hasMoreBeers: action.payload.length !== 0
       };
     case actionTypes.SET_FILTERS_VALUE:
-      console.log(action.payload);
       return {
         ...state,
         alcoholValue: action.payload[0],

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -49,8 +49,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function FavoritesCard(props) {
-  const { beers, handleRemove, favoritesBeers } = props;
+  const { beers, handleRemove, favoritesBeers, currentPageDecrement } = props;
   const classes = useStyles();
+
+  useEffect(() => {
+    if (beers.length === 0 && favoritesBeers.length > 0) currentPageDecrement();
+  });
+
   return (
     <div>
       <Typography variant="h2" className={classes.title}>
@@ -97,7 +102,7 @@ export default function FavoritesCard(props) {
           })
         ) : (
           <Typography variant="h4" className={classes.noFav}>
-            Net lubimogo piva(english)
+            No beer in fav
           </Typography>
         )}
       </div>
@@ -108,5 +113,6 @@ export default function FavoritesCard(props) {
 FavoritesCard.propTypes = {
   beers: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleRemove: PropTypes.func.isRequired,
-  favoritesBeers: PropTypes.arrayOf(PropTypes.object).isRequired
+  favoritesBeers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  currentPageDecrement: PropTypes.func.isRequired
 };

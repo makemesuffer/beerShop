@@ -15,10 +15,6 @@ import "./index.css";
 
 const store = createStore(reducer, applyMiddleware(thunk, logger));
 
-// TODO: фаворитов чутка пофиксь при определенном кейсе(страничный кейс)
-
-// TODO: добавь нормальный обработчик эрроров
-
 // TODO:  1 контейнер - 1 компонент
 
 ReactDOM.render(

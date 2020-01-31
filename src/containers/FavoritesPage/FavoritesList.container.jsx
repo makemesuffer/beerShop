@@ -44,12 +44,8 @@ class FavoritesListContainer extends React.PureComponent {
     const { favoritesBeers } = this.props;
     const { currentPage } = this.state;
 
-    // TODO: Component Did Update fix
-
     const index = currentPage === 1 ? 0 : (currentPage - 1) * 5;
     const beers = favoritesBeers.slice(index, index + 5);
-
-    console.log(beers);
 
     const length = Math.ceil(favoritesBeers.length / 5);
     const pageArray = [];
@@ -76,6 +72,7 @@ class FavoritesListContainer extends React.PureComponent {
           beers={beers}
           handleRemove={this.handleRemove}
           favoritesBeers={favoritesBeers}
+          currentPageDecrement={this.currentPageDecrement}
         />
         <FavoritesPagination
           pageArray={pageArray}

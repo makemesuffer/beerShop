@@ -4,10 +4,14 @@ import PropTypes from "prop-types";
 
 import TitleDescription from "../../components/BeerDetailsPage/TitleDescription";
 import { addFavorite, removeFavorite } from "../../store/favorite/actions";
-import { getBeerDetails, setStatus } from "../../store/details/actions";
+import {
+  getBeerDetails,
+  getBeerDetailsPending
+} from "../../store/details/actions";
 import PropertiesPairing from "../../components/BeerDetailsPage/PropertiesPairing";
 import BrewingInfo from "../../components/BeerDetailsPage/BrewingInfo";
 import Loader from "../../components/Loader";
+import ErrorBoundary from "../../components/ErrorBoundary";
 
 class SingleBeerContainer extends React.PureComponent {
   constructor(props) {
@@ -17,10 +21,11 @@ class SingleBeerContainer extends React.PureComponent {
 
   componentDidMount() {
     const { id } = this.props;
-    // Добавил, чтобы показать лоудер (?)
-
-    this.props.setStatus(false);
-    this.props.getBeerDetails(id);
+    // Добавил, чтобы показать лоудер
+    setTimeout(() => {
+      this.props.getBeerDetailsPending(false);
+      this.props.getBeerDetails(id);
+    }, 3000);
   }
 
   createTableData = (name, value, description, id) => {
@@ -43,7 +48,10 @@ class SingleBeerContainer extends React.PureComponent {
   };
 
   render() {
-    const { favorites, details } = this.props;
+    const { favorites, details, error } = this.props;
+    if (error !== null) {
+      return <ErrorBoundary error={error} />;
+    }
     if (!details.length) {
       return <Loader />;
     }
@@ -75,15 +83,18 @@ SingleBeerContainer.propTypes = {
   removeFavorite: PropTypes.func.isRequired,
   getBeerDetails: PropTypes.func.isRequired,
   details: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setStatus: PropTypes.func.isRequired
+  getBeerDetailsPending: PropTypes.func.isRequired,
+  error: PropTypes.oneOfType([PropTypes.oneOf([null]), PropTypes.string])
+    .isRequired
 };
 
 const mapStateToProps = state => {
   return {
     beerList: state.beer.beerList,
     favorites: state.favorites.favorites,
-    details: state.details.thisBeer,
-    isBusy: state.details.isBusy
+    details: state.details.item,
+    isBusy: state.details.isBusy,
+    error: state.details.error
   };
 };
 
@@ -91,5 +102,5 @@ export default connect(mapStateToProps, {
   addFavorite,
   removeFavorite,
   getBeerDetails,
-  setStatus
+  getBeerDetailsPending
 })(SingleBeerContainer);
