@@ -21,7 +21,6 @@ class SingleBeerContainer extends React.PureComponent {
 
   componentDidMount() {
     const { id } = this.props;
-    // Добавил, чтобы показать лоудер
     setTimeout(() => {
       this.props.getBeerDetailsPending(false);
       this.props.getBeerDetails(id);
