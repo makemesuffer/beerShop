@@ -2,13 +2,13 @@ import React from "react";
 
 import Search from "../containers/LangingPage/Search.container";
 import BeerList from "../containers/LangingPage/BeerList.container";
-import SignUpContainer from "../containers/SignUp.container";
+import HeaderContainer from "../containers/Header.container";
 
 class LandingPage extends React.PureComponent {
   render() {
     return (
       <>
-        <SignUpContainer />
+        <HeaderContainer />
         <Search />
         <BeerList />
       </>

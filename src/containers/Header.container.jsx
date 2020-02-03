@@ -2,7 +2,7 @@ import * as React from "react";
 
 import Header from "../components/Header";
 
-class SignUpContainer extends React.PureComponent {
+class HeaderContainer extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,4 +32,4 @@ class SignUpContainer extends React.PureComponent {
   }
 }
 
-export default SignUpContainer;
+export default HeaderContainer;

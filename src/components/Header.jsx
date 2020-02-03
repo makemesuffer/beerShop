@@ -13,6 +13,7 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Popover from "@material-ui/core/Popper";
 import { IoIosMore } from "react-icons/all";
 
+import { Link as RouterLink } from "react-router-dom";
 import NavigationContainer from "../containers/Navigation.container";
 
 const useStyles = makeStyles(theme => ({
@@ -77,11 +78,19 @@ export default function Header(props) {
               <Paper>
                 <ClickAwayListener onClickAway={handleClose}>
                   <MenuList autoFocusItem={open}>
-                    <MenuItem onClick={handleClose}>
-                      {auth ? "My account" : "Sign up"}
+                    <MenuItem
+                      onClick={handleClose}
+                      component={RouterLink}
+                      to={auth ? "#" : "/login"}
+                    >
+                      {auth ? "My account" : "Sign in"}
                     </MenuItem>
-                    <MenuItem onClick={handleClose}>
-                      {auth ? "Logout" : "Sign in"}
+                    <MenuItem
+                      onClick={handleClose}
+                      component={RouterLink}
+                      to={auth ? "/root" : "/sign"}
+                    >
+                      {auth ? "Logout" : "Sign up"}
                     </MenuItem>
                   </MenuList>
                 </ClickAwayListener>
