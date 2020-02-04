@@ -25,7 +25,7 @@ const Routes = () => {
       <Route path={routes.signIn}>
         <SignInPage />
       </Route>
-      <Route>
+      <Route path={routes.signUp}>
         <SignUpPage />
       </Route>
       <Route path="*">

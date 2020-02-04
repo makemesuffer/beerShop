@@ -6,12 +6,12 @@ import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import logger from "redux-logger";
-import * as serviceWorker from "./serviceWorker";
+import * as serviceWorker from "./client/serviceWorker";
 
-import App from "./App";
-import theme from "./styles/theme";
-import reducer from "./store/reducer";
-import "./index.css";
+import App from "./client/App";
+import theme from "./client/styles/theme";
+import reducer from "./client/store/reducer";
+import "./client/index.css";
 
 const store = createStore(reducer, applyMiddleware(thunk, logger));
 

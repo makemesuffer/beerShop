@@ -2,8 +2,8 @@ import React from "react";
 import { withRouter } from "react-router";
 import PropTypes from "prop-types";
 
-import Header from "../components/Header";
 import SingleBeer from "../containers/BeerDetailsPage/SingleBeer.container";
+import HeaderContainer from "../containers/Header.container";
 
 class BeerDetailsPage extends React.PureComponent {
   render() {
@@ -11,7 +11,7 @@ class BeerDetailsPage extends React.PureComponent {
     const id = Number(location.pathname.split("/").pop());
     return (
       <>
-        <Header />
+        <HeaderContainer />
         <SingleBeer id={id} />
       </>
     );

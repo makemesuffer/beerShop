@@ -21,6 +21,7 @@
     "no-param-reassign": "off",
     "no-nested-ternary": "off",
     "no-prototype-builtins": "off",
-    "react/jsx-props-no-spreading": "off"
+    "react/jsx-props-no-spreading": "off",
+    "consistent-return": "off"
   }
 }
