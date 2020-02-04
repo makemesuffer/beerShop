@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const morgan = require("morgan");
 
+require("dotenv").config();
+
 const cfg = require("./server/config.js");
 
 const app = express();
@@ -15,6 +17,12 @@ app.use(
     extended: true
   })
 );
+
+app.use(require("./server/routes/users"));
+
+// Budet last vsegda
+
+app.use(require("./server/controllers/errorController"));
 
 app.listen(cfg.EXPRESS_PORT, () => {
   console.log(`Express server running on port ${cfg.EXPRESS_PORT}.`);

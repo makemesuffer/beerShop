@@ -22,6 +22,8 @@
     "no-nested-ternary": "off",
     "no-prototype-builtins": "off",
     "react/jsx-props-no-spreading": "off",
-    "consistent-return": "off"
+    "consistent-return": "off",
+    "no-useless-return": "warn",
+    "no-underscore-dangle": "off"
   }
 }

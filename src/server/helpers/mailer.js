@@ -13,7 +13,7 @@ class Mailer {
     });
   }
 
-  async send(data) {
+  send(data) {
     let mailOptions;
     switch (data.source) {
       case "email-verification": {
@@ -36,24 +36,12 @@ class Mailer {
         };
         break;
       }
-      case "reset-link": {
-        mailOptions = {
-          to: data.login,
-          from: "akite.cloud@gmail.com",
-          subject: `AskBrains | Reset Password`,
-          html: `Hello.<br> Confirm password resetting for account: ${data.login}<br><br>
-			        			<a href="${data.link}" target="_blank">Click here</a>`
-        };
-        break;
-      }
       default: {
         console.log("something went wrong");
       }
     }
 
-    const mailResult = await this.smtp.sendMail(mailOptions);
-    console.log(mailResult);
-    return mailResult;
+    return this.smtp.sendMail(mailOptions);
   }
 }
 

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -28,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.secondary.main
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(3)
   },
   submit: {
@@ -36,9 +37,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function SignUpForm() {
+export default function SignUpForm(props) {
   const classes = useStyles();
-
+  const { handleChange, addUser } = props;
   return (
     <Container component="main" maxWidth="xs" className={classes.container}>
       <CssBaseline />
@@ -61,6 +62,7 @@ export default function SignUpForm() {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -71,7 +73,7 @@ export default function SignUpForm() {
                 id="lastName"
                 label="Last Name"
                 name="lastName"
-                autoComplete="lname"
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -82,18 +84,8 @@ export default function SignUpForm() {
                 id="login"
                 label="Login"
                 name="login"
-                autoComplete="login"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
                 autoComplete="email"
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -101,8 +93,10 @@ export default function SignUpForm() {
                 variant="outlined"
                 id="date"
                 type="date"
+                name="date"
                 fullWidth
                 required
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -114,7 +108,7 @@ export default function SignUpForm() {
                 label="Password"
                 type="password"
                 id="password"
-                autoComplete="current-password"
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -130,6 +124,7 @@ export default function SignUpForm() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={addUser}
           >
             Sign Up
           </Button>
@@ -145,3 +140,8 @@ export default function SignUpForm() {
     </Container>
   );
 }
+
+SignUpForm.propTypes = {
+  handleChange: PropTypes.func.isRequired,
+  addUser: PropTypes.func.isRequired
+};

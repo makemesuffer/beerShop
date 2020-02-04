@@ -8,18 +8,26 @@ module.exports.login = (login, password) => {
 };
 
 module.exports.create = data => {
-  const { login, password, name, email, profilePicture, birthDate } = data;
+  const {
+    login,
+    password,
+    firstName,
+    lastName,
+    profilePicture,
+    birthDate,
+    available
+  } = data;
   const user = new User({
     login,
     password,
-    firstName: name.firstName || null,
-    lastName: name.lastName || null,
+    firstName,
+    lastName,
     birthDate,
-    email,
     createdAt: new Date(),
-    profilePicture: profilePicture || null
+    profilePicture: profilePicture || null,
+    available
   });
   const promise = user.save();
-  console.log(promise);
+  console.log(promise, "working and called");
   return promise;
 };

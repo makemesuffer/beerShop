@@ -1,5 +1,5 @@
 import React from "react";
-import SignUpForm from "../components/Signs/SignUpForm";
+import SignUpContainer from "../containers/Signs/SignUp.container";
 import HeaderContainer from "../containers/Header.container";
 
 class SignUpPage extends React.PureComponent {
@@ -7,7 +7,7 @@ class SignUpPage extends React.PureComponent {
     return (
       <>
         <HeaderContainer />
-        <SignUpForm />
+        <SignUpContainer />
       </>
     );
   }

@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
-// const user = require("./UserUtils");
+const user = require("./userUtils");
+
+mongoose.Promise = global.Promise;
 
 module.exports.setUpConnection = () => {
   mongoose.connect(
@@ -12,4 +14,4 @@ module.exports.setUpConnection = () => {
   );
 };
 
-// module.exports.Users = user;
+module.exports.Users = user;
