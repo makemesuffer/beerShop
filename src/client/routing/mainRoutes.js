@@ -6,5 +6,6 @@ export default {
   favPagination: "/favorites/:id",
   signIn: "/login",
   signUp: "/sign",
-  verify: "/register"
+  verify: "/register",
+  user: "/users/:id"
 };

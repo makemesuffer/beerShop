@@ -14,7 +14,7 @@ exports.verifyUser = wrapAsync(async (req, res) => {
     action: { available: true }
   });
   if (userUpdate) {
-    res.redirect(clientOptions.url + clientOptions.emailSuccess);
+    res.redirect(clientOptions.url + clientOptions.emailSuccess); // тоже не работает
   } else {
     res.json({ success: false });
   }

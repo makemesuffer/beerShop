@@ -7,6 +7,7 @@ import BeerDetailsPage from "../pages/BeerDetailsPage";
 import SignInPage from "../pages/SignInPage";
 import SignUpPage from "../pages/SignUpPage";
 import VerifyPage from "../pages/VerifyPage";
+import UserDetailsPage from "../pages/UserDetailsPage";
 
 const Routes = () => {
   return (
@@ -31,6 +32,9 @@ const Routes = () => {
       </Route>
       <Route path={routes.verify}>
         <VerifyPage />
+      </Route>
+      <Route path={routes.user}>
+        <UserDetailsPage />
       </Route>
       <Route path="*">
         <Redirect to={routes.root} />

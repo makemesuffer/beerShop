@@ -6,7 +6,7 @@ class VerifyPage extends React.PureComponent {
     return (
       <>
         <HeaderContainer />
-        <h1>Check verification</h1>
+        <h1>Не работает чет из-за небезопасного соед че за дела то</h1>
       </>
     );
   }

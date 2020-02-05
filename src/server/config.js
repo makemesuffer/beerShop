@@ -4,7 +4,7 @@ module.exports = {
   AWS_SECRET_ACCESS: "/iRzSeH9qlEiUvy945KoF9HuM1RtuHkZkUlSVo0s",
   AWS_ACCESS_KEY: "AKIAIJTIV56EZ6MXIJXA",
   client_Options: {
-    url: "https://localhost:3000/",
+    url: "http://localhost:3000/",
     emailSuccess: "search",
     socialSuccess: "login"
   }

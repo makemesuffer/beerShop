@@ -35,3 +35,7 @@ module.exports.create = data => {
 module.exports.update = object => {
   return Users.findOneAndUpdate({ _id: object._id }, { $set: object.action });
 };
+
+module.exports.getOneByID = id => {
+  return Users.findOne({ _id: id });
+};

@@ -8,6 +8,8 @@ const mailer = require("./../helpers/mailer");
 const wrapAsync = require("../helpers/asyncErrorHandler");
 const db = require("../loaders/db");
 
+const clientOptions = config.client_Options;
+
 exports.registerUser = wrapAsync(async (req, res) => {
   const { login, password, firstName, lastName, birthDate } = req.body;
 
@@ -81,7 +83,9 @@ exports.loginUser = wrapAsync(async (req, res) => {
     login: req.body.login,
     password: md5(req.body.password)
   };
+  console.log(userData.login, userData.password);
   const result = await db.Users.login(userData.login, userData.password);
+  console.log(result);
   if (result) {
     const ans = {
       success: true,
@@ -91,16 +95,21 @@ exports.loginUser = wrapAsync(async (req, res) => {
       }
     };
     if (result.available) {
-      const token = jwt.sign({ id: result._id }, config.jwtSECRET, {
+      const token = await jwt.sign({ id: result._id }, config.jwtSECRET, {
         expiresIn: "14 days"
       });
       ans.accessTOKEN = token;
     }
-    res.json(ans);
-  } else {
-    res.json({
-      success: false,
-      error: "Login or password is incorrect"
+    res.redirect(clientOptions.url + clientOptions.emailSuccess); // 302, но не редиктертает чего
+    return res.json({
+      success: true,
+      payload: result._id
     });
   }
+
+  res.json({
+    success: false,
+    error: "Login or password is incorrect"
+  });
+  // TODO: remake norm error otpravitel
 });

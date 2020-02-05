@@ -17,13 +17,15 @@ class SignInContainer extends React.PureComponent {
     this.setState({ [name]: e.target.value });
   };
 
-  logUser = async () => {
+  logUser = async e => {
+    e.preventDefault();
     const { login, password } = this.state;
     const payload = { login, password };
-    await loginUser(payload).then(() => {
-      console.log("srabotalo??????"); // rabotaet ksta
-    });
+    const test = await loginUser(payload);
+    console.log(test);
   };
+
+  // TODO: тебе приходит json в случае ошибки сделай типа if(success=false) { и парси контент {error} в разметку}
 
   render() {
     return (
