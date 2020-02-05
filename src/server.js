@@ -19,6 +19,7 @@ app.use(
 );
 
 app.use(require("./server/routes/users"));
+app.use(require("./server/routes/verify"));
 
 // Budet last vsegda
 

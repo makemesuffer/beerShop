@@ -31,3 +31,7 @@ module.exports.create = data => {
   console.log(promise, "working and called");
   return promise;
 };
+
+module.exports.update = object => {
+  return Users.findOneAndUpdate({ _id: object._id }, { $set: object.action });
+};

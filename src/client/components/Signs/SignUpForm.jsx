@@ -91,10 +91,10 @@ export default function SignUpForm(props) {
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
-                id="date"
-                type="date"
-                name="date"
+                id="birthDate"
+                name="birthDate"
                 fullWidth
+                type="date"
                 required
                 onChange={handleChange}
               />

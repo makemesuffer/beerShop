@@ -4,6 +4,6 @@ const api = axios.create({
   baseURL: "http://localhost:1337"
 });
 
-const createUser = payload => api.post(`/sign`, payload);
+export const createUser = payload => api.post(`/sign`, payload);
 
-export default createUser;
+export const loginUser = payload => api.post(`/post`, payload);

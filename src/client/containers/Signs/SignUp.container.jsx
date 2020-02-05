@@ -1,6 +1,6 @@
 import React from "react";
 
-import createUser from "../../dataAccess/userRepository/helpers";
+import { createUser } from "../../dataAccess/userRepository/helpers";
 import SignUpForm from "../../components/Signs/SignUpForm";
 
 class SignUpContainer extends React.PureComponent {
@@ -29,6 +29,7 @@ class SignUpContainer extends React.PureComponent {
   };
 
   render() {
+    console.log(this.state.birthDate);
     return (
       <>
         <SignUpForm addUser={this.addUser} handleChange={this.handleChange} />

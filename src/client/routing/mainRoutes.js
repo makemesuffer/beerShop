@@ -5,5 +5,6 @@ export default {
   beer: "/beers/:id",
   favPagination: "/favorites/:id",
   signIn: "/login",
-  signUp: "/sign"
+  signUp: "/sign",
+  verify: "/register"
 };

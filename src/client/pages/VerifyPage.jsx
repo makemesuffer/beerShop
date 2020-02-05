@@ -1,15 +1,14 @@
 import React from "react";
 import HeaderContainer from "../containers/Header.container";
-import SignInContainer from "../containers/Signs/SignIn.container";
 
-class SignInPage extends React.PureComponent {
+class VerifyPage extends React.PureComponent {
   render() {
     return (
       <>
         <HeaderContainer />
-        <SignInContainer />
+        <h1>Check verification</h1>
       </>
     );
   }
 }
-export default SignInPage;
+export default VerifyPage;

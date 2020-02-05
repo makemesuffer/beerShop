@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -36,8 +37,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function SignInForm() {
+export default function SignInForm(props) {
   const classes = useStyles();
+  const { logUser, handleChange } = props;
 
   return (
     <Container component="main" maxWidth="xs" className={classes.container}>
@@ -60,6 +62,7 @@ export default function SignInForm() {
             name="login"
             autoComplete="login"
             autoFocus
+            onChange={handleChange}
           />
           <TextField
             variant="outlined"
@@ -71,10 +74,12 @@ export default function SignInForm() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={handleChange}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
+            // Че нить сделай с этим если время будет)
           />
           <Button
             type="submit"
@@ -82,6 +87,7 @@ export default function SignInForm() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={logUser}
           >
             Sign In
           </Button>
@@ -102,3 +108,8 @@ export default function SignInForm() {
     </Container>
   );
 }
+
+SignInForm.propTypes = {
+  logUser: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired
+};
