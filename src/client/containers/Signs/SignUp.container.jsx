@@ -23,13 +23,10 @@ class SignUpContainer extends React.PureComponent {
   addUser = async () => {
     const { firstName, lastName, login, birthDate, password } = this.state;
     const payload = { login, password, firstName, lastName, birthDate };
-    await createUser(payload).then(() => {
-      console.log("srabotalo??????"); // rabotaet ksta
-    });
+    await createUser(payload);
   };
 
   render() {
-    console.log(this.state.birthDate);
     return (
       <>
         <SignUpForm addUser={this.addUser} handleChange={this.handleChange} />

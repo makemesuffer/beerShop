@@ -9,7 +9,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 
-import InfoPortalContainer from "../../containers/BeerDetailsPage/InfoPortal.container";
+import InfoPortal from "../../containers/BeerDetailsPage/InfoPortal";
 
 const useStyles = makeStyles(theme => ({
   grid: {
@@ -57,7 +57,7 @@ export default function PropertiesPairing(props) {
                 <TableRow key={row.name}>
                   <TableCell component="th" scope="row">
                     {row.name}
-                    <InfoPortalContainer description={row.description} />
+                    <InfoPortal description={row.description} />
                   </TableCell>
                   <TableCell align="right">
                     <span className={classes.dot}>{row.value}</span>

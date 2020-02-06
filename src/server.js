@@ -9,7 +9,11 @@ const cfg = require("./server/config.js");
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://localhost:1337"]
+  })
+);
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(
@@ -22,6 +26,8 @@ app.use(require("./server/routes/users"));
 app.use(require("./server/routes/verify"));
 
 // Budet last vsegda
+
+// TODO: уровень репозиториев, убрать ютилс. Классы переписать(потом). Бейс репозиторий сделать, бейс сервис и тд. Редирект на клиенте. Сделать обработчик статусов
 
 app.use(require("./server/controllers/errorController"));
 

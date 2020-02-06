@@ -3,6 +3,8 @@ const initialState = {
   favoritesBeers: []
 };
 
+// TODO: action types blya zabil
+
 const favoriteReducer = (state = initialState, action) => {
   switch (action.type) {
     case "ADD_FAVORITE_SUCCESS":

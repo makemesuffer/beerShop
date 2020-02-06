@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Header(props) {
-  const { toggleMenu, handleClose, auth, anchorEi } = props;
+  const { toggleMenu, handleClose, auth, anchorEi, handleExit, user } = props;
   const classes = useStyles();
   const open = Boolean(anchorEi);
   const id = open ? "simple-popover" : undefined;
@@ -81,12 +81,12 @@ export default function Header(props) {
                     <MenuItem
                       onClick={handleClose}
                       component={RouterLink}
-                      to={auth ? "#" : "/login"}
+                      to={auth ? `/users/${user.id}` : "/login"}
                     >
                       {auth ? "My account" : "Sign in"}
                     </MenuItem>
                     <MenuItem
-                      onClick={handleClose}
+                      onClick={auth ? handleExit : handleClose}
                       component={RouterLink}
                       to={auth ? "/root" : "/sign"}
                     >
@@ -107,7 +107,12 @@ Header.propTypes = {
   toggleMenu: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   auth: PropTypes.bool.isRequired,
-  // Убери тут этот варнинг
-  anchorEi: PropTypes.oneOfType([PropTypes.oneOf([null]), PropTypes.any])
-    .isRequired
+  handleExit: PropTypes.func.isRequired,
+  anchorEi: PropTypes.oneOfType([PropTypes.oneOf([null]), PropTypes.any]),
+  user: PropTypes.objectOf(PropTypes.any)
+};
+
+Header.defaultProps = {
+  anchorEi: null,
+  user: null
 };

@@ -1,5 +1,9 @@
 import * as React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
+import SimpleSnackbar from "../components/Signs/Snackbar";
+import { exitUserSession, hideLogout } from "../store/user/actions";
 import Header from "../components/Header";
 
 class HeaderContainer extends React.PureComponent {
@@ -11,6 +15,15 @@ class HeaderContainer extends React.PureComponent {
     };
   }
 
+  componentDidMount() {
+    const { user } = this.props;
+    if (Object.entries(user).length !== 0) {
+      this.setState({ auth: true });
+    } else {
+      this.setState({ auth: false });
+    }
+  }
+
   toggleMenu = event => {
     this.setState({ anchorEi: event.currentTarget });
   };
@@ -19,17 +32,58 @@ class HeaderContainer extends React.PureComponent {
     this.setState({ anchorEi: null });
   };
 
+  handleExit = () => {
+    this.props.exitUserSession();
+  };
+
+  handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.props.hideLogout();
+  };
+
   render() {
+    const { isLogout, user } = this.props;
     const { anchorEi, auth } = this.state;
     return (
-      <Header
-        toggleMenu={this.toggleMenu}
-        anchorEi={anchorEi}
-        handleClose={this.handleClose}
-        auth={auth}
-      />
+      <>
+        <Header
+          toggleMenu={this.toggleMenu}
+          anchorEi={anchorEi}
+          handleClose={this.handleClose}
+          auth={auth}
+          handleExit={this.handleExit}
+          user={user}
+        />
+        <SimpleSnackbar
+          open={isLogout}
+          handleCloseSnackbar={this.handleCloseSnackbar}
+        />
+      </>
     );
   }
 }
 
-export default HeaderContainer;
+HeaderContainer.propTypes = {
+  user: PropTypes.objectOf(PropTypes.any),
+  exitUserSession: PropTypes.func.isRequired,
+  isLogout: PropTypes.bool,
+  hideLogout: PropTypes.func.isRequired
+};
+
+HeaderContainer.defaultProps = {
+  user: null,
+  isLogout: null
+};
+
+const mapStateToProps = state => {
+  return {
+    user: state.user.user,
+    isLogout: state.user.isLogout
+  };
+};
+
+export default connect(mapStateToProps, { exitUserSession, hideLogout })(
+  HeaderContainer
+);

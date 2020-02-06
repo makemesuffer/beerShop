@@ -1,6 +1,10 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
 import { loginUser } from "../../dataAccess/userRepository/helpers";
+import { saveUserSession } from "../../store/user/actions";
 import SignInForm from "../../components/Signs/SignInForm";
 
 class SignInContainer extends React.PureComponent {
@@ -19,10 +23,14 @@ class SignInContainer extends React.PureComponent {
 
   logUser = async e => {
     e.preventDefault();
+    const { history } = this.props;
     const { login, password } = this.state;
     const payload = { login, password };
     const test = await loginUser(payload);
-    console.log(test);
+    if (test.status === 200) {
+      this.props.saveUserSession(test.data.user);
+      history.push("/search");
+    }
   };
 
   // TODO: тебе приходит json в случае ошибки сделай типа if(success=false) { и парси контент {error} в разметку}
@@ -36,4 +44,17 @@ class SignInContainer extends React.PureComponent {
   }
 }
 
-export default SignInContainer;
+SignInContainer.propTypes = {
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
+  saveUserSession: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => {
+  return {
+    user: state.user.user
+  };
+};
+
+export default connect(mapStateToProps, { saveUserSession })(
+  withRouter(SignInContainer)
+);
