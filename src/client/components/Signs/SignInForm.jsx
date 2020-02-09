@@ -12,6 +12,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import Alert from "@material-ui/lab/Alert";
 import { Link as RouterLink } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
@@ -39,7 +40,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignInForm(props) {
   const classes = useStyles();
-  const { logUser, handleChange } = props;
+  const { logUser, handleChange, error } = props;
 
   return (
     <Container component="main" maxWidth="xs" className={classes.container}>
@@ -51,6 +52,7 @@ export default function SignInForm(props) {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
+        {error !== "" ? <Alert severity="error">{error}</Alert> : <></>}
         <form className={classes.form} noValidate>
           <TextField
             variant="outlined"
@@ -111,5 +113,6 @@ export default function SignInForm(props) {
 
 SignInForm.propTypes = {
   logUser: PropTypes.func.isRequired,
-  handleChange: PropTypes.func.isRequired
+  handleChange: PropTypes.func.isRequired,
+  error: PropTypes.string.isRequired
 };

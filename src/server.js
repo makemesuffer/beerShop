@@ -25,8 +25,6 @@ app.use(
 app.use(require("./server/routes/users"));
 app.use(require("./server/routes/verify"));
 
-// Budet last vsegda
-
 // TODO: уровень репозиториев, убрать ютилс. Классы переписать(потом). Бейс репозиторий сделать, бейс сервис и тд. Редирект на клиенте. Сделать обработчик статусов
 
 app.use(require("./server/controllers/errorController"));

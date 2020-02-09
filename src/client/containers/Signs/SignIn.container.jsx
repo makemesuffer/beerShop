@@ -12,7 +12,8 @@ class SignInContainer extends React.PureComponent {
     super(props);
     this.state = {
       login: "",
-      password: ""
+      password: "",
+      error: ""
     };
   }
 
@@ -26,19 +27,24 @@ class SignInContainer extends React.PureComponent {
     const { history } = this.props;
     const { login, password } = this.state;
     const payload = { login, password };
-    const test = await loginUser(payload);
-    if (test.status === 200) {
-      this.props.saveUserSession(test.data.user);
+    const result = await loginUser(payload);
+    if (result.data.success === true) {
+      this.props.saveUserSession(result.data.user);
       history.push("/search");
+    } else {
+      this.setState({ error: result.data.error });
     }
   };
 
-  // TODO: тебе приходит json в случае ошибки сделай типа if(success=false) { и парси контент {error} в разметку}
-
   render() {
+    const { error } = this.state;
     return (
       <>
-        <SignInForm logUser={this.logUser} handleChange={this.handleChange} />
+        <SignInForm
+          logUser={this.logUser}
+          handleChange={this.handleChange}
+          error={error}
+        />
       </>
     );
   }

@@ -85,6 +85,7 @@ exports.loginUser = wrapAsync(async (req, res) => {
     password: md5(req.body.password)
   };
   const result = await db.Users.login(userData.login, userData.password);
+  console.log(result);
   if (result) {
     const ans = {
       success: true,
@@ -99,10 +100,9 @@ exports.loginUser = wrapAsync(async (req, res) => {
       }
     };
     if (result.available) {
-      const token = await jwt.sign({ id: result._id }, config.jwtSECRET, {
+      ans.accessTOKEN = await jwt.sign({ id: result._id }, config.jwtSECRET, {
         expiresIn: "14 days"
       });
-      ans.accessTOKEN = token;
     }
     res.status(200).send(ans);
   } else {
@@ -111,7 +111,6 @@ exports.loginUser = wrapAsync(async (req, res) => {
       error: "Login or password is incorrect"
     });
   }
-  // TODO: remake norm error otpravitel
 });
 
 exports.findUser = wrapAsync(async (req, res) => {

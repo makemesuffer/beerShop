@@ -1,5 +1,7 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 
+import PropTypes from "prop-types";
 import { createUser } from "../../dataAccess/userRepository/helpers";
 import SignUpForm from "../../components/Signs/SignUpForm";
 
@@ -11,7 +13,8 @@ class SignUpContainer extends React.PureComponent {
       lastName: "",
       login: "",
       birthDate: "",
-      password: ""
+      password: "",
+      error: ""
     };
   }
 
@@ -20,19 +23,36 @@ class SignUpContainer extends React.PureComponent {
     this.setState({ [name]: e.target.value });
   };
 
-  addUser = async () => {
+  addUser = async e => {
+    e.preventDefault();
+    const { history } = this.props;
     const { firstName, lastName, login, birthDate, password } = this.state;
     const payload = { login, password, firstName, lastName, birthDate };
-    await createUser(payload);
+    const result = await createUser(payload);
+    console.log(result);
+    if (result.data.success === true) {
+      history.push("/search");
+    } else {
+      this.setState({ error: test.data.error });
+    }
   };
 
   render() {
+    const { error } = this.state;
     return (
       <>
-        <SignUpForm addUser={this.addUser} handleChange={this.handleChange} />
+        <SignUpForm
+          addUser={this.addUser}
+          handleChange={this.handleChange}
+          error={error}
+        />
       </>
     );
   }
 }
 
-export default SignUpContainer;
+SignUpContainer.propTypes = {
+  history: PropTypes.objectOf(PropTypes.any).isRequired
+};
+
+export default withRouter(SignUpContainer);
