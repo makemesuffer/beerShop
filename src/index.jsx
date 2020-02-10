@@ -6,21 +6,14 @@ import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import logger from "redux-logger";
-import * as serviceWorker from "./client/serviceWorker";
+import * as serviceWorker from "./serviceWorker";
 
-import App from "./client/App";
-import theme from "./client/styles/theme";
-import reducer from "./client/store/reducer";
-import "./client/index.css";
+import App from "./App";
+import theme from "./styles/theme";
+import reducer from "./store/reducer";
+import "./index.css";
 
 const store = createStore(reducer, applyMiddleware(thunk, logger));
-
-// TODO:  1 контейнер - 1 компонент
-
-// TODO: List
-// TODO: 2. Сделай функцию восстановления пароля по мылу, либо выдавай пароль, либо пусть сами меняют
-// TODO: 3. Сделай страничку с юзером.
-// TODO: 5. Сделай чтобы у каждого юзера была своя коллекция пива, прообгейдив модель на наличие аррея айдишек пива
 
 ReactDOM.render(
   <Provider store={store}>

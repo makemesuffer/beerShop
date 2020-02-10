@@ -52,7 +52,7 @@
     "lint": "eslint .",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "start-server": "nodemon src/server.js"
+    "start-server": "nodemon server/server.js"
   },
   "eslintConfig": {
     "extends": "react-app"

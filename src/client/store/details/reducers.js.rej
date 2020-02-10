@@ -1,4 +1,0 @@
-diff a/src/store/details/reducers.js b/src/store/details/reducers.js	(rejected hunks)
-@@ -21 +21 @@ const detailsReducer = (state = initialState, action) => {
--    case actionTypes.GET_BEER_DETAILS_ERROR:{
-+    case actionTypes.GET_BEER_DETAILS_ERROR: {
