@@ -21,7 +21,6 @@ exports.registerUser = wrapAsync(async (req, res) => {
     });
   }
 
-  console.log(password);
   if (password.length < 8) {
     res.json({
       success: false,

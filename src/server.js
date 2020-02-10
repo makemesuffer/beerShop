@@ -24,6 +24,7 @@ app.use(
 
 app.use(require("./server/routes/users"));
 app.use(require("./server/routes/verify"));
+app.use(require("./server/routes/image"));
 
 // TODO: уровень репозиториев, убрать ютилс. Классы переписать(потом). Бейс репозиторий сделать, бейс сервис и тд. Редирект на клиенте. Сделать обработчик статусов
 

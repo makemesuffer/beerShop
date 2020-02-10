@@ -29,7 +29,6 @@ class SignUpContainer extends React.PureComponent {
     const { firstName, lastName, login, birthDate, password } = this.state;
     const payload = { login, password, firstName, lastName, birthDate };
     const result = await createUser(payload);
-    console.log(result);
     if (result.data.success === true) {
       history.push("/search");
     } else {
