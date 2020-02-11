@@ -25,7 +25,7 @@ const useStyles = makeStyles({
   },
   buttons: {
     margin: "20px auto",
-    maxWidth: 150
+    maxWidth: 200
   },
   secondColumn: {
     maxWidth: "70%",
@@ -52,7 +52,7 @@ const useStyles = makeStyles({
 });
 
 export default function UserInfo(props) {
-  const { user } = props;
+  const { user, allowed } = props;
   const classes = useStyles();
   return (
     <Container component="main" maxWidth="lg">
@@ -61,9 +61,15 @@ export default function UserInfo(props) {
           <div style={{ textAlign: "center" }}>
             <img src={noAvatar} alt="chego" className={classes.media} />
             <Card className={classes.buttons}>
-              <Button variant="contained" color="primary">
-                Upload image
-              </Button>
+              {allowed ? (
+                <Button variant="contained" color="primary">
+                  Upload image
+                </Button>
+              ) : (
+                <Button variant="contained" color="primary">
+                  Add to friends
+                </Button>
+              )}
               {user.profilePicture === null ? (
                 <></>
               ) : (
@@ -114,5 +120,6 @@ export default function UserInfo(props) {
 }
 
 UserInfo.propTypes = {
-  user: PropTypes.objectOf(PropTypes.any).isRequired
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
+  allowed: PropTypes.bool.isRequired
 };

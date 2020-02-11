@@ -11,6 +11,14 @@ import BeerGrid from "../../components/LandingPage/BeerGrid";
 import { getUser } from "../../store/user/actions";
 
 class BeerListContainer extends React.PureComponent {
+  componentDidMount() {
+    const { user } = this.props;
+    const waitUser = async () => {
+      await this.props.getUser(user.id);
+    };
+    waitUser();
+  }
+
   handleLoad = () => {
     const {
       beerList,

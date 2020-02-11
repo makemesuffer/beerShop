@@ -2,8 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getUser } from "../../store/user/actions";
-import { getFavorites } from "../../store/favorite/actions";
+import { getFavorites, removeFavorite } from "../../store/user/actions";
 import FavoritesCard from "../../components/FavoritesPage/FavoritesCard";
 import FavoritesPagination from "../../components/FavoritesPage/FavoritesPagination";
 import { deleteBeer } from "../../dataAccess/userRepository/helpers";
@@ -45,7 +44,7 @@ class FavoritesListContainer extends React.PureComponent {
     const { user } = this.props;
     if (Object.entries(user).length !== 0) {
       await deleteBeer({ id, userId: user.id });
-      await this.props.getUser(user.id);
+      this.props.removeFavorite(id);
     }
   };
 
@@ -103,7 +102,7 @@ FavoritesListContainer.propTypes = {
   getFavorites: PropTypes.func.isRequired,
   favoritesBeers: PropTypes.arrayOf(PropTypes.object).isRequired,
   user: PropTypes.objectOf(PropTypes.any),
-  getUser: PropTypes.func.isRequired
+  removeFavorite: PropTypes.func.isRequired
 };
 
 FavoritesListContainer.defaultProps = {
@@ -112,11 +111,11 @@ FavoritesListContainer.defaultProps = {
 
 const mapStateToProps = state => {
   return {
-    favoritesBeers: state.favorites.favoritesBeers,
+    favoritesBeers: state.user.favoritesBeers,
     user: state.user.user
   };
 };
 
-export default connect(mapStateToProps, { getFavorites, getUser })(
+export default connect(mapStateToProps, { getFavorites, removeFavorite })(
   FavoritesListContainer
 );

@@ -52,7 +52,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function UserBeerList(props) {
-  const { beers, favoritesBeers, currentPageDecrement } = props;
+  const {
+    beers,
+    favoritesBeers,
+    handleRemove,
+    currentPageDecrement,
+    allowed
+  } = props;
   const classes = useStyles();
 
   useEffect(() => {
@@ -86,6 +92,19 @@ export default function UserBeerList(props) {
                       >
                         Open
                       </Button>
+                      {allowed ? (
+                        <Button
+                          size="small"
+                          color="primary"
+                          onClick={() => {
+                            handleRemove(elem.id);
+                          }}
+                        >
+                          Remove Favorite
+                        </Button>
+                      ) : (
+                        <></>
+                      )}
                     </CardActions>
                   </CardContent>
                 </Card>
@@ -105,20 +124,7 @@ export default function UserBeerList(props) {
 UserBeerList.propTypes = {
   beers: PropTypes.arrayOf(PropTypes.object).isRequired,
   favoritesBeers: PropTypes.arrayOf(PropTypes.object).isRequired,
-  currentPageDecrement: PropTypes.func.isRequired
+  currentPageDecrement: PropTypes.func.isRequired,
+  handleRemove: PropTypes.func.isRequired,
+  allowed: PropTypes.bool.isRequired
 };
-
-/* beer.img beer.name beer.tagline beer.abv beer.ibu
-        beer.ebc */
-
-/*
-<Button
-                      size="small"
-                      color="primary"
-                      onClick={() => {
-                        handleRemove(elem.id);
-                      }}
-                    >
-                      Remove Favorite
-                    </Button>
- */

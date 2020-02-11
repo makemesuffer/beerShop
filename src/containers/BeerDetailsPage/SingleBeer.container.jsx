@@ -22,11 +22,13 @@ class SingleBeerContainer extends React.PureComponent {
 
   componentDidMount() {
     this.props.getBeerDetailsPending(true);
-    const { id } = this.props;
-    setTimeout(() => {
+    const { user, id } = this.props;
+    const waitUser = async () => {
+      await this.props.getUser(user.id);
       this.props.getBeerDetailsPending(false);
       this.props.getBeerDetails(id);
-    }, 500);
+    };
+    waitUser();
   }
 
   createTableData = (name, value, description, id) => {

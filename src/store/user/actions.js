@@ -1,5 +1,16 @@
 import actionTypes from "./actionTypes";
 import { findUser } from "../../dataAccess/userRepository/helpers";
+import { getSingleBeer } from "../../dataAccess/beerRepository/helpers";
+
+const getFavoritesSuccess = response => ({
+  type: actionTypes.GET_FAVORITES_SUCCESS,
+  payload: response
+});
+
+const getFavoritesError = error => ({
+  type: actionTypes.GET_FAVORITES_ERROR,
+  payload: error
+});
 
 export const saveUserSession = response => ({
   type: actionTypes.SAVE_USER_SESSION,
@@ -32,3 +43,31 @@ export const getUser = id => async dispatch => {
     dispatch(getUserSuccess(response.data));
   }
 };
+
+const getForeignUserSuccess = response => ({
+  type: actionTypes.GET_FOREIGN_USER_SUCCESS,
+  payload: response
+});
+
+export const getForeignUser = id => async dispatch => {
+  const response = await findUser(id);
+  if (response.data.success === false) {
+    dispatch(getUserError(response.data.error));
+  } else {
+    dispatch(getForeignUserSuccess(response.data));
+  }
+};
+
+export const getFavorites = id => async dispatch => {
+  try {
+    const response = await getSingleBeer(id);
+    dispatch(getFavoritesSuccess(response.data));
+  } catch (e) {
+    dispatch(getFavoritesError(e));
+  }
+};
+
+export const removeFavorite = response => ({
+  type: actionTypes.REMOVE_FAVORITE_SUCCESS,
+  payload: response
+});
