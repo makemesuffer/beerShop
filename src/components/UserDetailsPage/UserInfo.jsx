@@ -41,6 +41,13 @@ const useStyles = makeStyles({
     margin: "20px auto 0",
     textAlign: "left",
     fontSize: 20
+  },
+  container: {
+    paddingBottom: "2%"
+  },
+  favBeers: {
+    textAlign: "center",
+    marginTop: 30
   }
 });
 
@@ -49,7 +56,7 @@ export default function UserInfo(props) {
   const classes = useStyles();
   return (
     <Container component="main" maxWidth="lg">
-      <Card>
+      <Card className={classes.container}>
         <div className={classes.grid}>
           <div style={{ textAlign: "center" }}>
             <img src={noAvatar} alt="chego" className={classes.media} />
@@ -98,10 +105,9 @@ export default function UserInfo(props) {
             </div>
           </div>
         </div>
-
-        <Card>
-          <p>Beer List</p>
-        </Card>
+        <Typography variant="h5" className={classes.favBeers}>
+          {user.firstName} favorites beers:
+        </Typography>
       </Card>
     </Container>
   );

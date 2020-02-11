@@ -36,9 +36,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function TitleDescription(props) {
-  const { beer, favorites, handleFavorite } = props;
+  const { beer, userBeerList, handleFavorite } = props;
   const classes = useStyles();
-  const haveInFav = favorites.includes(beer.id);
+  let haveInFav = false;
+  if (userBeerList !== null) {
+    haveInFav = userBeerList.includes(beer.id);
+  }
   return (
     <div className={classes.container}>
       <Typography variant="h3" className={classes.title}>
@@ -77,5 +80,9 @@ TitleDescription.propTypes = {
     id: PropTypes.number
   }).isRequired,
   handleFavorite: PropTypes.func.isRequired,
-  favorites: PropTypes.arrayOf(PropTypes.number).isRequired
+  userBeerList: PropTypes.arrayOf(PropTypes.number)
+};
+
+TitleDescription.defaultProps = {
+  userBeerList: null
 };

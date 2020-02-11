@@ -4,10 +4,11 @@ import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroller";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
+import { addBeer, deleteBeer } from "../../dataAccess/userRepository/helpers";
 import { continueBeerName, setBeerList } from "../../store/beer/actions";
 import { getBeerDetails } from "../../store/details/actions";
-import { addFavorite, removeFavorite } from "../../store/favorite/actions";
 import BeerGrid from "../../components/LandingPage/BeerGrid";
+import { getUser } from "../../store/user/actions";
 
 class BeerListContainer extends React.PureComponent {
   handleLoad = () => {
@@ -35,14 +36,21 @@ class BeerListContainer extends React.PureComponent {
     }
   };
 
-  handleFavorite = id => {
-    const { favorites } = this.props;
-    if (favorites.includes(id)) this.props.removeFavorite(id);
-    else this.props.addFavorite(id);
+  handleFavorite = async id => {
+    const { user } = this.props;
+    if (Object.entries(user).length !== 0) {
+      if (user.beerList.includes(id)) {
+        await deleteBeer({ id, userId: user.id });
+        await this.props.getUser(user.id);
+      } else {
+        await addBeer({ id, userId: user.id });
+        await this.props.getUser(user.id);
+      }
+    }
   };
 
   render() {
-    const { beerList, favorites, hasMoreBeers } = this.props;
+    const { beerList, user, hasMoreBeers } = this.props;
     if (beerList.length !== 0) {
       return (
         <InfiniteScroll
@@ -57,7 +65,7 @@ class BeerListContainer extends React.PureComponent {
           threshold={100}
         >
           <BeerGrid
-            favorites={favorites}
+            userBeerList={user.beerList === undefined ? null : user.beerList}
             beerList={beerList}
             handleFavorite={this.handleFavorite}
           />
@@ -70,9 +78,6 @@ class BeerListContainer extends React.PureComponent {
 
 BeerListContainer.propTypes = {
   beerList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  addFavorite: PropTypes.func.isRequired,
-  removeFavorite: PropTypes.func.isRequired,
-  favorites: PropTypes.arrayOf(PropTypes.number).isRequired,
   value: PropTypes.string.isRequired,
   page: PropTypes.number.isRequired,
   continueBeerName: PropTypes.func.isRequired,
@@ -80,26 +85,31 @@ BeerListContainer.propTypes = {
   hasMoreBeers: PropTypes.bool.isRequired,
   alcoholValue: PropTypes.number.isRequired,
   bitternessValue: PropTypes.number.isRequired,
-  colorValue: PropTypes.number.isRequired
+  colorValue: PropTypes.number.isRequired,
+  user: PropTypes.objectOf(PropTypes.any),
+  getUser: PropTypes.func.isRequired
+};
+
+BeerListContainer.defaultProps = {
+  user: null
 };
 
 const mapStateToProps = state => {
   return {
     beerList: state.beer.beerList,
-    favorites: state.favorites.favorites,
     value: state.beer.value,
     page: state.beer.page,
     hasMoreBeers: state.beer.hasMoreBeers,
     alcoholValue: state.beer.alcoholValue,
     bitternessValue: state.beer.bitternessValue,
-    colorValue: state.beer.colorValue
+    colorValue: state.beer.colorValue,
+    user: state.user.user
   };
 };
 
 export default connect(mapStateToProps, {
-  addFavorite,
-  removeFavorite,
   continueBeerName,
   setBeerList,
-  getBeerDetails
+  getBeerDetails,
+  getUser
 })(BeerListContainer);

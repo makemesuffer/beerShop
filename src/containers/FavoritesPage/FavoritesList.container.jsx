@@ -2,9 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { removeFavorite, getFavorites } from "../../store/favorite/actions";
+import { getUser } from "../../store/user/actions";
+import { getFavorites } from "../../store/favorite/actions";
 import FavoritesCard from "../../components/FavoritesPage/FavoritesCard";
 import FavoritesPagination from "../../components/FavoritesPage/FavoritesPagination";
+import { deleteBeer } from "../../dataAccess/userRepository/helpers";
 
 class FavoritesListContainer extends React.PureComponent {
   constructor(props) {
@@ -14,14 +16,17 @@ class FavoritesListContainer extends React.PureComponent {
     };
   }
 
+  // TODO: мб debounce попробуешь тут?
   componentDidMount() {
-    const { favorites, favoritesBeers } = this.props;
+    const { user, favoritesBeers } = this.props;
     const ids = favoritesBeers.map(elem => {
       return elem.id;
     });
-    favorites.forEach(elem => {
-      if (!ids.includes(elem)) this.props.getFavorites(elem);
-    });
+    if (Object.entries(user).length !== 0) {
+      user.beerList.forEach(elem => {
+        if (!ids.includes(elem)) this.props.getFavorites(elem);
+      });
+    }
   }
 
   currentPageIncrement = () => {
@@ -36,13 +41,19 @@ class FavoritesListContainer extends React.PureComponent {
     this.setState({ currentPage: page });
   };
 
-  handleRemove = id => {
-    this.props.removeFavorite(id);
+  handleRemove = async id => {
+    const { user } = this.props;
+    if (Object.entries(user).length !== 0) {
+      await deleteBeer({ id, userId: user.id });
+      await this.props.getUser(user.id);
+    }
   };
 
   render() {
     const { favoritesBeers } = this.props;
     const { currentPage } = this.state;
+
+    const user = null;
 
     const index = currentPage === 1 ? 0 : (currentPage - 1) * 5;
     const beers = favoritesBeers.slice(index, index + 5);
@@ -75,6 +86,7 @@ class FavoritesListContainer extends React.PureComponent {
           currentPageDecrement={this.currentPageDecrement}
         />
         <FavoritesPagination
+          userPage={user !== null ? user.id : null}
           pageArray={pageArray}
           currentPage={currentPage}
           paginationFinal={paginationFinal}
@@ -88,19 +100,23 @@ class FavoritesListContainer extends React.PureComponent {
 }
 
 FavoritesListContainer.propTypes = {
-  favorites: PropTypes.arrayOf(PropTypes.number).isRequired,
   getFavorites: PropTypes.func.isRequired,
   favoritesBeers: PropTypes.arrayOf(PropTypes.object).isRequired,
-  removeFavorite: PropTypes.func.isRequired
+  user: PropTypes.objectOf(PropTypes.any),
+  getUser: PropTypes.func.isRequired
+};
+
+FavoritesListContainer.defaultProps = {
+  user: null
 };
 
 const mapStateToProps = state => {
   return {
-    favorites: state.favorites.favorites,
-    favoritesBeers: state.favorites.favoritesBeers
+    favoritesBeers: state.favorites.favoritesBeers,
+    user: state.user.user
   };
 };
 
-export default connect(mapStateToProps, { removeFavorite, getFavorites })(
+export default connect(mapStateToProps, { getFavorites, getUser })(
   FavoritesListContainer
 );

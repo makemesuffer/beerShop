@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { addBeer, deleteBeer } from "../../dataAccess/userRepository/helpers";
+import { getUser } from "../../store/user/actions";
 import TitleDescription from "../../components/BeerDetailsPage/TitleDescription";
-import { addFavorite, removeFavorite } from "../../store/favorite/actions";
 import {
   getBeerDetails,
   getBeerDetailsPending
@@ -21,11 +21,12 @@ class SingleBeerContainer extends React.PureComponent {
   }
 
   componentDidMount() {
+    this.props.getBeerDetailsPending(true);
     const { id } = this.props;
     setTimeout(() => {
       this.props.getBeerDetailsPending(false);
       this.props.getBeerDetails(id);
-    }, 3000);
+    }, 500);
   }
 
   createTableData = (name, value, description, id) => {
@@ -42,24 +43,20 @@ class SingleBeerContainer extends React.PureComponent {
   };
 
   handleFavorite = async id => {
-    const { favorites, user } = this.props;
-    if (favorites.includes(id)) {
-      this.props.removeFavorite(id);
-      if (Object.entries(user).length !== 0) {
-        const result = await deleteBeer({ id, userId: user.id });
-        console.log(result);
-      }
-    } else {
-      this.props.addFavorite(id);
-      if (Object.entries(user).length !== 0) {
-        const result = await addBeer({ id, userId: user.id });
-        console.log(result);
+    const { user } = this.props;
+    if (Object.entries(user).length !== 0) {
+      if (user.beerList.includes(id)) {
+        await deleteBeer({ id, userId: user.id });
+        await this.props.getUser(user.id);
+      } else {
+        await addBeer({ id, userId: user.id });
+        await this.props.getUser(user.id);
       }
     }
   };
 
   render() {
-    const { favorites, details, error } = this.props;
+    const { user, details, error } = this.props;
     if (error !== null) {
       return <ErrorBoundary error={error} />;
     }
@@ -69,7 +66,7 @@ class SingleBeerContainer extends React.PureComponent {
     return (
       <>
         <TitleDescription
-          favorites={favorites}
+          userBeerList={user.beerList === undefined ? null : user.beerList}
           beer={details[0]}
           handleFavorite={this.handleFavorite}
         />
@@ -89,25 +86,22 @@ class SingleBeerContainer extends React.PureComponent {
 
 SingleBeerContainer.propTypes = {
   id: PropTypes.number.isRequired,
-  addFavorite: PropTypes.func.isRequired,
-  favorites: PropTypes.arrayOf(PropTypes.number).isRequired,
-  removeFavorite: PropTypes.func.isRequired,
   getBeerDetails: PropTypes.func.isRequired,
   details: PropTypes.arrayOf(PropTypes.object).isRequired,
   getBeerDetailsPending: PropTypes.func.isRequired,
-  error: PropTypes.oneOfType([PropTypes.oneOf([null]), PropTypes.string])
-    .isRequired,
-  user: PropTypes.objectOf(PropTypes.any)
+  error: PropTypes.string,
+  user: PropTypes.objectOf(PropTypes.any),
+  getUser: PropTypes.func.isRequired
 };
 
 SingleBeerContainer.defaultProps = {
-  user: null
+  user: null,
+  error: null
 };
 
 const mapStateToProps = state => {
   return {
     beerList: state.beer.beerList,
-    favorites: state.favorites.favorites,
     details: state.details.item,
     isBusy: state.details.isBusy,
     error: state.details.error,
@@ -116,8 +110,7 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-  addFavorite,
-  removeFavorite,
   getBeerDetails,
-  getBeerDetailsPending
+  getBeerDetailsPending,
+  getUser
 })(SingleBeerContainer);

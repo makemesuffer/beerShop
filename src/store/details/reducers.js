@@ -16,7 +16,8 @@ const detailsReducer = (state = initialState, action) => {
     case actionTypes.GET_BEER_DETAILS_PENDING:
       return {
         ...state,
-        isBusy: action.payload
+        isBusy: action.payload,
+        item: []
       };
     case actionTypes.GET_BEER_DETAILS_ERROR: {
       return {

@@ -22,8 +22,11 @@ const useStyles = makeStyles({
 
 export default function BeerItem(props) {
   const classes = useStyles();
-  const { beer, id, handleFavorite, favorites } = props;
-  const haveInFav = favorites.includes(beer.id);
+  const { beer, id, handleFavorite, userBeerList } = props;
+  let haveInFav = false;
+  if (userBeerList !== null) {
+    haveInFav = userBeerList.includes(beer.id);
+  }
   return (
     <Card className={classes.card}>
       <CardActionArea>
@@ -79,5 +82,9 @@ BeerItem.propTypes = {
   }).isRequired,
   id: PropTypes.number.isRequired,
   handleFavorite: PropTypes.func.isRequired,
-  favorites: PropTypes.arrayOf(PropTypes.number).isRequired
+  userBeerList: PropTypes.arrayOf(PropTypes.number)
+};
+
+BeerItem.defaultProps = {
+  userBeerList: null
 };

@@ -71,6 +71,8 @@ exports.registerUser = wrapAsync(async (req, res) => {
   }
 });
 
+// TODO: login tol'ko po available
+
 exports.loginUser = wrapAsync(async (req, res) => {
   if (!req.body.password || !req.body.login) {
     res.json({
@@ -94,7 +96,8 @@ exports.loginUser = wrapAsync(async (req, res) => {
         lastName: result.lastName,
         birthDate: result.birthDate,
         profilePicture: result.profilePicture,
-        available: result.available
+        available: result.available,
+        beerList: result.beerList
       }
     };
     if (result.available) {
@@ -117,12 +120,14 @@ exports.findUser = wrapAsync(async (req, res) => {
   const result = await db.Users.getOneByID(id);
   if (result) {
     const response = {
+      id: result._id,
       login: result.login,
       firstName: result.firstName,
       lastName: result.lastName,
       birthDate: result.birthDate,
       createdAt: result.createdAt,
-      profilePicture: result.profilePicture
+      profilePicture: result.profilePicture,
+      beerList: result.beerList
     };
     res.status(200).send(response);
   } else {

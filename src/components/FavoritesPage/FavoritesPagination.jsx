@@ -31,11 +31,12 @@ export default function FavoritesPagination(props) {
     currentPageDecrement,
     currentPageIncrement,
     setCurrentPage,
-    currentPage
+    currentPage,
+    userId
   } = props;
   const classes = useStyles();
 
-  if (paginationFinal.length <= 1) {
+  if (paginationFinal.length <= 1 && userId === null) {
     return <Redirect to={`/favorites/${currentPage}`} />;
   }
 
@@ -46,7 +47,9 @@ export default function FavoritesPagination(props) {
           <Button
             onClick={currentPageDecrement}
             component={RouterLink}
-            to={`/favorites/${currentPage}`}
+            to={
+              userId !== null ? `/users/${userId}` : `/favorites/${currentPage}`
+            }
           >
             {" "}
             &lt; &lt;{" "}
@@ -70,7 +73,7 @@ export default function FavoritesPagination(props) {
                 setCurrentPage(number);
               }}
               component={RouterLink}
-              to={`/favorites/${number}`}
+              to={userId !== null ? `/users/${userId}` : `/favorites/${number}`}
             >
               {number}
             </Button>
@@ -82,7 +85,9 @@ export default function FavoritesPagination(props) {
           <Button
             onClick={currentPageIncrement}
             component={RouterLink}
-            to={`/favorites/${currentPage}`}
+            to={
+              userId !== null ? `/users/${userId}` : `/favorites/${currentPage}`
+            }
           >
             {" "}
             &gt; &gt;{" "}
@@ -103,5 +108,10 @@ FavoritesPagination.propTypes = {
   paginationFinal: PropTypes.arrayOf(PropTypes.number).isRequired,
   currentPageIncrement: PropTypes.func.isRequired,
   currentPageDecrement: PropTypes.func.isRequired,
-  setCurrentPage: PropTypes.func.isRequired
+  setCurrentPage: PropTypes.func.isRequired,
+  userId: PropTypes.string
+};
+
+FavoritesPagination.defaultProps = {
+  userId: null
 };

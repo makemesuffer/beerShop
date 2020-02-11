@@ -1,5 +1,7 @@
 import actionTypes from "./actionTypes";
 
+// TODO: сделай типа разграничения: юзер - конкретный юзер, форейнЮзерс - лист из объектов других юзеров
+
 const initialState = {
   user: {},
   error: null,
