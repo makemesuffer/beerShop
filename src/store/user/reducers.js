@@ -1,7 +1,5 @@
 import actionTypes from "./actionTypes";
 
-// TODO: сделай типа разграничения: юзер - конкретный юзер, форейнЮзерс - лист из объектов других юзеров
-
 const initialState = {
   user: {},
   foreignUser: {},
@@ -60,8 +58,6 @@ const userReducer = (state = initialState, action) => {
         ...state,
         favoritesBeers: [...state.favoritesBeers, ...action.payload]
       };
-    case actionTypes.GET_FAVORITES_ERROR:
-      return console.log(action.payload);
     case actionTypes.REMOVE_FAVORITE_SUCCESS:
       return {
         ...state,

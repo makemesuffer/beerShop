@@ -15,7 +15,6 @@ class FavoritesListContainer extends React.PureComponent {
     };
   }
 
-  // TODO: мб debounce попробуешь тут?
   componentDidMount() {
     const { user, favoritesBeers } = this.props;
     const ids = favoritesBeers.map(elem => {

@@ -50,8 +50,6 @@ const beerReducer = (state = initialState, action) => {
         ...state,
         showFilters: action.payload
       };
-    case actionTypes.GET_BEER_ERROR:
-      return console.error(action.payload);
     default:
       return state;
   }

@@ -3,12 +3,10 @@ const db = require("../loaders/db");
 
 exports.addBeer = wrapAsync(async (req, res) => {
   const { id, userId } = req.body;
-
   const data = {
     id,
     userId
   };
-
   try {
     await db.Users.addBeer(data);
     return res.json({

@@ -1,4 +1,4 @@
-const db = require("../utils/dbUtils");
+const db = require("../repositories/dbRepository");
 
 db.setUpConnection();
 

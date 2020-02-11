@@ -1,5 +1,5 @@
 const handleErrorBoundary = (error, req, res) => {
-  return res.status(400).json({
+  return res.status(error.status).json({
     success: false,
     message: error.message
   });

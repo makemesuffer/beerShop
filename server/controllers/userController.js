@@ -71,8 +71,6 @@ exports.registerUser = wrapAsync(async (req, res) => {
   }
 });
 
-// TODO: login tol'ko po available
-
 exports.loginUser = wrapAsync(async (req, res) => {
   if (!req.body.password || !req.body.login) {
     res.json({
@@ -96,7 +94,6 @@ exports.loginUser = wrapAsync(async (req, res) => {
         lastName: result.lastName,
         birthDate: result.birthDate,
         profilePicture: result.profilePicture,
-        available: result.available,
         beerList: result.beerList
       }
     };
@@ -107,7 +104,7 @@ exports.loginUser = wrapAsync(async (req, res) => {
     }
     res.status(200).send(ans);
   } else {
-    res.json({
+    return res.json({
       success: false,
       error: "Login or password is incorrect"
     });
@@ -116,7 +113,6 @@ exports.loginUser = wrapAsync(async (req, res) => {
 
 exports.findUser = wrapAsync(async (req, res) => {
   const { id } = req.params;
-  // вот тут вебтокен юзни а то узнают пароль и все по судам таскаться будешь
   const result = await db.Users.getOneByID(id);
   if (result) {
     const response = {

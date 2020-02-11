@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const user = require("./userUtils");
+const user = require("./userRepository");
 
 module.exports.setUpConnection = () => {
   mongoose.connect(

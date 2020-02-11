@@ -6,6 +6,10 @@ const morgan = require("morgan");
 require("dotenv").config();
 
 const cfg = require("./config.js");
+const userRouter = require("./routes/users");
+const verifyRouter = require("./routes/verify");
+const beerRouter = require("./routes/beers");
+const errorController = require("./controllers/errorController");
 
 const app = express();
 
@@ -22,12 +26,11 @@ app.use(
   })
 );
 
-app.use(require("./routes/users"));
-app.use(require("./routes/verify"));
-app.use(require("./routes/image"));
-app.use(require("./routes/beers"));
+app.use(userRouter);
+app.use(verifyRouter);
+app.use(beerRouter);
 
-app.use(require("./controllers/errorController"));
+app.use(errorController);
 
 app.listen(cfg.EXPRESS_PORT, () => {
   console.log(`Express server running on port ${cfg.EXPRESS_PORT}.`);

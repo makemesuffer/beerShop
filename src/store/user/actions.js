@@ -7,11 +7,6 @@ const getFavoritesSuccess = response => ({
   payload: response
 });
 
-const getFavoritesError = error => ({
-  type: actionTypes.GET_FAVORITES_ERROR,
-  payload: error
-});
-
 export const saveUserSession = response => ({
   type: actionTypes.SAVE_USER_SESSION,
   payload: response
@@ -59,12 +54,8 @@ export const getForeignUser = id => async dispatch => {
 };
 
 export const getFavorites = id => async dispatch => {
-  try {
-    const response = await getSingleBeer(id);
-    dispatch(getFavoritesSuccess(response.data));
-  } catch (e) {
-    dispatch(getFavoritesError(e));
-  }
+  const response = await getSingleBeer(id);
+  dispatch(getFavoritesSuccess(response.data));
 };
 
 export const removeFavorite = response => ({

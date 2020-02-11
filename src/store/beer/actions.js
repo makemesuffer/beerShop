@@ -2,8 +2,6 @@ import { getListOfBeers } from "../../dataAccess/beerRepository/helpers";
 
 import actionTypes from "./actionTypes";
 
-// SETTERS
-
 export const setValueSuccess = response => ({
   type: actionTypes.SET_VALUE_SUCCESS,
   payload: response
@@ -24,13 +22,6 @@ export const setFiltersValue = array => ({
   payload: array
 });
 
-// GETTERS
-
-const getBeerError = error => ({
-  type: actionTypes.GET_BEER_ERROR,
-  payload: error
-});
-
 const getBeerSuccess = response => ({
   type: actionTypes.GET_BEER_SUCCESS,
   payload: response
@@ -42,14 +33,10 @@ const updateBeerSuccess = response => ({
 });
 
 export const getBeer = (page, name, abv, ibu, ebc) => async dispatch => {
-  try {
-    let response;
-    if (name === "") response = await getListOfBeers(page);
-    else response = await getListOfBeers(page, name, abv, ibu, ebc);
-    dispatch(getBeerSuccess(response.data));
-  } catch (e) {
-    dispatch(getBeerError(e));
-  }
+  let response;
+  if (name === "") response = await getListOfBeers(page);
+  else response = await getListOfBeers(page, name, abv, ibu, ebc);
+  dispatch(getBeerSuccess(response.data));
 };
 
 export const continueBeerName = (
@@ -59,10 +46,6 @@ export const continueBeerName = (
   ibu,
   ebc
 ) => async dispatch => {
-  try {
-    const response = await getListOfBeers(page, name, abv, ibu, ebc);
-    dispatch(updateBeerSuccess(response.data));
-  } catch (e) {
-    dispatch(getBeerError(e));
-  }
+  const response = await getListOfBeers(page, name, abv, ibu, ebc);
+  dispatch(updateBeerSuccess(response.data));
 };
