@@ -1,42 +1,12 @@
 const wrapAsync = require("../helpers/asyncErrorHandler");
-const db = require("../loaders/db");
+const beerController = require("../services/beerServices");
 
 exports.addBeer = wrapAsync(async (req, res) => {
-  const { id, userId } = req.body;
-  const data = {
-    id,
-    userId
-  };
-  try {
-    await db.Users.addBeer(data);
-    return res.json({
-      success: true,
-      message: "beer added"
-    });
-  } catch (e) {
-    return res.json({
-      success: false,
-      message: "unknown error met"
-    });
-  }
+  const message = await beerController.beerAdd(req.body);
+  return res.json(message);
 });
 
 exports.deleteBeer = wrapAsync(async (req, res) => {
-  const { id, userId } = req.body;
-  const data = {
-    id,
-    userId
-  };
-  try {
-    await db.Users.deleteBeer(data);
-    return res.json({
-      success: true,
-      message: "beer deleted"
-    });
-  } catch (e) {
-    return res.json({
-      success: false,
-      message: "unknown error met"
-    });
-  }
+  const message = await beerController.beerDelete(req.body);
+  return res.json(message);
 });

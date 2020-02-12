@@ -8,22 +8,14 @@ module.exports.login = (login, password) => {
 };
 
 module.exports.create = data => {
-  const {
-    login,
-    password,
-    firstName,
-    lastName,
-    profilePicture,
-    birthDate
-  } = data;
   const user = new User({
-    login,
-    password,
-    firstName,
-    lastName,
-    birthDate,
+    login: data.login,
+    password: data.password,
+    firstName: data.firstName,
+    lastName: data.lastName,
+    birthDate: data.birthDate,
     createdAt: new Date(),
-    profilePicture: profilePicture || null,
+    profilePicture: data.profilePicture || null,
     available: false
   });
   return user.save();

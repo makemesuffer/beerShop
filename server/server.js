@@ -5,17 +5,15 @@ const morgan = require("morgan");
 
 require("dotenv").config();
 
+const router = require("./routes/router");
 const cfg = require("./config.js");
-const userRouter = require("./routes/users");
-const verifyRouter = require("./routes/verify");
-const beerRouter = require("./routes/beers");
 const errorController = require("./controllers/errorController");
 
 const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:1337"]
+    origin: [cfg.client_Options.url, cfg.url]
   })
 );
 app.use(morgan("dev"));
@@ -26,15 +24,10 @@ app.use(
   })
 );
 
-app.use(userRouter);
-app.use(verifyRouter);
-app.use(beerRouter);
+app.use(router);
 
 app.use(errorController);
 
 app.listen(cfg.EXPRESS_PORT, () => {
   console.log(`Express server running on port ${cfg.EXPRESS_PORT}.`);
 });
-
-// TODO: Сделай функцию восстановления пароля по мылу
-// TODO: проверка логина через авейлабл
