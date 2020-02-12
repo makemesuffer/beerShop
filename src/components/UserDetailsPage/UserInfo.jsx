@@ -27,6 +27,10 @@ const useStyles = makeStyles({
     margin: "20px auto",
     maxWidth: 200
   },
+  button: {
+    marginTop: 10,
+    marginBottom: 10
+  },
   secondColumn: {
     maxWidth: "70%",
     margin: "50px auto 0"
@@ -62,9 +66,23 @@ export default function UserInfo(props) {
             <img src={noAvatar} alt="chego" className={classes.media} />
             <Card className={classes.buttons}>
               {allowed ? (
-                <Button variant="contained" color="primary">
-                  Upload image
-                </Button>
+                <>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                  >
+                    Upload Image
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    href={`/users/${user.id}/change-password`}
+                  >
+                    Change Password
+                  </Button>
+                </>
               ) : (
                 <Button variant="contained" color="primary">
                   Add to friends

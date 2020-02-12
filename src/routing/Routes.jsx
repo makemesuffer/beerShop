@@ -8,6 +8,7 @@ import SignInPage from "../pages/SignInPage";
 import SignUpPage from "../pages/SignUpPage";
 import VerifyPage from "../pages/VerifyPage";
 import UserDetailsPage from "../pages/UserDetailsPage";
+import ChangePasswordPage from "../pages/ChangePasswordPage";
 
 const Routes = () => {
   return (
@@ -33,8 +34,11 @@ const Routes = () => {
       <Route path={routes.verify}>
         <VerifyPage />
       </Route>
-      <Route path={routes.user}>
+      <Route exact path={routes.user}>
         <UserDetailsPage />
+      </Route>
+      <Route path={routes.changePassword}>
+        <ChangePasswordPage />
       </Route>
       <Route path="*">
         <Redirect to={routes.root} />

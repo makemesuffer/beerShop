@@ -35,3 +35,6 @@ app.use(errorController);
 app.listen(cfg.EXPRESS_PORT, () => {
   console.log(`Express server running on port ${cfg.EXPRESS_PORT}.`);
 });
+
+// TODO: Сделай функцию восстановления пароля по мылу
+// TODO: проверка логина через авейлабл

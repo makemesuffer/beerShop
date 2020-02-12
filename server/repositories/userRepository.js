@@ -14,8 +14,7 @@ module.exports.create = data => {
     firstName,
     lastName,
     profilePicture,
-    birthDate,
-    available
+    birthDate
   } = data;
   const user = new User({
     login,
@@ -25,7 +24,7 @@ module.exports.create = data => {
     birthDate,
     createdAt: new Date(),
     profilePicture: profilePicture || null,
-    available
+    available: false
   });
   return user.save();
 };
@@ -42,6 +41,10 @@ module.exports.getOneByID = id => {
 
 module.exports.findEmail = login => {
   return Users.findOne({ login });
+};
+
+module.exports.findPassword = password => {
+  return Users.findOne({ password });
 };
 
 module.exports.addBeer = data => {

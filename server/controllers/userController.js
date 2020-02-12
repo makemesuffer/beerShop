@@ -84,7 +84,7 @@ exports.loginUser = wrapAsync(async (req, res) => {
     password: md5(req.body.password)
   };
   const result = await db.Users.login(userData.login, userData.password);
-  if (result) {
+  if (result && result.available === true) {
     const ans = {
       success: true,
       user: {
