@@ -16,3 +16,9 @@ export const deleteBeer = payload => api.post(`/delete-beer`, payload);
 
 export const changePassword = payload =>
   api.post(`/users/:id/change-password`, payload);
+
+export const forgotPassword = payload => api.post(`/password`, payload);
+
+export const checkMessage = payload => api.post(`/confirm`, payload);
+
+export const replacePassword = payload => api.post(`/pass`, payload);

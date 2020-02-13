@@ -31,12 +31,18 @@ module.exports.getOneByID = id => {
   }
 };
 
+// TODO: перепиши эти три функции в одну
+
 module.exports.findEmail = login => {
   return Users.findOne({ login });
 };
 
 module.exports.findPassword = password => {
   return Users.findOne({ password });
+};
+
+module.exports.findCode = code => {
+  return Users.findOne({ resetCode: code });
 };
 
 module.exports.addBeer = data => {

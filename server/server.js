@@ -31,3 +31,6 @@ app.use(errorController);
 app.listen(cfg.EXPRESS_PORT, () => {
   console.log(`Express server running on port ${cfg.EXPRESS_PORT}.`);
 });
+
+// TODO: восстановление по мылу
+// TODO: аплоад картинок

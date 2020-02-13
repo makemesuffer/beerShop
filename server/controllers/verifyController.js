@@ -14,3 +14,18 @@ exports.changePassword = wrapAsync(async (req, res) => {
   const message = await verifyServices.passwordChange(req.body);
   return res.json(message);
 });
+
+exports.forgotPassword = wrapAsync(async (req, res) => {
+  const message = await verifyServices.passwordForgot(req.body);
+  return res.json(message);
+});
+
+exports.checkCode = wrapAsync(async (req, res) => {
+  const message = await verifyServices.codeCheck(req.body);
+  return res.json(message);
+});
+
+exports.replacePassword = wrapAsync(async (req, res) => {
+  const message = await verifyServices.passwordReplace(req.body);
+  return res.json(message);
+});

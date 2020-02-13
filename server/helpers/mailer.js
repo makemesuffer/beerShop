@@ -31,8 +31,7 @@ class Mailer {
           to: data.login,
           from: "vikadarova1337@gmail.com",
           subject: `Beer Shop | Reset Password`,
-          html: `Hello.<br> Success reset password for account: ${data.login}<br><br>
-			        		New password: ${data.password}`
+          html: `Hello.<br> Please, enter this code to reset your password --- <h1>${data.code}</h1>`
         };
         break;
       }

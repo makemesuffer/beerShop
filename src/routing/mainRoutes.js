@@ -8,5 +8,6 @@ export default {
   signUp: "/sign",
   verify: "/register",
   user: "/users/:id",
-  changePassword: "/users/:id/change-password"
+  changePassword: "/users/:id/change-password",
+  forgotPassword: "/password"
 };

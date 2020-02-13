@@ -9,6 +9,7 @@ import SignUpPage from "../pages/SignUpPage";
 import VerifyPage from "../pages/VerifyPage";
 import UserDetailsPage from "../pages/UserDetailsPage";
 import ChangePasswordPage from "../pages/ChangePasswordPage";
+import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 
 const Routes = () => {
   return (
@@ -39,6 +40,9 @@ const Routes = () => {
       </Route>
       <Route path={routes.changePassword}>
         <ChangePasswordPage />
+      </Route>
+      <Route path={routes.forgotPassword}>
+        <ForgotPasswordPage />
       </Route>
       <Route path="*">
         <Redirect to={routes.root} />

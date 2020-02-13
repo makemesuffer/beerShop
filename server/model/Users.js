@@ -9,7 +9,8 @@ const UserSchema = mongoose.Schema({
   profilePicture: { type: String },
   available: { type: Boolean },
   createdAt: { type: Date },
-  beerList: [{ type: Number }]
+  beerList: [{ type: Number }],
+  resetCode: { type: String }
 });
 
 const User = mongoose.model("Users", UserSchema);
