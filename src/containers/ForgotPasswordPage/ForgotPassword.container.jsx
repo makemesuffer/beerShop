@@ -36,7 +36,7 @@ class ForgotPasswordContainer extends React.PureComponent {
     const payload = { email };
     const message = await forgotPassword(payload);
     if (message.data.success === true) {
-      this.setState({ appear: true });
+      this.setState({ appear: true, error: "" });
     } else {
       this.setState({ error: message.data.error });
     }
@@ -45,10 +45,9 @@ class ForgotPasswordContainer extends React.PureComponent {
   handleCheck = async e => {
     e.preventDefault();
     const { code } = this.state;
-    console.log(code);
     const message = await checkMessage({ code });
     if (message.data.success === true) {
-      this.setState({ pass: true, id: message.data.id });
+      this.setState({ pass: true, id: message.data.id, error: "" });
     } else {
       this.setState({ error: message.data.error });
     }
@@ -61,7 +60,7 @@ class ForgotPasswordContainer extends React.PureComponent {
     const payload = { id, newPassword, repeatPassword };
     const message = await replacePassword(payload);
     if (message.data.success === true) {
-      this.setState({ success: message.data.message });
+      this.setState({ success: message.data.message, error: "" });
       setTimeout(() => {
         history.replace("/login");
       }, 3000);

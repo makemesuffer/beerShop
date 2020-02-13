@@ -94,7 +94,7 @@ export default function SignInForm(props) {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link component={RouterLink} to="/search">
+              <Link component={RouterLink} to="/password">
                 Forgot password?
               </Link>
             </Grid>
