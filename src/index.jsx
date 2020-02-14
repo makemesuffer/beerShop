@@ -12,8 +12,14 @@ import App from "./App";
 import theme from "./styles/theme";
 import reducer from "./store/reducer";
 import "./index.css";
+import { saveUserSessionSuccess } from "./store/user/actions";
 
 const store = createStore(reducer, applyMiddleware(thunk, logger));
+
+if (localStorage.user) {
+  const user = JSON.parse(localStorage.user);
+  store.dispatch(saveUserSessionSuccess([user, true]));
+}
 
 ReactDOM.render(
   <Provider store={store}>

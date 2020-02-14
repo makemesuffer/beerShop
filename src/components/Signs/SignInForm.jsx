@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignInForm(props) {
   const classes = useStyles();
-  const { logUser, handleChange, error } = props;
+  const { logUser, handleChange, error, handleSwitch } = props;
 
   return (
     <Container component="main" maxWidth="xs" className={classes.container}>
@@ -79,8 +79,15 @@ export default function SignInForm(props) {
             onChange={handleChange}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={
+              <Checkbox
+                onClick={handleSwitch}
+                value="remember"
+                color="primary"
+              />
+            }
             label="Remember me"
+            value="remember"
           />
           <Button
             type="submit"
@@ -113,5 +120,6 @@ export default function SignInForm(props) {
 SignInForm.propTypes = {
   logUser: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
-  error: PropTypes.string.isRequired
+  error: PropTypes.string.isRequired,
+  handleSwitch: PropTypes.func.isRequired
 };

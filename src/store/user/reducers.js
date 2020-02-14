@@ -7,25 +7,28 @@ const initialState = {
   isLogout: false,
   isBusy: true,
   favoritesBeers: [],
-  allowed: false
+  allowed: false,
+  rememberMe: false
 };
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.SAVE_USER_SESSION:
+    case actionTypes.SAVE_USER_SESSION_SUCCESS:
       return {
         ...state,
-        user: action.payload,
+        user: action.payload[0],
+        rememberMe: action.payload[1],
         error: null
       };
-    case actionTypes.EXIT_USER_SESSION:
+    case actionTypes.EXIT_USER_SESSION_SUCCESS:
       return {
         ...state,
         user: {},
         isLogout: true,
         foreignUser: {},
         favoritesBeers: [],
-        allowed: false
+        allowed: false,
+        rememberMe: false
       };
     case actionTypes.HIDE_LOGOUT:
       return {

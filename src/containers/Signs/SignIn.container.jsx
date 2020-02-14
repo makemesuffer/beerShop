@@ -13,7 +13,8 @@ class SignInContainer extends React.PureComponent {
     this.state = {
       login: "",
       password: "",
-      error: ""
+      error: "",
+      rememberMe: false
     };
   }
 
@@ -22,14 +23,19 @@ class SignInContainer extends React.PureComponent {
     this.setState({ [name]: e.target.value });
   };
 
+  handleSwitch = () => {
+    const { rememberMe } = this.state;
+    this.setState({ rememberMe: !rememberMe });
+  };
+
   logUser = async e => {
     e.preventDefault();
     const { history } = this.props;
-    const { login, password } = this.state;
+    const { login, password, rememberMe } = this.state;
     const payload = { login, password };
     const result = await loginUser(payload);
     if (result.data.success === true) {
-      this.props.saveUserSession(result.data.user);
+      this.props.saveUserSession([result.data.user, rememberMe]);
       history.push("/search");
     } else {
       this.setState({ error: result.data.error });
@@ -44,6 +50,7 @@ class SignInContainer extends React.PureComponent {
           logUser={this.logUser}
           handleChange={this.handleChange}
           error={error}
+          handleSwitch={this.handleSwitch}
         />
       </>
     );

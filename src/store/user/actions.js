@@ -7,14 +7,27 @@ const getFavoritesSuccess = response => ({
   payload: response
 });
 
-export const saveUserSession = response => ({
-  type: actionTypes.SAVE_USER_SESSION,
+export const saveUserSessionSuccess = response => ({
+  type: actionTypes.SAVE_USER_SESSION_SUCCESS,
   payload: response
 });
 
-export const exitUserSession = () => ({
-  type: actionTypes.EXIT_USER_SESSION
+export const saveUserSession = data => dispatch => {
+  console.log(data[0]);
+  if (data[1] === true) {
+    localStorage.setItem("user", JSON.stringify(data[0]));
+  }
+  dispatch(saveUserSessionSuccess(data));
+};
+
+const exitUserSessionSuccess = () => ({
+  type: actionTypes.EXIT_USER_SESSION_SUCCESS
 });
+
+export const exitUserSession = () => dispatch => {
+  localStorage.removeItem("user");
+  dispatch(exitUserSessionSuccess());
+};
 
 export const hideLogout = () => ({
   type: actionTypes.HIDE_LOGOUT
