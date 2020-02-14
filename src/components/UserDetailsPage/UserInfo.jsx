@@ -52,28 +52,49 @@ const useStyles = makeStyles({
   favBeers: {
     textAlign: "center",
     marginTop: 30
+  },
+  hide: {
+    display: "none"
   }
 });
 
 export default function UserInfo(props) {
-  const { user, allowed } = props;
+  const { user, allowed, handleUpload, handleDelete } = props;
   const classes = useStyles();
   return (
     <Container component="main" maxWidth="lg">
       <Card className={classes.container}>
         <div className={classes.grid}>
           <div style={{ textAlign: "center" }}>
-            <img src={noAvatar} alt="chego" className={classes.media} />
+            <img
+              src={
+                user.profilePicture === null ? noAvatar : user.profilePicture
+              }
+              alt="user"
+              className={classes.media}
+            />
             <Card className={classes.buttons}>
               {allowed ? (
                 <>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                  >
-                    Upload Image
-                  </Button>
+                  <input
+                    accept="image/*"
+                    className={classes.hide}
+                    id="raised-button-file"
+                    multiple
+                    type="file"
+                    onChange={handleUpload}
+                  />
+                  {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                  <label htmlFor="raised-button-file">
+                    <Button
+                      component="span"
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                    >
+                      Upload image
+                    </Button>
+                  </label>
                   <Button
                     variant="contained"
                     color="primary"
@@ -82,17 +103,22 @@ export default function UserInfo(props) {
                   >
                     Change Password
                   </Button>
+                  {user.profilePicture === null ? (
+                    <></>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      onClick={handleDelete}
+                    >
+                      Delete image
+                    </Button>
+                  )}
                 </>
               ) : (
                 <Button variant="contained" color="primary">
                   Add to friends
-                </Button>
-              )}
-              {user.profilePicture === null ? (
-                <></>
-              ) : (
-                <Button variant="contained" color="primary">
-                  Delete image
                 </Button>
               )}
             </Card>
@@ -139,5 +165,7 @@ export default function UserInfo(props) {
 
 UserInfo.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
-  allowed: PropTypes.bool.isRequired
+  allowed: PropTypes.bool.isRequired,
+  handleUpload: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired
 };

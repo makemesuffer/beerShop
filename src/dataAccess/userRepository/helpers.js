@@ -22,3 +22,7 @@ export const forgotPassword = payload => api.post(`/password`, payload);
 export const checkMessage = payload => api.post(`/confirm`, payload);
 
 export const replacePassword = payload => api.post(`/pass`, payload);
+
+export const uploadImage = payload => api.post(`/add-image`, payload);
+
+export const deleteImage = payload => api.post(`/delete-image`, payload);

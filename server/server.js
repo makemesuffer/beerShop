@@ -17,10 +17,12 @@ app.use(
   })
 );
 app.use(morgan("dev"));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "100mb" }));
 app.use(
   bodyParser.urlencoded({
-    extended: true
+    limit: "100mb",
+    extended: true,
+    parameterLimit: 50000
   })
 );
 

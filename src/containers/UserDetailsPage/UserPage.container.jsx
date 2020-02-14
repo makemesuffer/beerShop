@@ -11,7 +11,11 @@ import {
 import Loader from "../../components/Loader";
 import UserBeerList from "../../components/UserDetailsPage/UserBeerList";
 import ErrorBoundary from "../../components/ErrorBoundary";
-import { deleteBeer } from "../../dataAccess/userRepository/helpers";
+import {
+  deleteBeer,
+  uploadImage,
+  deleteImage
+} from "../../dataAccess/userRepository/helpers";
 import FavoritesPagination from "../../components/FavoritesPage/FavoritesPagination";
 
 class UserPageContainer extends React.PureComponent {
@@ -65,6 +69,38 @@ class UserPageContainer extends React.PureComponent {
     }
   };
 
+  handleUpload = async e => {
+    e.preventDefault();
+    const { user } = this.props;
+    const reader = new FileReader();
+    const file = e.target.files[0];
+    reader.onloadend = async () => {
+      const payload = { id: user.id, img: reader.result };
+      const result = await uploadImage(payload);
+      if (result.data.success === true) {
+        await this.props.getUser(user.id);
+        user.beerList.forEach(elem => {
+          this.props.getFavorites(elem);
+        });
+      }
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  handleDelete = async e => {
+    e.preventDefault();
+    const { user } = this.props;
+    const payload = { id: user.id };
+    const result = await deleteImage(payload);
+    if (result.data.success === true) {
+      await this.props.getUser(user.id);
+      user.beerList.forEach(elem => {
+        this.props.getFavorites(elem);
+      });
+    }
+  };
+
   render() {
     const { currentPage } = this.state;
     const { user, error, favoritesBeers, foreignUser, allowed } = this.props;
@@ -106,7 +142,12 @@ class UserPageContainer extends React.PureComponent {
           <ErrorBoundary error={error} />
         ) : (
           <>
-            <UserInfo user={thisUser} allowed={allowed} />
+            <UserInfo
+              user={thisUser}
+              allowed={allowed}
+              handleUpload={this.handleUpload}
+              handleDelete={this.handleDelete}
+            />
             <UserBeerList
               beers={beers}
               handleRemove={this.handleRemove}
