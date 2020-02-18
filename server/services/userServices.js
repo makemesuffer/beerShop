@@ -89,23 +89,23 @@ exports.userLogin = async data => {
   };
   const result = await db.Users.login(userData.login, userData.password);
   if (result && result.available === true) {
-    const ans = {
-      success: true,
-      user: {
-        id: result._id,
-        login: result.login,
-        firstName: result.firstName,
-        lastName: result.lastName,
-        birthDate: result.birthDate,
-        profilePicture: result.profilePicture,
-        beerList: result.beerList
-      }
+    const user = {
+      id: result._id,
+      login: result.login,
+      firstName: result.firstName,
+      lastName: result.lastName,
+      birthDate: result.birthDate,
+      profilePicture: result.profilePicture,
+      beerList: result.beerList
     };
-    if (result.available) {
-      ans.accessTOKEN = await jwt.sign({ id: result._id }, config.jwtSECRET, {
-        expiresIn: "14 days"
-      });
-    }
+    const ans = {
+      success: true
+    };
+
+    ans.accessTOKEN = await jwt.sign(user, config.secretOrKey, {
+      expiresIn: "14 days"
+    });
+
     return ans;
   }
   return {

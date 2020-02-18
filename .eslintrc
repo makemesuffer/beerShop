@@ -24,6 +24,7 @@
     "react/jsx-props-no-spreading": "off",
     "consistent-return": "off",
     "no-useless-return": "warn",
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "camelcase": "off"
   }
 }

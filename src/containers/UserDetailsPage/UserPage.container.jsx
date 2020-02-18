@@ -29,7 +29,7 @@ class UserPageContainer extends React.PureComponent {
   componentDidMount() {
     const { id, user } = this.props;
     const getUserBeerList = async () => {
-      if (user.id !== id && Object.entries(user).length === 0) {
+      if (user.id !== id || Object.entries(user).length === 0) {
         await this.props.getForeignUser(id);
         const { foreignUser } = this.props;
         if (Object.entries(foreignUser).length !== 0) {
@@ -103,9 +103,16 @@ class UserPageContainer extends React.PureComponent {
 
   render() {
     const { currentPage } = this.state;
-    const { user, error, favoritesBeers, foreignUser, allowed } = this.props;
+    const {
+      user,
+      error,
+      favoritesBeers,
+      foreignUser,
+      allowed,
+      id
+    } = this.props;
 
-    const thisUser = Object.entries(user).length === 0 ? foreignUser : user;
+    const thisUser = user.id === id ? user : foreignUser;
 
     const index = currentPage === 1 ? 0 : (currentPage - 1) * 6;
     const beers = favoritesBeers.slice(index, index + 6);

@@ -35,7 +35,7 @@ class SignInContainer extends React.PureComponent {
     const payload = { login, password };
     const result = await loginUser(payload);
     if (result.data.success === true) {
-      this.props.saveUserSession([result.data.user, rememberMe]);
+      this.props.saveUserSession([result.data.accessTOKEN, rememberMe]);
       history.push("/search");
     } else {
       this.setState({ error: result.data.error });

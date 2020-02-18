@@ -1,4 +1,5 @@
 const express = require("express");
+const passport = require("passport");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const morgan = require("morgan");
@@ -8,6 +9,7 @@ require("dotenv").config();
 const router = require("./routes/router");
 const cfg = require("./config.js");
 const errorController = require("./controllers/errorController");
+const passportCfg = require("./helpers/passport");
 
 const app = express();
 
@@ -25,6 +27,10 @@ app.use(
     parameterLimit: 50000
   })
 );
+
+app.use(passport.initialize());
+
+passportCfg(passport);
 
 app.use(router);
 

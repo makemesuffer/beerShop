@@ -1,6 +1,9 @@
+import jwt_decode from "jwt-decode";
+
 import actionTypes from "./actionTypes";
 import { findUser } from "../../dataAccess/userRepository/helpers";
 import { getSingleBeer } from "../../dataAccess/beerRepository/helpers";
+import setAuthToken from "../../dataAccess/userRepository/setAuthToken";
 
 const getFavoritesSuccess = response => ({
   type: actionTypes.GET_FAVORITES_SUCCESS,
@@ -14,10 +17,12 @@ export const saveUserSessionSuccess = response => ({
 
 export const saveUserSession = data => dispatch => {
   console.log(data[0]);
+  setAuthToken(data[0]);
+  const decoded = jwt_decode(data[0]);
   if (data[1] === true) {
-    localStorage.setItem("user", JSON.stringify(data[0]));
+    localStorage.setItem("token", data[0]);
   }
-  dispatch(saveUserSessionSuccess(data));
+  dispatch(saveUserSessionSuccess([decoded, data[1]]));
 };
 
 const exitUserSessionSuccess = () => ({
@@ -25,7 +30,8 @@ const exitUserSessionSuccess = () => ({
 });
 
 export const exitUserSession = () => dispatch => {
-  localStorage.removeItem("user");
+  localStorage.removeItem("token");
+  setAuthToken(false);
   dispatch(exitUserSessionSuccess());
 };
 
