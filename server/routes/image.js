@@ -1,6 +1,8 @@
 const router = require("express").Router();
 
-const imageController = require("../controllers/imageController");
+const ImageController = require("../controllers/imageController");
+
+const imageController = new ImageController();
 
 router.post("/add-image", imageController.addImage);
 

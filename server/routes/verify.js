@@ -1,6 +1,8 @@
 const router = require("express").Router();
 
-const verifyController = require("../controllers/verifyController");
+const VerifyController = require("../controllers/verifyController");
+
+const verifyController = new VerifyController();
 
 router.get("/account/verify/:id", verifyController.verifyUser);
 

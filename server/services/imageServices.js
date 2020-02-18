@@ -11,23 +11,31 @@ cloudinary.config({
   api_secret: cloudinaryConfig.cloudSecret
 });
 
-exports.imageAdd = async data => {
-  const { id, img } = data;
-  const image = await cloudinary.uploader.upload(img);
-  await db.Users.update({ _id: id, action: { profilePicture: image.url } });
+module.exports = class ImageServices {
+  async imageAdd(data) {
+    const { id, img } = data;
+    const image = await cloudinary.uploader.upload(img);
+    await db.Base.update("Users", {
+      _id: id,
+      action: { profilePicture: image.url }
+    });
 
-  return {
-    success: true,
-    message: "Successfully uploaded"
-  };
-};
+    return {
+      success: true,
+      message: "Successfully uploaded"
+    };
+  }
 
-exports.deleteImg = async data => {
-  const { id } = data;
-  await db.Users.update({ _id: id, action: { profilePicture: null } });
+  async deleteImg(data) {
+    const { id } = data;
+    await db.Base.update("Users", {
+      _id: id,
+      action: { profilePicture: null }
+    });
 
-  return {
-    success: true,
-    message: "Successfully deleted"
-  };
+    return {
+      success: true,
+      message: "Successfully deleted"
+    };
+  }
 };

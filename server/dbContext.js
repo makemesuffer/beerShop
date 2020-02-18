@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
-const user = require("./repositories/userRepository");
+const UserRepository = require("./repositories/userRepository");
+const BaseRepository = require("./repositories/baseRepository");
+
+const user = new UserRepository();
+const base = new BaseRepository();
 
 module.exports.setUpConnection = () => {
   mongoose.connect(
@@ -14,3 +18,4 @@ module.exports.setUpConnection = () => {
 };
 
 module.exports.Users = user;
+module.exports.Base = base;

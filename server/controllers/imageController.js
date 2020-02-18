@@ -1,12 +1,16 @@
 const wrapAsync = require("../helpers/asyncErrorHandler");
-const imageServices = require("../services/imageServices");
+const ImageServices = require("../services/imageServices");
 
-exports.addImage = wrapAsync(async (req, res) => {
-  const message = await imageServices.imageAdd(req.body);
-  return res.json(message);
-});
+const imageServices = new ImageServices();
 
-exports.deleteBeer = wrapAsync(async (req, res) => {
-  const message = await imageServices.deleteImg(req.body);
-  return res.json(message);
-});
+module.exports = class ImageController {
+  addImage = wrapAsync(async function(req, res) {
+    const message = await imageServices.imageAdd(req.body);
+    return res.json(message);
+  });
+
+  deleteBeer = wrapAsync(async function(req, res) {
+    const message = await imageServices.deleteImg(req.body);
+    return res.json(message);
+  });
+};

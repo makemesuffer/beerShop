@@ -1,12 +1,16 @@
 const wrapAsync = require("../helpers/asyncErrorHandler");
-const beerController = require("../services/beerServices");
+const BeerServices = require("../services/beerServices");
 
-exports.addBeer = wrapAsync(async (req, res) => {
-  const message = await beerController.beerAdd(req.body);
-  return res.json(message);
-});
+const beerServices = new BeerServices();
 
-exports.deleteBeer = wrapAsync(async (req, res) => {
-  const message = await beerController.beerDelete(req.body);
-  return res.json(message);
-});
+module.exports = class BeerController {
+  addBeer = wrapAsync(async function(req, res) {
+    const message = await beerServices.beerAdd(req.body);
+    return res.json(message);
+  });
+
+  deleteBeer = wrapAsync(async function(req, res) {
+    const message = await beerServices.beerDelete(req.body);
+    return res.json(message);
+  });
+};

@@ -1,7 +1,7 @@
 const handleErrorBoundary = (error, req, res) => {
   return res.status(error.status).json({
     success: false,
-    message: error.message
+    message: "Incorrect password and/or login"
   });
 };
 

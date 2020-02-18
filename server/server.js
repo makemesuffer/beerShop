@@ -36,6 +36,8 @@ app.use(router);
 
 app.use(errorController);
 
+// TODO: сделать норм обработчик ошибок на фронте через трай-кетч + статус ошибки норм подобрать
+
 app.listen(cfg.EXPRESS_PORT, () => {
   console.log(`Express server running on port ${cfg.EXPRESS_PORT}.`);
 });

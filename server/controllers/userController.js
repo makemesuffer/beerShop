@@ -1,18 +1,22 @@
-const userServices = require("../services/userServices");
+const UserServices = require("../services/userServices");
 const wrapAsync = require("../helpers/asyncErrorHandler");
 
-exports.registerUser = wrapAsync(async (req, res) => {
-  const message = await userServices.userRegister(req.body);
-  return res.json(message);
-  // return res.status(message.status).json(message);
-});
+const userServices = new UserServices();
 
-exports.loginUser = wrapAsync(async (req, res) => {
-  const message = await userServices.userLogin(req.body);
-  return res.json(message);
-});
+module.exports = class UserController {
+  registerUser = wrapAsync(async function(req, res) {
+    const message = await userServices.userRegister(req.body);
+    return res.json(message);
+  });
 
-exports.findUser = wrapAsync(async (req, res) => {
-  const message = await userServices.userFind(req.params);
-  return res.json(message);
-});
+  loginUser = wrapAsync(async function(req, res) {
+    const message = await userServices.userLogin(req.body);
+    return res.json(message);
+    // return res.status(message.status).json(message);
+  });
+
+  findUser = wrapAsync(async function(req, res) {
+    const message = await userServices.userFind(req.params);
+    return res.json(message);
+  });
+};

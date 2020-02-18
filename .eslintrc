@@ -25,6 +25,8 @@
     "consistent-return": "off",
     "no-useless-return": "warn",
     "no-underscore-dangle": "off",
-    "camelcase": "off"
+    "camelcase": "off",
+    "class-methods-use-this": "off",
+    "func-names": "off"
   }
 }

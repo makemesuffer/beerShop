@@ -117,7 +117,7 @@ class UserPageContainer extends React.PureComponent {
     const index = currentPage === 1 ? 0 : (currentPage - 1) * 6;
     const beers = favoritesBeers.slice(index, index + 6);
 
-    const length = Math.ceil(favoritesBeers.length / 5);
+    const length = Math.ceil(favoritesBeers.length / 6);
     const pageArray = [];
     for (let i = 0; i < length; i += 1) {
       pageArray.push(i + 1);
@@ -125,7 +125,7 @@ class UserPageContainer extends React.PureComponent {
 
     let paginationFinal = [];
 
-    if (pageArray.length > 6) {
+    if (pageArray.length > 5) {
       if (currentPage === 1) {
         paginationFinal = pageArray.slice(currentPage - 1, currentPage + 3);
       } else if (currentPage === pageArray.length) {

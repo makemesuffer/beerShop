@@ -3,58 +3,52 @@ const Users = require("../model/Users");
 
 const User = mongoose.model("Users");
 
-module.exports.login = (login, password) => {
-  return Users.findOne({ login, password });
-};
+module.exports = class UserRepository {
+  login(login, password) {
+    return Users.findOne({ login, password });
+  }
 
-module.exports.create = data => {
-  const user = new User({
-    login: data.login,
-    password: data.password,
-    firstName: data.firstName,
-    lastName: data.lastName,
-    birthDate: data.birthDate,
-    createdAt: new Date(),
-    profilePicture: data.profilePicture || null,
-    available: false
-  });
-  return user.save();
-};
+  create(data) {
+    const user = new User({
+      login: data.login,
+      password: data.password,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      birthDate: data.birthDate,
+      createdAt: new Date(),
+      profilePicture: data.profilePicture || null,
+      available: false
+    });
+    return user.save();
+  }
 
-module.exports.update = object => {
-  return Users.findOneAndUpdate({ _id: object._id }, { $set: object.action });
-};
+  addBeer(data) {
+    return Users.findOneAndUpdate(
+      { _id: data.userId },
+      { $push: { beerList: data.id } }
+    );
+  }
 
-module.exports.getOneByID = id => {
-  if (mongoose.Types.ObjectId.isValid(id)) {
-    return Users.findOne({ _id: id });
+  deleteBeer(data) {
+    return Users.findOneAndUpdate(
+      { _id: data.userId },
+      { $pull: { beerList: data.id } }
+    );
   }
 };
 
-// TODO: перепиши эти три функции в одну
+/*
+update(object) {
+    return Users.findOneAndUpdate({ _id: object._id }, { $set: object.action });
+  }
 
-module.exports.findEmail = login => {
-  return Users.findOne({ login });
-};
+  getOneByID(id) {
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      return Users.findOne({ _id: id });
+    }
+  }
 
-module.exports.findPassword = password => {
-  return Users.findOne({ password });
-};
-
-module.exports.findCode = code => {
-  return Users.findOne({ resetCode: code });
-};
-
-module.exports.addBeer = data => {
-  return Users.findOneAndUpdate(
-    { _id: data.userId },
-    { $push: { beerList: data.id } }
-  );
-};
-
-module.exports.deleteBeer = data => {
-  return Users.findOneAndUpdate(
-    { _id: data.userId },
-    { $pull: { beerList: data.id } }
-  );
-};
+  find(param, value) {
+    return Users.findOne({ [param]: value });
+  }
+ */
