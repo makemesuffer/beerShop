@@ -51,7 +51,7 @@ export default function SignUpForm(props) {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        {error !== "" ? <Alert severity="error">{error}</Alert> : <></>}
+        {error !== null ? <Alert severity="error">{error}</Alert> : <></>}
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
@@ -146,5 +146,9 @@ export default function SignUpForm(props) {
 SignUpForm.propTypes = {
   handleChange: PropTypes.func.isRequired,
   addUser: PropTypes.func.isRequired,
-  error: PropTypes.string.isRequired
+  error: PropTypes.string
+};
+
+SignUpForm.defaultProps = {
+  error: null
 };

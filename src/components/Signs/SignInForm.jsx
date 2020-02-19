@@ -52,7 +52,7 @@ export default function SignInForm(props) {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        {error !== "" ? <Alert severity="error">{error}</Alert> : <></>}
+        {error !== null ? <Alert severity="error">{error}</Alert> : <></>}
         <form className={classes.form} noValidate>
           <TextField
             variant="outlined"
@@ -120,6 +120,10 @@ export default function SignInForm(props) {
 SignInForm.propTypes = {
   logUser: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
-  error: PropTypes.string.isRequired,
+  error: PropTypes.string,
   handleSwitch: PropTypes.func.isRequired
+};
+
+SignInForm.defaultProps = {
+  error: null
 };

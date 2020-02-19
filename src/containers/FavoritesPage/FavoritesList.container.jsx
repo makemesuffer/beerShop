@@ -48,10 +48,8 @@ class FavoritesListContainer extends React.PureComponent {
   };
 
   render() {
-    const { favoritesBeers } = this.props;
+    const { favoritesBeers, user } = this.props;
     const { currentPage } = this.state;
-
-    const user = null;
 
     const index = currentPage === 1 ? 0 : (currentPage - 1) * 5;
     const beers = favoritesBeers.slice(index, index + 5);

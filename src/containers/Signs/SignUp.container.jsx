@@ -1,8 +1,9 @@
 import React from "react";
+import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import PropTypes from "prop-types";
-import { createUser } from "../../dataAccess/userRepository/helpers";
+import { userCreate } from "../../store/user/actions";
 import SignUpForm from "../../components/Signs/SignUpForm";
 
 class SignUpContainer extends React.PureComponent {
@@ -13,8 +14,7 @@ class SignUpContainer extends React.PureComponent {
       lastName: "",
       login: "",
       birthDate: "",
-      password: "",
-      error: ""
+      password: ""
     };
   }
 
@@ -28,16 +28,15 @@ class SignUpContainer extends React.PureComponent {
     const { history } = this.props;
     const { firstName, lastName, login, birthDate, password } = this.state;
     const payload = { login, password, firstName, lastName, birthDate };
-    const result = await createUser(payload);
-    if (result.data.success === true) {
+    await this.props.userCreate(payload);
+    const { error } = this.props;
+    if (error === null) {
       history.push("/search");
-    } else {
-      this.setState({ error: result.data.error });
     }
   };
 
   render() {
-    const { error } = this.state;
+    const { error } = this.props;
     return (
       <>
         <SignUpForm
@@ -51,7 +50,21 @@ class SignUpContainer extends React.PureComponent {
 }
 
 SignUpContainer.propTypes = {
-  history: PropTypes.objectOf(PropTypes.any).isRequired
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
+  userCreate: PropTypes.func.isRequired,
+  error: PropTypes.string
 };
 
-export default withRouter(SignUpContainer);
+SignUpContainer.defaultProps = {
+  error: null
+};
+
+const mapStateToProps = state => {
+  return {
+    error: state.user.error
+  };
+};
+
+export default connect(mapStateToProps, { userCreate })(
+  withRouter(SignUpContainer)
+);

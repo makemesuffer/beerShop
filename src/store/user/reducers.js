@@ -20,6 +20,12 @@ const userReducer = (state = initialState, action) => {
         rememberMe: action.payload[1],
         error: null
       };
+    case actionTypes.SAVE_USER_SESSION_ERROR: {
+      return {
+        ...state,
+        error: action.payload
+      };
+    }
     case actionTypes.EXIT_USER_SESSION_SUCCESS:
       return {
         ...state,
@@ -46,8 +52,7 @@ const userReducer = (state = initialState, action) => {
       };
     case actionTypes.GET_USER_ERROR:
       return {
-        ...state,
-        error: action.payload
+        ...state
       };
     case actionTypes.GET_FOREIGN_USER_SUCCESS:
       return {

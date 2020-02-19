@@ -3,7 +3,6 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { loginUser } from "../../dataAccess/userRepository/helpers";
 import { saveUserSession } from "../../store/user/actions";
 import SignInForm from "../../components/Signs/SignInForm";
 
@@ -13,7 +12,6 @@ class SignInContainer extends React.PureComponent {
     this.state = {
       login: "",
       password: "",
-      error: "",
       rememberMe: false
     };
   }
@@ -33,17 +31,18 @@ class SignInContainer extends React.PureComponent {
     const { history } = this.props;
     const { login, password, rememberMe } = this.state;
     const payload = { login, password };
-    const result = await loginUser(payload);
-    if (result.data.success === true) {
-      this.props.saveUserSession([result.data.accessTOKEN, rememberMe]);
+    await this.props.saveUserSession({
+      payload,
+      rememberMe
+    });
+    const { error } = this.props;
+    if (error === null) {
       history.push("/search");
-    } else {
-      this.setState({ error: result.data.error });
     }
   };
 
   render() {
-    const { error } = this.state;
+    const { error } = this.props;
     return (
       <>
         <SignInForm
@@ -59,12 +58,18 @@ class SignInContainer extends React.PureComponent {
 
 SignInContainer.propTypes = {
   history: PropTypes.objectOf(PropTypes.any).isRequired,
-  saveUserSession: PropTypes.func.isRequired
+  saveUserSession: PropTypes.func.isRequired,
+  error: PropTypes.string
+};
+
+SignInContainer.defaultProps = {
+  error: null
 };
 
 const mapStateToProps = state => {
   return {
-    user: state.user.user
+    user: state.user.user,
+    error: state.user.error
   };
 };
 

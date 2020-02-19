@@ -9,5 +9,7 @@ export default {
   verify: "/register",
   user: "/users/:id",
   changePassword: "/users/:id/change-password",
-  forgotPassword: "/password"
+  forgotPassword: "/password",
+  brews: "/brews",
+  addBrew: "/brews/add"
 };

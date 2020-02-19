@@ -10,6 +10,8 @@ import VerifyPage from "../pages/VerifyPage";
 import UserDetailsPage from "../pages/UserDetailsPage";
 import ChangePasswordPage from "../pages/ChangePasswordPage";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
+import BrewListPage from "../pages/BrewListPage";
+import AddBrewPage from "../pages/AddBrewPage";
 
 const Routes = () => {
   return (
@@ -43,6 +45,12 @@ const Routes = () => {
       </Route>
       <Route path={routes.forgotPassword}>
         <ForgotPasswordPage />
+      </Route>
+      <Route exact path={routes.brews}>
+        <BrewListPage />
+      </Route>
+      <Route path={routes.addBrew}>
+        <AddBrewPage />
       </Route>
       <Route path="*">
         <Redirect to={routes.root} />

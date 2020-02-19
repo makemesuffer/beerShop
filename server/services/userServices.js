@@ -16,7 +16,7 @@ module.exports = class userServices {
       return {
         success: false,
         error: "Please fill all the inputs",
-        status: 400
+        status: 406
       };
     }
 
@@ -24,7 +24,7 @@ module.exports = class userServices {
       return {
         success: false,
         error: "Password must be at least 8 characters",
-        status: 400
+        status: 406
       };
     }
 
@@ -32,7 +32,7 @@ module.exports = class userServices {
       return {
         success: false,
         error: "You have to be older than 18 to register",
-        status: 400
+        status: 406
       };
     }
 
@@ -40,7 +40,7 @@ module.exports = class userServices {
       return {
         success: false,
         error: "Login incorrect, need email format",
-        status: 400
+        status: 406
       };
     }
 
@@ -48,7 +48,7 @@ module.exports = class userServices {
       return {
         success: false,
         error: "email is already taken",
-        status: 400
+        status: 406
       };
     }
 
@@ -102,7 +102,8 @@ module.exports = class userServices {
         beerList: result.beerList
       };
       const ans = {
-        success: true
+        success: true,
+        status: 200
       };
 
       ans.accessTOKEN = await jwt.sign(user, config.secretOrKey, {

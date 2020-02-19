@@ -27,6 +27,7 @@
     "no-underscore-dangle": "off",
     "camelcase": "off",
     "class-methods-use-this": "off",
-    "func-names": "off"
+    "func-names": "off",
+    "jsx-a11y/label-has-associated-control": "off"
   }
 }

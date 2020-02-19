@@ -6,13 +6,12 @@ const userServices = new UserServices();
 module.exports = class UserController {
   registerUser = wrapAsync(async function(req, res) {
     const message = await userServices.userRegister(req.body);
-    return res.json(message);
+    return res.status(message.status).json(message);
   });
 
   loginUser = wrapAsync(async function(req, res) {
     const message = await userServices.userLogin(req.body);
-    return res.json(message);
-    // return res.status(message.status).json(message);
+    return res.status(message.status).json(message);
   });
 
   findUser = wrapAsync(async function(req, res) {

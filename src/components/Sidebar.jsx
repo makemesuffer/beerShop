@@ -46,12 +46,18 @@ export default function Sidebar(props) {
             classes={{ primary: classes.listItemText }}
           />
         </ListItem>
-        {["Home", "Favorites"].map((text, index) => (
+        {["Home", "Favorites", "Brews"].map((text, index) => (
           <ListItem
             button
             key={text}
             component={RouterLink}
-            to={index % 2 === 0 ? routes.search : routes.favorites}
+            to={
+              index % 2 === 0
+                ? index / 2 === 0
+                  ? routes.search
+                  : routes.brews
+                : routes.favorites
+            }
           >
             <ListItemIcon>
               {index % 2 === 0 ? <IoIosBeer /> : <IoIosStar />}
