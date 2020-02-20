@@ -17,14 +17,21 @@ class SearchContainer extends React.PureComponent {
     const { value } = this.props;
     const { colorValue, bitternessValue, alcoholValue } = this.state;
     this.props.setFiltersValue([alcoholValue, bitternessValue, colorValue]);
-    this.props.getBeer(null, value, alcoholValue, bitternessValue, colorValue);
+    this.props.getBeer(
+      9,
+      null,
+      value,
+      alcoholValue,
+      bitternessValue,
+      colorValue
+    );
   }, 500);
 
   getResults = debounce(() => {
     const { value } = this.state;
     this.props.setValueSuccess(value);
-    if (value === "") this.props.getBeer();
-    this.props.getBeer(null, value);
+    if (value === "") this.props.getBeer(9);
+    this.props.getBeer(9, null, value);
   }, 500);
 
   constructor(props) {

@@ -29,9 +29,10 @@ class BeerListContainer extends React.PureComponent {
       colorValue
     } = this.props;
     if (value === "") {
-      this.props.continueBeerName(null, page);
+      this.props.continueBeerName(9, null, page);
     } else {
       this.props.continueBeerName(
+        9,
         value,
         page,
         alcoholValue,

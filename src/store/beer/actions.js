@@ -32,20 +32,28 @@ const updateBeerSuccess = response => ({
   payload: response
 });
 
-export const getBeer = (page, name, abv, ibu, ebc) => async dispatch => {
+export const getBeer = (
+  perPage,
+  page,
+  name,
+  abv,
+  ibu,
+  ebc
+) => async dispatch => {
   let response;
-  if (name === "") response = await getListOfBeers(page);
-  else response = await getListOfBeers(page, name, abv, ibu, ebc);
+  if (name === "") response = await getListOfBeers(perPage, page);
+  else response = await getListOfBeers(perPage, page, name, abv, ibu, ebc);
   dispatch(getBeerSuccess(response.data));
 };
 
 export const continueBeerName = (
+  perPage,
   name,
   page,
   abv,
   ibu,
   ebc
 ) => async dispatch => {
-  const response = await getListOfBeers(page, name, abv, ibu, ebc);
+  const response = await getListOfBeers(perPage, page, name, abv, ibu, ebc);
   dispatch(updateBeerSuccess(response.data));
 };

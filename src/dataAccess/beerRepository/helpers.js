@@ -9,16 +9,17 @@ export const getSingleBeer = id => {
 };
 
 const listedBeer = () => {
-  return `https://api.punkapi.com/v2/beers?&per_page=9`;
+  return `https://api.punkapi.com/v2/beers`;
 };
 
-export const getListOfBeers = (page, name, abv, ibu, ebc) => {
+export const getListOfBeers = (perPage, page, name, abv, ibu, ebc) => {
   return axios.get(`${listedBeer()}`, {
     params: {
       beer_name: name,
       abv_gt: abv,
       ibu_gt: ibu,
       ebc_gt: ebc,
+      per_page: perPage,
       page
     }
   });

@@ -12,7 +12,8 @@ class SignInContainer extends React.PureComponent {
     this.state = {
       login: "",
       password: "",
-      rememberMe: false
+      rememberMe: false,
+      error: null
     };
   }
 
@@ -38,11 +39,13 @@ class SignInContainer extends React.PureComponent {
     const { error } = this.props;
     if (error === null) {
       history.push("/search");
+    } else {
+      this.setState({ error });
     }
   };
 
   render() {
-    const { error } = this.props;
+    const { error } = this.state;
     return (
       <>
         <SignInForm

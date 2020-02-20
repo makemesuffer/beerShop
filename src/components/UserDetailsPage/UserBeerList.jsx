@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
@@ -69,52 +68,46 @@ export default function UserBeerList(props) {
     <Container component="main" maxWidth="lg" className={classes.container}>
       <Card>
         <div className={classes.cardGrid}>
-          {favoritesBeers.length > 0 ? (
-            beers.map(elem => {
-              return (
-                <Card key={elem.id} className={classes.card}>
-                  <CardContent>
-                    <CardMedia
-                      image={elem.image_url}
-                      title="pivandopalo"
-                      className={classes.image}
-                    />
-                  </CardContent>
-                  <CardContent>
-                    <p className={classes.beerName}> {elem.name}</p>
-                    <p className={classes.tagLine}> {elem.tagline} </p>
-                    <CardActions>
+          {beers.map(elem => {
+            return (
+              <Card key={elem.id} className={classes.card}>
+                <CardContent>
+                  <CardMedia
+                    image={elem.image_url}
+                    title="pivandopalo"
+                    className={classes.image}
+                  />
+                </CardContent>
+                <CardContent>
+                  <p className={classes.beerName}> {elem.name}</p>
+                  <p className={classes.tagLine}> {elem.tagline} </p>
+                  <CardActions>
+                    <Button
+                      size="small"
+                      color="primary"
+                      component={RouterLink}
+                      to={`/beers/${elem.id}`}
+                    >
+                      Open
+                    </Button>
+                    {allowed ? (
                       <Button
                         size="small"
                         color="primary"
-                        component={RouterLink}
-                        to={`/beers/${elem.id}`}
+                        onClick={() => {
+                          handleRemove(elem.id);
+                        }}
                       >
-                        Open
+                        Remove Favorite
                       </Button>
-                      {allowed ? (
-                        <Button
-                          size="small"
-                          color="primary"
-                          onClick={() => {
-                            handleRemove(elem.id);
-                          }}
-                        >
-                          Remove Favorite
-                        </Button>
-                      ) : (
-                        <></>
-                      )}
-                    </CardActions>
-                  </CardContent>
-                </Card>
-              );
-            })
-          ) : (
-            <Typography variant="h4" className={classes.noFav}>
-              No beer in fav
-            </Typography>
-          )}
+                    ) : (
+                      <></>
+                    )}
+                  </CardActions>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </Card>
     </Container>

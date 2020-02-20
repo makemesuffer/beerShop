@@ -41,4 +41,6 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
+// TODO: хрефы на линки замени!
+
 serviceWorker.unregister();
