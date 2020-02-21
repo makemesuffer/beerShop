@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import debounce from "lodash/debounce";
-// import getLocation from "../../dataAccess/mapsRepository/helpers";
+import getLocation from "../../dataAccess/mapsRepository/helpers";
 
 import BrewForm from "../../components/BrewFormPage/BrewForm";
 import { getBeer } from "../../store/beer/actions";
@@ -17,7 +17,6 @@ class AddBrewContainer extends React.PureComponent {
     super(props);
     this.state = {
       brewName: "",
-      // eslint-disable-next-line react/no-unused-state
       impressions: "",
       location: "",
       photos: [],
@@ -32,30 +31,34 @@ class AddBrewContainer extends React.PureComponent {
         "Weissbier",
         "Belgian Ale"
       ],
-      // eslint-disable-next-line react/no-unused-state
-      brewType: ""
+      brewType: "",
+      error: ""
     };
   }
 
-  handleChange = (e, values) => {
+  handleChange = e => {
     const { name } = e.target;
-    if (values !== undefined && values !== null) {
-      // С НЕЙМОМ ТАК НЕ РАБОТАЕТ из-за лишек сделай отдельные хендлы блин
-      if (name === "brewName") this.setState({ brewName: values.name });
-      else if (name === "brewType") this.setState({ brewType: values.name });
-      else this.setState({ [name]: e.target.value });
-    }
+    this.setState({ [name]: e.target.value });
     if (name === "brewName") this.getResults();
   };
 
-  handleMapClick = () => {
-    this.setState({ location: "Улица Кирова, 1" });
-    /* POKA NE RABOTAET
+  handleBrewNameChange = (e, values) => {
+    if (values !== undefined && values !== null) {
+      this.setState({ brewName: values.name });
+    }
+  };
+
+  handleBrewTypeChange = (e, values) => {
+    if (values !== undefined && values !== null) {
+      this.setState({ brewType: values });
+    }
+  };
+
+  handleMapClick = async e => {
     const [lat, lon] = e.get("coords");
-    const coords = `${lat},${lon}`;
+    const coords = `${lon},${lat}`;
     const result = await getLocation(coords);
-    console.log(result);
-     */
+    this.setState({ location: result.name });
   };
 
   handleUpload = e => {
@@ -65,12 +68,25 @@ class AddBrewContainer extends React.PureComponent {
     const reader = new FileReader();
     const file = e.target.files[0];
     reader.onloadend = () => {
-      dummy.push(reader.result);
-      this.setState({
-        photos: dummy
-      });
+      if (!dummy.includes(reader.result)) {
+        dummy.push(reader.result);
+        this.setState({
+          photos: dummy,
+          error: ""
+        });
+      } else {
+        this.setState({ error: "Image is already uploaded" });
+      }
     };
     reader.readAsDataURL(file);
+  };
+
+  handleDelete = id => {
+    const { photos } = this.state;
+    const filtered = photos.filter(elem => {
+      return elem !== id;
+    });
+    this.setState({ photos: filtered });
   };
 
   handleSubmit = e => {
@@ -81,8 +97,15 @@ class AddBrewContainer extends React.PureComponent {
 
   render() {
     const { beerList } = this.props;
-    const { location, photos, beerTypes, brewName, impressions } = this.state;
-    console.log(brewName, impressions);
+    const {
+      location,
+      photos,
+      beerTypes,
+      brewName,
+      impressions,
+      error,
+      brewType
+    } = this.state;
     const beerNames = beerList.map(elem => {
       return { name: elem.name };
     });
@@ -97,6 +120,13 @@ class AddBrewContainer extends React.PureComponent {
           location={location}
           photos={photos}
           beerTypes={beerTypes}
+          handleBrewNameChange={this.handleBrewNameChange}
+          handleBrewTypeChange={this.handleBrewTypeChange}
+          brewName={brewName}
+          brewType={brewType}
+          impressions={impressions}
+          error={error}
+          handleDelete={this.handleDelete}
         />
       </>
     );

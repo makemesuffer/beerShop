@@ -9,6 +9,8 @@ import Button from "@material-ui/core/Button";
 import CakeIcon from "@material-ui/icons/Cake";
 import EmailIcon from "@material-ui/icons/Email";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@material-ui/core/Link";
 
 import noAvatar from "./assets/noAvatar.png";
 
@@ -94,14 +96,19 @@ export default function UserInfo(props) {
                       Upload image
                     </Button>
                   </label>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    href={`/users/${user.id}/change-password`}
+                  <Link
+                    color="inherit"
+                    component={RouterLink}
+                    to={`/users/${user.id}/change-password`}
                   >
-                    Change Password
-                  </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                    >
+                      Change Password
+                    </Button>
+                  </Link>
                   {user.profilePicture === null ? (
                     <></>
                   ) : (

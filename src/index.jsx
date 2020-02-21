@@ -41,6 +41,7 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-// TODO: хрефы на линки замени!
+// TODO: сделай вторую часть brew add page
+// TODO: добавляй уже брюхи в дб
 
 serviceWorker.unregister();

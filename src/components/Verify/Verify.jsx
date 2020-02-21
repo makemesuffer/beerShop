@@ -3,6 +3,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -22,14 +24,11 @@ export default function Verify() {
   return (
     <Container component="main" maxWidth="md" className={classes.container}>
       <Typography variant="h3">Email was confirmed</Typography>
-      <Button
-        variant="contained"
-        className={classes.button}
-        color="primary"
-        href="/login"
-      >
-        Login
-      </Button>
+      <Link color="inherit" component={RouterLink} to="/login">
+        <Button variant="contained" className={classes.button} color="primary">
+          Login
+        </Button>
+      </Link>
     </Container>
   );
 }

@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   },
   titleHeading: {
     alignSelf: "start",
-    marginLeft: 30,
+    marginLeft: 20,
     marginTop: 20
   },
   hint: {
@@ -64,8 +64,8 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 20
   },
   img: {
-    width: 200,
-    height: 200
+    width: 180,
+    height: 180
   }
 }));
 
@@ -78,7 +78,11 @@ export default function BrewInput(props) {
     photos,
     handleUpload,
     beerTypes,
-    handleSubmit
+    handleSubmit,
+    handleBrewTypeChange,
+    handleBrewNameChange,
+    error,
+    handleDelete
   } = props;
   const classes = useStyles();
   return (
@@ -89,113 +93,131 @@ export default function BrewInput(props) {
       <Typography component="h4" variant="h4" className={classes.heading}>
         Tell us about your brew experience!
       </Typography>
+      <form className={classes.container}>
+        <Typography component="p" variant="h6" className={classes.titleHeading}>
+          What is brew name?
+        </Typography>
+        <Alert severity="info" className={classes.hint}>
+          Start typing to get a list of names
+        </Alert>
+        <Autocomplete
+          options={beerNames}
+          getOptionLabel={option => option.name}
+          className={classes.input}
+          onChange={handleBrewNameChange}
+          renderInput={params => (
+            <TextField
+              {...params}
+              variant="outlined"
+              label="Brew Name"
+              fullWidth
+              name="brewName"
+              onChange={handleChange}
+            />
+          )}
+        />
 
-      <Typography component="p" variant="h6" className={classes.titleHeading}>
-        What is brew name?
-      </Typography>
-      <Alert severity="info" className={classes.hint}>
-        Start typing to get a list of names
-      </Alert>
-      <Autocomplete
-        options={beerNames}
-        getOptionLabel={option => option.name}
-        className={classes.input}
-        onChange={handleChange}
-        name="brewName"
-        renderInput={params => (
-          <TextField
-            {...params}
-            variant="outlined"
-            label="Brew Name"
-            fullWidth
-            name="brewName"
-            onChange={handleChange}
-          />
-        )}
-      />
+        <Typography component="p" variant="h6" className={classes.titleHeading}>
+          Where did you taste this brew?
+        </Typography>
+        <div className={classes.mapContainer}>
+          <YMaps>
+            <Map
+              defaultState={{ center: [53.902496, 27.561481], zoom: 10 }}
+              onClick={handleMapClick}
+              className={classes.map}
+            />
+          </YMaps>
+        </div>
+        <TextField
+          variant="outlined"
+          label="Location"
+          fullWidth
+          name="location"
+          onChange={handleChange}
+          className={classes.input}
+          value={location === "" ? "" : location}
+        />
 
-      <Typography component="p" variant="h6" className={classes.titleHeading}>
-        Where did you taste this brew?
-      </Typography>
-      <div className={classes.mapContainer}>
-        <YMaps>
-          <Map
-            defaultState={{ center: [53.902496, 27.561481], zoom: 10 }}
-            onClick={handleMapClick}
-            className={classes.map}
-          />
-        </YMaps>
-      </div>
-      <TextField
-        variant="outlined"
-        label="Location"
-        fullWidth
-        name="location"
-        onChange={handleChange}
-        className={classes.input}
-        value={location === "" ? "" : location}
-      />
+        <Typography component="p" variant="h6" className={classes.titleHeading}>
+          Did you picture that moment?
+        </Typography>
+        <input
+          accept="image/*"
+          className={classes.hide}
+          id="raised-button-file"
+          multiple
+          type="file"
+          onChange={handleUpload}
+        />
+        <label htmlFor="raised-button-file">
+          <Button
+            component="span"
+            variant="contained"
+            color="primary"
+            className={classes.button}
+          >
+            Upload image
+          </Button>
+          <Alert severity="info">Click on image to remove it</Alert>
+        </label>
+        <div className={classes.imagePreview}>
+          {photos.map(photo => {
+            return (
+              // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
+              <img
+                key={photo}
+                src={photo}
+                alt="boje moi"
+                className={classes.img}
+                onClick={() => {
+                  handleDelete(photo);
+                }}
+              />
+            );
+          })}
+        </div>
+        {error === "" ? <></> : <Alert severity="error">{error}</Alert>}
 
-      <Typography component="p" variant="h6" className={classes.titleHeading}>
-        Did you picture that moment?
-      </Typography>
-      <input
-        accept="image/*"
-        className={classes.hide}
-        id="raised-button-file"
-        multiple
-        type="file"
-        onChange={handleUpload}
-      />
-      <label htmlFor="raised-button-file">
+        <Typography component="p" variant="h6" className={classes.titleHeading}>
+          Share your opinion about this brew
+        </Typography>
+        <TextField
+          label="Your opinion"
+          name="impressions"
+          variant="outlined"
+          multiline
+          className={classes.input}
+          onChange={handleChange}
+        />
+
+        <Typography component="p" variant="h6" className={classes.titleHeading}>
+          What is the type of the beer?
+        </Typography>
+        <Autocomplete
+          options={beerTypes}
+          className={classes.input}
+          onChange={handleBrewTypeChange}
+          renderInput={params => (
+            <TextField
+              {...params}
+              variant="outlined"
+              label="Brew Type"
+              fullWidth
+              onChange={handleBrewTypeChange}
+              name="brewType"
+            />
+          )}
+        />
+
         <Button
-          component="span"
-          variant="contained"
-          color="primary"
           className={classes.button}
+          onSubmit={handleSubmit}
+          type="submit"
         >
-          Upload image
+          Submit
         </Button>
-      </label>
-      <div className={classes.imagePreview}>
-        {photos.map(photo => {
-          return <img src={photo} alt="boje moi" className={classes.img} />;
-        })}
-      </div>
-
-      <Typography component="p" variant="h6" className={classes.titleHeading}>
-        Share your opinion about this brew
-      </Typography>
-      <TextField
-        label="Your opinion"
-        name="impressions"
-        variant="outlined"
-        multiline
-        className={classes.input}
-        onChange={handleChange}
-      />
-
-      <Typography component="p" variant="h6" className={classes.titleHeading}>
-        What is the type of the beer?
-      </Typography>
-      <Autocomplete
-        options={beerTypes}
-        className={classes.input}
-        renderInput={params => (
-          <TextField
-            {...params}
-            variant="outlined"
-            label="Brew Type"
-            fullWidth
-            name="brewType"
-            onChange={handleChange}
-          />
-        )}
-      />
-
-      <Button className={classes.button} onClick={handleSubmit}>
-        Submit
-      </Button>
+      </form>
     </Paper>
   );
 }
@@ -208,7 +230,11 @@ BrewInput.propTypes = {
   photos: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleUpload: PropTypes.func.isRequired,
   beerTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
-  handleSubmit: PropTypes.func.isRequired
+  handleSubmit: PropTypes.func.isRequired,
+  handleBrewTypeChange: PropTypes.func.isRequired,
+  handleBrewNameChange: PropTypes.func.isRequired,
+  error: PropTypes.string.isRequired,
+  handleDelete: PropTypes.func.isRequired
 };
 
 BrewInput.defaultProps = {

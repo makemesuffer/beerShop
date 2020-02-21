@@ -8,7 +8,8 @@ import BrewPreview from "./BrewPreview";
 
 const useStyles = makeStyles(theme => ({
   container: {
-    marginTop: theme.spacing(8)
+    marginTop: theme.spacing(8),
+    marginBottom: theme.spacing(8)
   },
   grid: {
     display: "grid",
@@ -27,7 +28,14 @@ export default function BrewForm(props) {
     photos,
     handleUpload,
     beerTypes,
-    handleSubmit
+    handleSubmit,
+    handleBrewNameChange,
+    handleBrewTypeChange,
+    error,
+    handleDelete,
+    brewName,
+    brewType,
+    impressions
   } = props;
 
   const classes = useStyles();
@@ -44,8 +52,18 @@ export default function BrewForm(props) {
           photos={photos}
           beerTypes={beerTypes}
           handleSubmit={handleSubmit}
+          handleBrewNameChange={handleBrewNameChange}
+          handleBrewTypeChange={handleBrewTypeChange}
+          error={error}
+          handleDelete={handleDelete}
         />
-        <BrewPreview />
+        <BrewPreview
+          brewType={brewType}
+          photos={photos}
+          brewName={brewName}
+          location={location}
+          impressions={impressions}
+        />
       </Paper>
     </Container>
   );
@@ -59,7 +77,14 @@ BrewForm.propTypes = {
   photos: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleUpload: PropTypes.func.isRequired,
   beerTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
-  handleSubmit: PropTypes.func.isRequired
+  handleSubmit: PropTypes.func.isRequired,
+  handleBrewNameChange: PropTypes.func.isRequired,
+  handleBrewTypeChange: PropTypes.func.isRequired,
+  error: PropTypes.string.isRequired,
+  handleDelete: PropTypes.func.isRequired,
+  brewName: PropTypes.string.isRequired,
+  brewType: PropTypes.string.isRequired,
+  impressions: PropTypes.string.isRequired
 };
 
 BrewForm.defaultProps = {
