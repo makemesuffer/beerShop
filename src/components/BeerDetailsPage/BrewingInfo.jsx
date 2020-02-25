@@ -13,40 +13,40 @@ const useStyles = makeStyles({
     marginLeft: 20
   },
   boxContainer: {
-    maxWidth: "70%"
+    maxWidth: "80%"
   },
   grid: {
     marginTop: "2%",
     display: "grid",
-    gridTemplateColumns: "40% 30%",
-    gridColumnGap: "10%"
+    gridTemplateColumns: "1fr 1.2fr",
+    gridColumnGap: 50
   }
 });
 
 export default function BrewingInfo(props) {
-  const { beer, createTableData, createListData } = props;
+  const { beer, createListData } = props;
   const classes = useStyles();
   const rows = [
-    createTableData("Water", `${beer.volume.value} ${beer.volume.unit}`, "", 1),
-    createTableData("Malt", beer.ingredients.malt, "", 2),
-    createTableData("Hops", beer.ingredients.hops, "", 3),
-    createTableData("Yeast", beer.ingredients.yeast, "", 4)
+    createListData("Water", `${beer.volume.value} ${beer.volume.unit}`, ""),
+    createListData("Malt", beer.ingredients.malt, ""),
+    createListData("Hops", beer.ingredients.hops, ""),
+    createListData("Yeast", beer.ingredients.yeast, "")
   ];
   const rowa = [
-    createListData("Mash", beer.method.mash_temp, 1),
-    createListData("Fermentation", beer.method.fermentation, 2),
-    createListData("Twist", beer.method.twist, 3)
+    createListData("Mash", beer.method.mash_temp, ""),
+    createListData("Fermentation", beer.method.fermentation, ""),
+    createListData("Twist", beer.method.twist, "")
   ];
   return (
     <div className={classes.container}>
       <Box className={classes.boxContainer}>
         <Typography variant="h4">Brewing</Typography>
         <p>{beer.brewers_tips}</p>
+        <div className={classes.grid}>
+          <Ingredients rows={rows} />
+          <Method rows={rowa} />
+        </div>
       </Box>
-      <div className={classes.grid}>
-        <Ingredients rows={rows} />
-        <Method rows={rowa} />
-      </div>
     </div>
   );
 }
@@ -69,6 +69,5 @@ BrewingInfo.propTypes = {
       twist: PropTypes.oneOfType([PropTypes.oneOf([null]), PropTypes.string])
     })
   }).isRequired,
-  createTableData: PropTypes.func.isRequired,
   createListData: PropTypes.func.isRequired
 };

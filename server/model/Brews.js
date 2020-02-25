@@ -4,11 +4,11 @@ const BrewSchema = mongoose.Schema({
   createdAt: { type: Date },
   location: { type: String },
   brewName: { type: String },
-  ingredients: { type: mongoose.Schema.Mixed },
-  brewingMethod: { type: mongoose.Schema.Mixed },
+  ingredients: { type: [mongoose.Schema.Types.Mixed] },
+  brewingMethod: { type: [mongoose.Schema.Types.Mixed] },
   images: { type: [String] },
   impressions: { type: String },
-  beerType: { type: String },
+  brewType: { type: String },
   rating: { type: Number },
   author: [{ type: mongoose.Schema.Types.ObjectId, ref: "Users" }]
 });

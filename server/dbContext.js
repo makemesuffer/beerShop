@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
 const UserRepository = require("./repositories/userRepository");
 const BaseRepository = require("./repositories/baseRepository");
+const BrewRepository = require("./repositories/brewRepository");
 
 const user = new UserRepository();
 const base = new BaseRepository();
+const brew = new BrewRepository();
 
 module.exports.setUpConnection = () => {
   mongoose.connect(
@@ -19,3 +21,4 @@ module.exports.setUpConnection = () => {
 
 module.exports.Users = user;
 module.exports.Base = base;
+module.exports.Brew = brew;

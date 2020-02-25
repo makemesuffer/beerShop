@@ -33,9 +33,7 @@ export default function Ingredients(props) {
                     {Array.isArray(row.value) ? (
                       row.value.map(elem => {
                         return (
-                          <div
-                            key={`${elem.name} - ${elem.amount.value} - ${elem.add}`}
-                          >
+                          <div key={`${elem.name} - ${elem.add}`}>
                             <p>
                               {elem.name} - {elem.amount.value}
                               {elem.amount.unit}

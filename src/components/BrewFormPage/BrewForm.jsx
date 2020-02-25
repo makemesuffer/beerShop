@@ -35,7 +35,11 @@ export default function BrewForm(props) {
     handleDelete,
     brewName,
     brewType,
-    impressions
+    impressions,
+    author,
+    time,
+    beer,
+    createListData
   } = props;
 
   const classes = useStyles();
@@ -63,6 +67,10 @@ export default function BrewForm(props) {
           brewName={brewName}
           location={location}
           impressions={impressions}
+          author={author}
+          time={time}
+          beer={beer}
+          createListData={createListData}
         />
       </Paper>
     </Container>
@@ -84,9 +92,14 @@ BrewForm.propTypes = {
   handleDelete: PropTypes.func.isRequired,
   brewName: PropTypes.string.isRequired,
   brewType: PropTypes.string.isRequired,
-  impressions: PropTypes.string.isRequired
+  impressions: PropTypes.string.isRequired,
+  author: PropTypes.string.isRequired,
+  time: PropTypes.string.isRequired,
+  beer: PropTypes.objectOf(PropTypes.any),
+  createListData: PropTypes.func.isRequired
 };
 
 BrewForm.defaultProps = {
-  beerNames: []
+  beerNames: [],
+  beer: undefined
 };

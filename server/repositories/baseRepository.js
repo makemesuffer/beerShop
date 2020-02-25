@@ -14,4 +14,8 @@ module.exports = class baseRepository {
   find(model, param, value) {
     return model.findOne({ [param]: value });
   }
+
+  findAll(model) {
+    return model.find({});
+  }
 };

@@ -41,7 +41,7 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-// TODO: сделай вторую часть brew add page
 // TODO: добавляй уже брюхи в дб
+// TODO: отображение на странице
 
 serviceWorker.unregister();

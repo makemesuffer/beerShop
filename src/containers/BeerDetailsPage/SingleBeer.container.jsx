@@ -31,17 +31,16 @@ class SingleBeerContainer extends React.PureComponent {
     waitUser();
   }
 
-  createTableData = (name, value, description, id) => {
-    return { name, value, description, id };
-  };
-
-  createListData = (name, value, id) => {
-    if (value === null) value = "NO INFO";
-    else {
-      value =
-        value instanceof Array || value instanceof String ? value : [value];
+  createListData = (name, value, description) => {
+    if (name !== "Yeast" && name !== "Water") {
+      if (value === null) value = "NO INFO";
+      else {
+        value =
+          value instanceof Array || value instanceof String ? value : [value];
+      }
     }
-    return { name, value, id };
+
+    return { name, value, description };
   };
 
   handleFavorite = async id => {
@@ -74,13 +73,9 @@ class SingleBeerContainer extends React.PureComponent {
         />
         <PropertiesPairing
           beer={details[0]}
-          createTableData={this.createTableData}
+          createTableData={this.createListData}
         />
-        <BrewingInfo
-          beer={details[0]}
-          createTableData={this.createTableData}
-          createListData={this.createListData}
-        />
+        <BrewingInfo beer={details[0]} createListData={this.createListData} />
       </>
     );
   }

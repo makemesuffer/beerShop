@@ -36,19 +36,3 @@ module.exports = class UserRepository {
     );
   }
 };
-
-/*
-update(object) {
-    return Users.findOneAndUpdate({ _id: object._id }, { $set: object.action });
-  }
-
-  getOneByID(id) {
-    if (mongoose.Types.ObjectId.isValid(id)) {
-      return Users.findOne({ _id: id });
-    }
-  }
-
-  find(param, value) {
-    return Users.findOne({ [param]: value });
-  }
- */

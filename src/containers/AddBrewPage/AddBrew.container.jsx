@@ -2,16 +2,19 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import debounce from "lodash/debounce";
+import moment from "moment";
+import cyrillicToTranslit from "cyrillic-to-translit-js";
 import getLocation from "../../dataAccess/mapsRepository/helpers";
 
 import BrewForm from "../../components/BrewFormPage/BrewForm";
-import { getBeer } from "../../store/beer/actions";
+import { getBeerNames, getBeerByName } from "../../store/brew/actions";
+import { createBrew } from "../../dataAccess/brewRepository/helpers";
 
 class AddBrewContainer extends React.PureComponent {
   getResults = debounce(() => {
     const { brewName } = this.state;
-    this.props.getBeer(50, null, brewName);
-  }, 300);
+    this.props.getBeerNames(brewName);
+  }, 200);
 
   constructor(props) {
     super(props);
@@ -32,9 +35,30 @@ class AddBrewContainer extends React.PureComponent {
         "Belgian Ale"
       ],
       brewType: "",
-      error: ""
+      error: "",
+      time: ""
     };
   }
+
+  componentDidMount() {
+    setInterval(() => {
+      this.setState({
+        time: moment().format("LTS")
+      });
+    }, 1000);
+  }
+
+  createListData = (name, value, description) => {
+    if (name !== "Yeast" && name !== "Water") {
+      if (value === null) value = "NO INFO";
+      else {
+        value =
+          value instanceof Array || value instanceof String ? value : [value];
+      }
+    }
+
+    return { name, value, description };
+  };
 
   handleChange = e => {
     const { name } = e.target;
@@ -45,6 +69,7 @@ class AddBrewContainer extends React.PureComponent {
   handleBrewNameChange = (e, values) => {
     if (values !== undefined && values !== null) {
       this.setState({ brewName: values.name });
+      this.props.getBeerByName(values.name);
     }
   };
 
@@ -58,7 +83,7 @@ class AddBrewContainer extends React.PureComponent {
     const [lat, lon] = e.get("coords");
     const coords = `${lon},${lat}`;
     const result = await getLocation(coords);
-    this.setState({ location: result.name });
+    this.setState({ location: cyrillicToTranslit().transform(result.name) });
   };
 
   handleUpload = e => {
@@ -89,14 +114,29 @@ class AddBrewContainer extends React.PureComponent {
     this.setState({ photos: filtered });
   };
 
-  handleSubmit = e => {
+  handleSubmit = async e => {
     e.preventDefault();
-    const { brewName, impressions, location, brewType } = this.state;
-    console.log(brewName, impressions, location, brewType);
+    const { user, beer } = this.props;
+    const { brewName, impressions, location, brewType, images } = this.state;
+    const payload = {
+      brewName,
+      impressions,
+      location,
+      brewType,
+      images,
+      author: user.id,
+      ingredients: beer.ingredients,
+      brewingMethod: beer.brewingMethod
+    };
+    const result = await createBrew(payload);
+    if (result.data.status === 200) {
+      console.log("successfully added!");
+    }
   };
 
   render() {
-    const { beerList } = this.props;
+    const { beerList, user, beer } = this.props;
+    const author = `${user.firstName} ${user.lastName}`;
     const {
       location,
       photos,
@@ -104,7 +144,8 @@ class AddBrewContainer extends React.PureComponent {
       brewName,
       impressions,
       error,
-      brewType
+      brewType,
+      time
     } = this.state;
     const beerNames = beerList.map(elem => {
       return { name: elem.name };
@@ -124,9 +165,13 @@ class AddBrewContainer extends React.PureComponent {
           handleBrewTypeChange={this.handleBrewTypeChange}
           brewName={brewName}
           brewType={brewType}
-          impressions={impressions}
+          impressions={impressions.trim()}
           error={error}
           handleDelete={this.handleDelete}
+          author={author}
+          time={time}
+          beer={beer}
+          createListData={this.createListData}
         />
       </>
     );
@@ -134,18 +179,26 @@ class AddBrewContainer extends React.PureComponent {
 }
 
 AddBrewContainer.propTypes = {
-  getBeer: PropTypes.func.isRequired,
-  beerList: PropTypes.arrayOf(PropTypes.any)
+  getBeerNames: PropTypes.func.isRequired,
+  beerList: PropTypes.arrayOf(PropTypes.any),
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
+  beer: PropTypes.objectOf(PropTypes.any),
+  getBeerByName: PropTypes.func.isRequired
 };
 
 AddBrewContainer.defaultProps = {
-  beerList: []
+  beerList: [],
+  beer: undefined
 };
 
 const mapStateToProps = state => {
   return {
-    beerList: state.beer.beerList
+    beerList: state.brew.beerNames,
+    user: state.user.user,
+    beer: state.brew.singleBeer[0]
   };
 };
 
-export default connect(mapStateToProps, { getBeer })(AddBrewContainer);
+export default connect(mapStateToProps, { getBeerNames, getBeerByName })(
+  AddBrewContainer
+);
