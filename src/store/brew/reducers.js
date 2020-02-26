@@ -2,7 +2,8 @@ import actionTypes from "./actionTypes";
 
 const initialState = {
   beerNames: [],
-  singleBeer: []
+  singleBeer: [],
+  brewList: []
 };
 
 const brewReducer = (state = initialState, action) => {
@@ -16,6 +17,11 @@ const brewReducer = (state = initialState, action) => {
       return {
         ...state,
         singleBeer: action.payload
+      };
+    case actionTypes.GET_BREWS_LIST:
+      return {
+        ...state,
+        brewList: action.payload
       };
     default:
       return state;

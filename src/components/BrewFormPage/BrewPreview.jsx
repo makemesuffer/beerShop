@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import moment from "moment";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core";
@@ -109,7 +110,6 @@ export default function BrewPreview(props) {
     location,
     impressions,
     author,
-    time,
     beer,
     createListData
   } = props;
@@ -177,7 +177,7 @@ export default function BrewPreview(props) {
             Beer was tasted in {location === "" ? "[Location]" : location}
           </Typography>
           <div className={classes.beerInfo}>
-            {beer === undefined ? (
+            {beer === null ? (
               <span>[Beer Description]</span>
             ) : (
               <BrewingInfo beer={beer} createListData={createListData} />
@@ -197,7 +197,7 @@ export default function BrewPreview(props) {
           </Typography>
 
           <Typography component="p" variant="h6" className={classes.rating}>
-            {time}
+            {moment().format("LTS")}
           </Typography>
         </div>
       </Paper>
@@ -212,11 +212,10 @@ BrewPreview.propTypes = {
   photos: PropTypes.arrayOf(PropTypes.string).isRequired,
   location: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
-  time: PropTypes.string.isRequired,
   beer: PropTypes.objectOf(PropTypes.any),
   createListData: PropTypes.func.isRequired
 };
 
 BrewPreview.defaultProps = {
-  beer: undefined
+  beer: null
 };

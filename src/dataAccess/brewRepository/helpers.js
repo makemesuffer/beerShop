@@ -6,4 +6,4 @@ const api = axios.create({
 
 export const createBrew = payload => api.post(`/add-brew`, payload);
 
-export const findBrews = time => api.get(`/brews/${time}`);
+export const findBrews = () => api.get(`/brews`);

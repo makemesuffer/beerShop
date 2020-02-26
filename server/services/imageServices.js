@@ -28,7 +28,13 @@ module.exports = class ImageServices {
   }
 
   async deleteImg(data) {
-    const { id } = data;
+    const { id, img } = data;
+    const publicId = img
+      .split("/")
+      .pop()
+      .split(".")
+      .shift();
+    await cloudinary.uploader.destroy(publicId);
     await db.Base.update(Users, {
       _id: id,
       action: { profilePicture: null }

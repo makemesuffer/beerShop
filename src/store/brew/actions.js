@@ -1,4 +1,5 @@
 import { getListOfBeers } from "../../dataAccess/beerRepository/helpers";
+import { findBrews } from "../../dataAccess/brewRepository/helpers";
 import actionTypes from "./actionTypes";
 
 const getBeerNamesSuccess = response => ({
@@ -22,4 +23,14 @@ const getBeerByNameSuccess = response => ({
 export const getBeerByName = name => async dispatch => {
   const response = await getListOfBeers(1, null, name);
   dispatch(getBeerByNameSuccess(response.data));
+};
+
+const getBrewListSuccess = response => ({
+  type: actionTypes.GET_BREWS_LIST,
+  payload: response
+});
+
+export const getBrewList = () => async dispatch => {
+  const response = await findBrews();
+  dispatch(getBrewListSuccess(response.data));
 };

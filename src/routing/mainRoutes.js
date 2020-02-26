@@ -11,5 +11,6 @@ export default {
   changePassword: "/users/:id/change-password",
   forgotPassword: "/password",
   brews: "/brews",
-  addBrew: "/brews/add"
+  addBrew: "/brews/add",
+  singleBrew: "/brews/:id"
 };

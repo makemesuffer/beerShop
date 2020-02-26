@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import debounce from "lodash/debounce";
-import moment from "moment";
 import cyrillicToTranslit from "cyrillic-to-translit-js";
 import getLocation from "../../dataAccess/mapsRepository/helpers";
 
@@ -35,17 +35,10 @@ class AddBrewContainer extends React.PureComponent {
         "Belgian Ale"
       ],
       brewType: "",
+      warning: "",
       error: "",
-      time: ""
+      success: ""
     };
-  }
-
-  componentDidMount() {
-    setInterval(() => {
-      this.setState({
-        time: moment().format("LTS")
-      });
-    }, 1000);
   }
 
   createListData = (name, value, description) => {
@@ -97,10 +90,10 @@ class AddBrewContainer extends React.PureComponent {
         dummy.push(reader.result);
         this.setState({
           photos: dummy,
-          error: ""
+          warning: ""
         });
       } else {
-        this.setState({ error: "Image is already uploaded" });
+        this.setState({ warning: "Image is already uploaded" });
       }
     };
     reader.readAsDataURL(file);
@@ -116,21 +109,30 @@ class AddBrewContainer extends React.PureComponent {
 
   handleSubmit = async e => {
     e.preventDefault();
-    const { user, beer } = this.props;
-    const { brewName, impressions, location, brewType, images } = this.state;
-    const payload = {
-      brewName,
-      impressions,
-      location,
-      brewType,
-      images,
-      author: user.id,
-      ingredients: beer.ingredients,
-      brewingMethod: beer.brewingMethod
-    };
-    const result = await createBrew(payload);
-    if (result.data.status === 200) {
-      console.log("successfully added!");
+    const { user, beer, history } = this.props;
+    const { brewName, impressions, location, brewType, photos } = this.state;
+    if (beer !== null) {
+      const payload = {
+        brewName,
+        impressions,
+        location,
+        brewType,
+        photos,
+        author: user.id,
+        ingredients: beer.ingredients,
+        brewingMethod: beer.method
+      };
+      const result = await createBrew(payload);
+      if (result.data.success === true) {
+        this.setState({ success: result.data.message });
+        setTimeout(() => {
+          history.replace("/brews");
+        }, 3000);
+      } else {
+        this.setState({ error: result.data.error });
+      }
+    } else {
+      this.setState({ error: "Please fill all the inputs" });
     }
   };
 
@@ -143,9 +145,10 @@ class AddBrewContainer extends React.PureComponent {
       beerTypes,
       brewName,
       impressions,
-      error,
+      warning,
       brewType,
-      time
+      error,
+      success
     } = this.state;
     const beerNames = beerList.map(elem => {
       return { name: elem.name };
@@ -165,11 +168,12 @@ class AddBrewContainer extends React.PureComponent {
           handleBrewTypeChange={this.handleBrewTypeChange}
           brewName={brewName}
           brewType={brewType}
-          impressions={impressions.trim()}
           error={error}
+          success={success}
+          impressions={impressions.trim()}
+          warning={warning}
           handleDelete={this.handleDelete}
           author={author}
-          time={time}
           beer={beer}
           createListData={this.createListData}
         />
@@ -183,12 +187,13 @@ AddBrewContainer.propTypes = {
   beerList: PropTypes.arrayOf(PropTypes.any),
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   beer: PropTypes.objectOf(PropTypes.any),
-  getBeerByName: PropTypes.func.isRequired
+  getBeerByName: PropTypes.func.isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired
 };
 
 AddBrewContainer.defaultProps = {
   beerList: [],
-  beer: undefined
+  beer: null
 };
 
 const mapStateToProps = state => {
@@ -200,5 +205,5 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, { getBeerNames, getBeerByName })(
-  AddBrewContainer
+  withRouter(AddBrewContainer)
 );

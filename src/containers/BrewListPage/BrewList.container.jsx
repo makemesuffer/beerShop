@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 import BrewList from "../../components/BrewListPage/BrewList";
 import { getUser } from "../../store/user/actions";
+import { getBrewList } from "../../store/brew/actions";
 
 class BrewListContainer extends React.PureComponent {
   componentDidMount() {
@@ -12,6 +13,10 @@ class BrewListContainer extends React.PureComponent {
       await this.props.getUser(user.id);
     };
     waitUser();
+    const waitBrewList = async () => {
+      await this.props.getBrewList();
+    };
+    waitBrewList();
   }
 
   render() {
@@ -28,7 +33,8 @@ BrewListContainer.propTypes = {
   allowed: PropTypes.bool.isRequired,
   brewList: PropTypes.arrayOf(PropTypes.object),
   user: PropTypes.objectOf(PropTypes.any),
-  getUser: PropTypes.func.isRequired
+  getUser: PropTypes.func.isRequired,
+  getBrewList: PropTypes.func.isRequired
 };
 
 BrewListContainer.defaultProps = {
@@ -39,9 +45,11 @@ BrewListContainer.defaultProps = {
 const mapStateToProps = state => {
   return {
     allowed: state.user.allowed,
-    user: state.user.user
-    // brewList: state.brew.brewList
+    user: state.user.user,
+    brewList: state.brew.brewList
   };
 };
 
-export default connect(mapStateToProps, { getUser })(BrewListContainer);
+export default connect(mapStateToProps, { getUser, getBrewList })(
+  BrewListContainer
+);

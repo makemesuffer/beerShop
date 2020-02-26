@@ -81,7 +81,7 @@ export default function BrewInput(props) {
     handleSubmit,
     handleBrewTypeChange,
     handleBrewNameChange,
-    error,
+    warning,
     handleDelete
   } = props;
   const classes = useStyles();
@@ -177,7 +177,7 @@ export default function BrewInput(props) {
             );
           })}
         </div>
-        {error === "" ? <></> : <Alert severity="error">{error}</Alert>}
+        {warning === "" ? <></> : <Alert severity="error">{warning}</Alert>}
 
         <Typography component="p" variant="h6" className={classes.titleHeading}>
           Share your opinion about this brew
@@ -210,11 +210,7 @@ export default function BrewInput(props) {
           )}
         />
 
-        <Button
-          className={classes.button}
-          onSubmit={handleSubmit}
-          type="submit"
-        >
+        <Button className={classes.button} onClick={handleSubmit} type="submit">
           Submit
         </Button>
       </form>
@@ -233,7 +229,7 @@ BrewInput.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   handleBrewTypeChange: PropTypes.func.isRequired,
   handleBrewNameChange: PropTypes.func.isRequired,
-  error: PropTypes.string.isRequired,
+  warning: PropTypes.string.isRequired,
   handleDelete: PropTypes.func.isRequired
 };
 

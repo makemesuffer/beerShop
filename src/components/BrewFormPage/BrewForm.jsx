@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
+import Alert from "@material-ui/lab/Alert";
+
 import BrewInput from "./BrewInput";
 import BrewPreview from "./BrewPreview";
 
@@ -16,6 +18,9 @@ const useStyles = makeStyles(theme => ({
     gridTemplateColumns: "0.7fr 1.3fr",
     textAlign: "center",
     gridColumnGap: 20
+  },
+  alerts: {
+    marginTop: theme.spacing(2)
   }
 }));
 
@@ -37,9 +42,10 @@ export default function BrewForm(props) {
     brewType,
     impressions,
     author,
-    time,
     beer,
-    createListData
+    createListData,
+    success,
+    warning
   } = props;
 
   const classes = useStyles();
@@ -58,7 +64,7 @@ export default function BrewForm(props) {
           handleSubmit={handleSubmit}
           handleBrewNameChange={handleBrewNameChange}
           handleBrewTypeChange={handleBrewTypeChange}
-          error={error}
+          warning={warning}
           handleDelete={handleDelete}
         />
         <BrewPreview
@@ -68,11 +74,14 @@ export default function BrewForm(props) {
           location={location}
           impressions={impressions}
           author={author}
-          time={time}
           beer={beer}
           createListData={createListData}
         />
       </Paper>
+      <div className={classes.alerts}>
+        {success === "" ? <></> : <Alert severity="success">{success}</Alert>}
+        {error === "" ? <></> : <Alert severity="error">{error}</Alert>}
+      </div>
     </Container>
   );
 }
@@ -94,12 +103,13 @@ BrewForm.propTypes = {
   brewType: PropTypes.string.isRequired,
   impressions: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
-  time: PropTypes.string.isRequired,
   beer: PropTypes.objectOf(PropTypes.any),
-  createListData: PropTypes.func.isRequired
+  createListData: PropTypes.func.isRequired,
+  warning: PropTypes.string.isRequired,
+  success: PropTypes.string.isRequired
 };
 
 BrewForm.defaultProps = {
   beerNames: [],
-  beer: undefined
+  beer: null
 };

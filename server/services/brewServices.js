@@ -20,7 +20,7 @@ module.exports = class BrewServices {
       ingredients,
       brewingMethod,
       brewName,
-      images,
+      photos,
       impressions,
       brewType,
       author
@@ -31,7 +31,7 @@ module.exports = class BrewServices {
       !ingredients ||
       !brewingMethod ||
       !brewName ||
-      !images ||
+      !photos ||
       !impressions ||
       !brewType
     ) {
@@ -41,8 +41,14 @@ module.exports = class BrewServices {
         status: 406
       };
     }
-    const newImages = images.map(image => {
-      return cloudinary.uploader.upload(image).url;
+
+    let newImages;
+    const promises = photos.map(async photo =>
+      cloudinary.uploader.upload(photo)
+    );
+
+    await Promise.all(promises).then(images => {
+      newImages = images.map(image => image.url);
     });
 
     const brewData = {
@@ -73,11 +79,16 @@ module.exports = class BrewServices {
     };
   }
 
-  async getAllReviews(data) {
-    // day, week, month, year
+  async getAllReviews() {
+    // day, week, month, year, all
+    /*
     const { time } = data;
+    console.log(time);
+     */
 
-    const posts = await db.Base.findAll(Brews);
+    const time = "all";
+
+    const posts = await db.Base.findAll(Brews).populate("author", "firstName");
 
     switch (time) {
       case "day":

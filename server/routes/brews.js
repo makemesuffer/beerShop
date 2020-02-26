@@ -6,6 +6,6 @@ const brewController = new BrewController();
 
 router.post("/add-brew", brewController.addBrew);
 
-router.get("brews/:time", brewController.findBrew);
+router.get("/brews", brewController.findBrew);
 
 module.exports = router;

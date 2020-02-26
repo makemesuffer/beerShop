@@ -91,7 +91,7 @@ class UserPageContainer extends React.PureComponent {
   handleDelete = async e => {
     e.preventDefault();
     const { user } = this.props;
-    const payload = { id: user.id };
+    const payload = { id: user.id, img: user.profilePicture };
     const result = await deleteImage(payload);
     if (result.data.success === true) {
       await this.props.getUser(user.id);

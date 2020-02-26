@@ -41,7 +41,7 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-// TODO: добавляй уже брюхи в дб
 // TODO: отображение на странице
+// TODO: WebSocket
 
 serviceWorker.unregister();

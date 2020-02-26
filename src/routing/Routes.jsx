@@ -12,6 +12,7 @@ import ChangePasswordPage from "../pages/ChangePasswordPage";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import BrewListPage from "../pages/BrewListPage";
 import AddBrewPage from "../pages/AddBrewPage";
+import SingleBrew from "../pages/SingleBrew";
 
 const Routes = () => {
   return (
@@ -51,6 +52,9 @@ const Routes = () => {
       </Route>
       <Route path={routes.addBrew}>
         <AddBrewPage />
+      </Route>
+      <Route exact path={routes.singleBrew}>
+        <SingleBrew />
       </Route>
       <Route path="*">
         <Redirect to={routes.root} />

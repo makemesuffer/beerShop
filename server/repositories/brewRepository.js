@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const moment = require("moment");
 // const Brews = require("../model/Brews");
 
 const Brew = mongoose.model("Brews");
@@ -7,7 +6,7 @@ const Brew = mongoose.model("Brews");
 module.exports = class BrewRepository {
   create(data) {
     const brew = new Brew({
-      createdAt: moment().format("LTS"),
+      createdAt: new Date(),
       location: data.location,
       ingredients: data.ingredients,
       brewingMethod: data.brewingMethod,
