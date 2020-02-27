@@ -12,7 +12,7 @@ import ChangePasswordPage from "../pages/ChangePasswordPage";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import BrewListPage from "../pages/BrewListPage";
 import AddBrewPage from "../pages/AddBrewPage";
-import SingleBrew from "../pages/SingleBrew";
+import SingleBrew from "../pages/SingleBrewPage";
 
 const Routes = () => {
   return (

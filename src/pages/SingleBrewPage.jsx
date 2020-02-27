@@ -2,24 +2,24 @@ import React from "react";
 import { withRouter } from "react-router";
 import PropTypes from "prop-types";
 
-import SingleBeer from "../containers/BeerDetailsPage/SingleBeer.container";
 import HeaderContainer from "../containers/Header.container";
+import SingleBrewContainer from "../containers/SingleBrewPage/SingleBrew.container";
 
-class SingleBrew extends React.PureComponent {
+class SingleBrewPage extends React.PureComponent {
   render() {
     const { location } = this.props;
-    const id = Number(location.pathname.split("/").pop());
+    const id = location.pathname.split("/").pop();
     return (
       <>
         <HeaderContainer />
-        <SingleBeer id={id} />
+        <SingleBrewContainer id={id} />
       </>
     );
   }
 }
 
-SingleBrew.propTypes = {
+SingleBrewPage.propTypes = {
   location: PropTypes.objectOf(PropTypes.string).isRequired
 };
 
-export default withRouter(SingleBrew);
+export default withRouter(SingleBrewPage);

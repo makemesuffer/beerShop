@@ -20,7 +20,10 @@ import BrewingInfo from "../BeerDetailsPage/BrewingInfo";
 const useStyles = makeStyles(theme => ({
   container: {
     border: "2px solid lightblue",
-    display: "flex"
+    display: "flex",
+    textAlign: "center",
+    paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(3)
   },
   post: {
     width: "90%",
@@ -81,7 +84,7 @@ const useStyles = makeStyles(theme => ({
   footerContainer: {
     marginTop: theme.spacing(7),
     display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr",
+    gridTemplateColumns: "1fr 1fr 1.5fr",
     paddingBottom: theme.spacing(5)
   },
   icons: {
@@ -96,7 +99,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   rating: {
-    fontSize: 22
+    fontSize: 20
   }
 }));
 
@@ -111,9 +114,19 @@ export default function BrewPreview(props) {
     impressions,
     author,
     beer,
-    createListData
+    createListData,
+    createdAt,
+    rating,
+    handleRating,
+    handleReturn,
+    userBeerList,
+    handleFavorite
   } = props;
   const classes = useStyles();
+  let haveInFav = false;
+  if (userBeerList !== null) {
+    haveInFav = userBeerList.includes(beer.id);
+  }
   return (
     <Paper className={classes.container}>
       <Paper className={classes.post}>
@@ -122,6 +135,7 @@ export default function BrewPreview(props) {
             color="primary"
             startIcon={<ArrowBackIcon />}
             className={classes.buttons}
+            onClick={handleReturn}
           >
             Go back
           </Button>
@@ -129,8 +143,11 @@ export default function BrewPreview(props) {
             color="primary"
             endIcon={<StarIcon />}
             className={classes.buttons}
+            onClick={() => {
+              handleFavorite(beer.id);
+            }}
           >
-            Add beer to fav
+            {haveInFav ? <span>Remove Fav</span> : <span>Add Fav</span>}
           </Button>
         </div>
         <Typography component="h4" variant="h4" className={classes.title}>
@@ -187,9 +204,19 @@ export default function BrewPreview(props) {
 
         <div className={classes.footerContainer}>
           <Typography component="p" variant="h6" className={classes.rating}>
-            Rating 1337
-            <IndeterminateCheckBoxIcon className={classes.icons} />
-            <AddBoxIcon className={classes.icons} />
+            Rating {rating === null ? "[rating]" : rating}
+            <IndeterminateCheckBoxIcon
+              className={classes.icons}
+              onClick={() => {
+                handleRating("-");
+              }}
+            />
+            <AddBoxIcon
+              className={classes.icons}
+              onClick={() => {
+                handleRating("+");
+              }}
+            />
           </Typography>
 
           <Typography component="p" variant="h6" className={classes.rating}>
@@ -197,7 +224,9 @@ export default function BrewPreview(props) {
           </Typography>
 
           <Typography component="p" variant="h6" className={classes.rating}>
-            {moment().format("LTS")}
+            {createdAt === null
+              ? moment().format("LL")
+              : moment(createdAt).format("LL")}
           </Typography>
         </div>
       </Paper>
@@ -213,9 +242,21 @@ BrewPreview.propTypes = {
   location: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
   beer: PropTypes.objectOf(PropTypes.any),
-  createListData: PropTypes.func.isRequired
+  createListData: PropTypes.func.isRequired,
+  createdAt: PropTypes.string,
+  rating: PropTypes.number,
+  handleRating: PropTypes.func,
+  handleReturn: PropTypes.func,
+  userBeerList: PropTypes.arrayOf(PropTypes.number),
+  handleFavorite: PropTypes.func
 };
 
 BrewPreview.defaultProps = {
-  beer: null
+  beer: null,
+  createdAt: null,
+  rating: null,
+  handleRating: null,
+  handleReturn: null,
+  userBeerList: null,
+  handleFavorite: null
 };

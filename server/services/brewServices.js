@@ -4,6 +4,7 @@ const moment = require("moment");
 const db = require("../loaders/db");
 const config = require("../config");
 const Brews = require("../model/Brews");
+// const Users = require("../model/Users");
 
 const cloudinaryConfig = config.cloudinary;
 
@@ -110,5 +111,24 @@ module.exports = class BrewServices {
       default:
         return posts;
     }
+  }
+
+  getSingleBrew(id) {
+    console.log(id);
+    return db.Base.find(Brews, "_id", id).populate("author", "firstName");
+  }
+
+  async ratingChange(data) {
+    const { id, change } = data;
+    const res = await db.Base.find(Brews, "_id", id);
+    res.rating += change;
+    await db.Base.update(Brews, {
+      _id: id,
+      action: { rating: res.rating }
+    });
+
+    return {
+      message: "updated"
+    };
   }
 };

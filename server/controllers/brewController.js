@@ -15,4 +15,14 @@ module.exports = class BrewController {
     return res.json(message);
     // return res.status(message.status).json(message);
   });
+
+  findSingleBrew = wrapAsync(async function(req, res) {
+    const message = await brewServices.getSingleBrew(req.params.id);
+    return res.json(message);
+  });
+
+  changeRating = wrapAsync(async function(req, res) {
+    const message = await brewServices.ratingChange(req.body);
+    return res.json(message);
+  });
 };

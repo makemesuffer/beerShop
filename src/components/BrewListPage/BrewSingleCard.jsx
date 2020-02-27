@@ -10,11 +10,12 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
+import moment from "moment";
 
 const useStyles = makeStyles({
   root: {
     maxWidth: 700,
-    height: 370,
+    height: 450,
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -56,6 +57,12 @@ export default function BrewSingleCard(props) {
           {brew.impressions.length > 200
             ? `${brew.impressions.slice(0, 200)}...`
             : brew.impressions}
+        </Typography>
+        <Typography variant="body2" component="p">
+          {brew.location}
+        </Typography>
+        <Typography variant="body2" component="p">
+          {moment(brew.createdAt).format("LL")}
         </Typography>
       </CardContent>
       <CardActions className={classes.grid}>

@@ -13,6 +13,7 @@ const useStyles = makeStyles(theme => ({
   },
   grid: {
     marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4),
     display: "grid",
     alignItems: "stretch",
     gridTemplateColumns: "1fr 1fr",

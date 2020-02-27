@@ -3,7 +3,8 @@ import actionTypes from "./actionTypes";
 const initialState = {
   beerNames: [],
   singleBeer: [],
-  brewList: []
+  brewList: [],
+  singleBrew: null
 };
 
 const brewReducer = (state = initialState, action) => {
@@ -22,6 +23,11 @@ const brewReducer = (state = initialState, action) => {
       return {
         ...state,
         brewList: action.payload
+      };
+    case actionTypes.GET_BREW_BY_ID:
+      return {
+        ...state,
+        singleBrew: action.payload
       };
     default:
       return state;
