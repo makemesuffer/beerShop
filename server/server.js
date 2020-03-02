@@ -1,6 +1,7 @@
 const express = require("express");
 const passport = require("passport");
 const mongoose = require("mongoose");
+const http = require("http");
 const WebSocket = require("ws");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -50,17 +51,13 @@ passportCfg(passport);
 
 enableWs(app);
 
-app.ws("/echo", ws => {
-  ws.on("message", data => {
-    ws.clients.forEach(client => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(data);
-      }
-    });
-  });
+const server = http.createServer(app);
 
-  ws.on("close", () => {
-    console.log("WebSocket was closed");
+const wss = new WebSocket.Server({ server });
+
+wss.on("connection", ws => {
+  ws.on("message", message => {
+    ws.send(message);
   });
 });
 
@@ -68,10 +65,6 @@ app.use(router);
 
 app.use(errorController);
 
-app.listen(cfg.EXPRESS_PORT, () => {
+server.listen(cfg.EXPRESS_PORT, () => {
   console.log(`Express server running on port ${cfg.EXPRESS_PORT}.`);
 });
-
-/*
-
- */

@@ -7,6 +7,24 @@ import { getUser } from "../../store/user/actions";
 import { getBrewList } from "../../store/brew/actions";
 
 class BrewListContainer extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      time: ["day", "week", "month", "year", "all"],
+      beerType: [
+        "Ale",
+        "Lager",
+        "Stout",
+        "Porter",
+        "Lambic",
+        "Pilsner",
+        "Pale Ale",
+        "Weissbier",
+        "Belgian Ale"
+      ]
+    };
+  }
+
   componentDidMount() {
     const { user } = this.props;
     const waitUser = async () => {
@@ -21,9 +39,15 @@ class BrewListContainer extends React.PureComponent {
 
   render() {
     const { allowed, brewList } = this.props;
+    const { time, beerType } = this.state;
     return (
       <>
-        <BrewList allowed={allowed} brewList={brewList} />
+        <BrewList
+          allowed={allowed}
+          brewList={brewList}
+          time={time}
+          beerType={beerType}
+        />
       </>
     );
   }

@@ -1,24 +1,47 @@
 import React from "react";
-// import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-// import InputAdornment from "@material-ui/core/InputAdornment";
+import Button from "@material-ui/core/Button";
+import Alert from "@material-ui/lab/Alert";
+import { TextField } from "@material-ui/core";
 
-const useStyles = makeStyles(theme => ({
-  margin: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4)
+const useStyles = makeStyles({
+  input: {
+    width: "70%",
+    display: "flex",
+    flexDirection: "column"
+  },
+  button: {
+    width: "20%",
+    alignSelf: "end"
   }
-}));
+});
 
-export default function AddComment() {
+export default function AddComment(props) {
+  const { submitMessage, handleChange, error } = props;
   const classes = useStyles();
   return (
-    <FormControl fullWidth className={classes.margin} variant="outlined">
-      <InputLabel htmlFor="outlined-adornment-amount">Comment</InputLabel>
-      <OutlinedInput labelWidth={60} />
-    </FormControl>
+    <>
+      {error === "" ? <></> : <Alert severity="error">{error}</Alert>}
+      <FormControl className={classes.input} variant="outlined">
+        <TextField
+          variant="outlined"
+          margin="normal"
+          name="message"
+          onChange={handleChange}
+          label="Comment"
+        />
+        <Button onClick={submitMessage} className={classes.button}>
+          Submit message
+        </Button>
+      </FormControl>
+    </>
   );
 }
+
+AddComment.propTypes = {
+  submitMessage: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  error: PropTypes.string.isRequired
+};

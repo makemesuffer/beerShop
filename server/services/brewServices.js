@@ -4,7 +4,6 @@ const moment = require("moment");
 const db = require("../loaders/db");
 const config = require("../config");
 const Brews = require("../model/Brews");
-// const Users = require("../model/Users");
 
 const cloudinaryConfig = config.cloudinary;
 
@@ -114,7 +113,6 @@ module.exports = class BrewServices {
   }
 
   getSingleBrew(id) {
-    console.log(id);
     return db.Base.find(Brews, "_id", id).populate("author", "firstName");
   }
 
@@ -129,6 +127,30 @@ module.exports = class BrewServices {
 
     return {
       message: "updated"
+    };
+  }
+
+  async messageAdd(data) {
+    const { id, name, message, userId } = data;
+    if (await db.Base.find(Brews, "comments.userId", userId)) {
+      return {
+        success: false,
+        message: "You can't leave comments twice, only 1 comment per user"
+      };
+    }
+    const comment = { id, payload: { userId, name, message } };
+    await db.Brew.pushComment(comment);
+    return {
+      success: true
+    };
+  }
+
+  async deleteMessage(data) {
+    const { id, userId, name, message } = data;
+    const comment = { id, payload: { userId, name, message } };
+    await db.Brew.deleteComment(comment);
+    return {
+      success: true
     };
   }
 };

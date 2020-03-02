@@ -5,6 +5,9 @@ import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@material-ui/core/Link";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextField from "@material-ui/core/TextField";
+
 import BrewSingleCard from "./BrewSingleCard";
 
 const useStyles = makeStyles(theme => ({
@@ -21,12 +24,18 @@ const useStyles = makeStyles(theme => ({
   },
   gridElem: {
     margin: "0 auto"
+  },
+  inputs: {
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4),
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gridGap: 50
   }
 }));
 
 export default function BrewList(props) {
-  const { allowed, brewList } = props;
-
+  const { allowed, brewList, time, beerType } = props;
   const classes = useStyles();
   return (
     <Container component="main" maxWidth="lg" className={classes.container}>
@@ -41,11 +50,39 @@ export default function BrewList(props) {
       ) : (
         <></>
       )}
+      <div className={classes.inputs}>
+        <Autocomplete
+          options={beerType}
+          className={classes.input}
+          renderInput={params => (
+            <TextField
+              {...params}
+              variant="outlined"
+              label="Brew Type"
+              fullWidth
+              name="brewType"
+            />
+          )}
+        />
+        <Autocomplete
+          options={time}
+          className={classes.input}
+          renderInput={params => (
+            <TextField
+              {...params}
+              variant="outlined"
+              label="Time"
+              fullWidth
+              name="time"
+            />
+          )}
+        />
+      </div>
       {brewList !== null ? (
         <div className={classes.grid}>
           {brewList.map(elem => {
             return (
-              <div key={elem.id} className={classes.gridElem}>
+              <div key={elem._id} className={classes.gridElem}>
                 <BrewSingleCard brew={elem} />
               </div>
             );
@@ -60,7 +97,9 @@ export default function BrewList(props) {
 
 BrewList.propTypes = {
   allowed: PropTypes.bool.isRequired,
-  brewList: PropTypes.arrayOf(PropTypes.object)
+  brewList: PropTypes.arrayOf(PropTypes.object),
+  beerType: PropTypes.arrayOf(PropTypes.string).isRequired,
+  time: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
 BrewList.defaultProps = {

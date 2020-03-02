@@ -3,51 +3,92 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Container } from "@material-ui/core";
+
 import { getBeerByName, getBrewById } from "../../store/brew/actions";
 import { getUser } from "../../store/user/actions";
-import { ratingChange } from "../../dataAccess/brewRepository/helpers";
+import {
+  ratingChange,
+  messageAdd,
+  deleteComment
+} from "../../dataAccess/brewRepository/helpers";
 import BrewPreview from "../../components/BrewFormPage/BrewPreview";
 import Loader from "../../components/Loader";
 import { addBeer, deleteBeer } from "../../dataAccess/userRepository/helpers";
-import AddComment from "../../components/SingleBrewPage/AddComment";
+import CommentSection from "../../components/SingleBrewPage/CommentSection";
 
 class SingleBrewContainer extends React.PureComponent {
   ws = new WebSocket("ws://localhost:1337");
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      message: "",
+      error: ""
+    };
+  }
+
   componentDidMount() {
     const { id } = this.props;
+
     const findBrewPost = async aidi => {
       await this.props.getBrewById(aidi);
       const { brew } = this.props;
       await this.props.getBeerByName(brew.brewName);
     };
 
-    this.ws.onopen = () => {
-      console.log("connected");
+    const setupWebSocket = () => {
+      this.ws = new WebSocket("ws://localhost:1337");
+      this.ws.onopen = () => {
+        console.log("opened");
+      };
+      this.ws.onerror = error => {
+        console.log(`WebSocket error: ${error}`);
+      };
+      this.ws.onmessage = evt => {
+        const message = JSON.parse(evt.data);
+        this.addMessage(message);
+      };
+      this.ws.onclose = () => {
+        console.log("closed");
+        setupWebSocket();
+      };
     };
-    this.ws.onmessage = evt => {
-      console.log(evt.data);
-      const message = JSON.parse(evt.data);
-      this.addMessage(message);
-    };
+
+    setupWebSocket();
+
     findBrewPost(id);
   }
 
-  addMessage = message => {
-    const user = this.props;
-    const payload = { id: user.id, message };
-    console.log(payload);
-    // messageAdd(payload); - post zapros na servak
+  addMessage = async message => {
+    const response = await messageAdd(message);
+    if (response.data.success === true) {
+      this.setState({ message: "" });
+    } else {
+      this.setState({ error: response.data.message });
+    }
   };
 
-  submitMessage = messageString => {
-    const { user } = this.props;
-    const message = {
-      name: `${user.firstName} ${user.lastName}`,
-      message: messageString
-    };
-    this.ws.send(JSON.stringify(message));
-    this.addMessage(message);
+  handleChange = e => {
+    const { name } = e.target;
+    this.setState({ [name]: e.target.value });
+  };
+
+  submitMessage = () => {
+    const { message } = this.state;
+    const { user, id } = this.props;
+
+    if (message.length < 20) {
+      this.setState({ error: "Message need to be at least 20 characters" });
+    } else {
+      const payload = {
+        userId: user.id,
+        id,
+        name: `${user.firstName} ${user.lastName}`,
+        message
+      };
+      this.setState({ error: "" });
+      this.ws.send(JSON.stringify(payload));
+    }
   };
 
   handleReturn = () => {
@@ -91,8 +132,22 @@ class SingleBrewContainer extends React.PureComponent {
     }
   };
 
+  handleDelete = async comment => {
+    const { id } = this.props;
+    const payload = {
+      id,
+      userId: comment.userId,
+      name: comment.name,
+      message: comment.message
+    };
+    await deleteComment(payload);
+  };
+
+  // TODO: создай комментс в редакс сторе!!!!!!!
+
   render() {
     const { user, brew, beer } = this.props;
+    const { error } = this.state;
     if (brew === null || beer === null) {
       return <Loader />;
     }
@@ -116,9 +171,14 @@ class SingleBrewContainer extends React.PureComponent {
             userBeerList={user.beerList === undefined ? null : user.beerList}
           />
         </Container>
-        <Container maxWidth="lg">
-          <AddComment />
-        </Container>
+        <CommentSection
+          submitMessage={this.submitMessage}
+          handleChange={this.handleChange}
+          error={error}
+          comments={brew.comments}
+          userId={user.id}
+          handleDelete={this.handleDelete}
+        />
       </>
     );
   }

@@ -4,6 +4,8 @@ const VerifyController = require("../controllers/verifyController");
 
 const verifyController = new VerifyController();
 
+// TODO: переделай все эти посты на путы/делиты при необходимости
+
 router.get("/account/verify/:id", verifyController.verifyUser);
 
 router.post("/users/:id/change-password", verifyController.changePassword);

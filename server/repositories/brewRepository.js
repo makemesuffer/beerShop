@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-// const Brews = require("../model/Brews");
+const Brews = require("../model/Brews");
 
 const Brew = mongoose.model("Brews");
 
@@ -18,5 +18,19 @@ module.exports = class BrewRepository {
       author: data.author
     });
     return brew.save();
+  }
+
+  pushComment(comment) {
+    return Brews.findOneAndUpdate(
+      { _id: comment.id },
+      { $push: { comments: comment.payload } }
+    );
+  }
+
+  deleteComment(comment) {
+    return Brews.findOneAndUpdate(
+      { _id: comment.id },
+      { $pull: { comments: comment.payload } }
+    );
   }
 };

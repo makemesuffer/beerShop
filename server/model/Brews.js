@@ -10,7 +10,7 @@ const BrewSchema = mongoose.Schema({
   impressions: { type: String },
   brewType: { type: String },
   rating: { type: Number },
-  comments: { type: [String] },
+  comments: { type: [Object] },
   author: { type: mongoose.Schema.Types.ObjectId, ref: "Users" }
 });
 

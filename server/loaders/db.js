@@ -1,5 +1,11 @@
-const db = require("../dbContext");
+const UserRepository = require("../repositories/userRepository");
+const BrewRepository = require("../repositories/brewRepository");
+const BaseRepository = require("../repositories/baseRepository");
 
-db.setUpConnection();
+const brew = new BrewRepository();
+const user = new UserRepository();
+const base = new BaseRepository();
 
-module.exports = db;
+module.exports.Brew = brew;
+module.exports.Users = user;
+module.exports.Base = base;
