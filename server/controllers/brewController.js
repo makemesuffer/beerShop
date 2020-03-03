@@ -33,11 +33,11 @@ module.exports = class BrewController {
 
   likeBrew = wrapAsync(async function(req, res) {
     const message = await brewServices.likeBrew(req.body);
-    return res.json(message);
+    return res.status(message.status).json(message);
   });
 
   dislikeBrew = wrapAsync(async function(req, res) {
     const message = await brewServices.dislikeBrew(req.body);
-    return res.json(message);
+    return res.status(message.status).json(message);
   });
 };

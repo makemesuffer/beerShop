@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function BrewList(props) {
-  const { allowed, brewList, time, beerType, handleRating } = props;
+  const { allowed, brewList, time, beerType, handleRating, rating } = props;
   const classes = useStyles();
   return (
     <Container component="main" maxWidth="lg" className={classes.container}>
@@ -89,6 +89,7 @@ export default function BrewList(props) {
                   brew={elem}
                   handleRating={handleRating}
                   index={index}
+                  rating={rating}
                 />
               </div>
             );
@@ -106,7 +107,8 @@ BrewList.propTypes = {
   brewList: PropTypes.arrayOf(PropTypes.object),
   beerType: PropTypes.arrayOf(PropTypes.string).isRequired,
   time: PropTypes.arrayOf(PropTypes.string).isRequired,
-  handleRating: PropTypes.func.isRequired
+  handleRating: PropTypes.func.isRequired,
+  rating: PropTypes.arrayOf(PropTypes.number).isRequired
 };
 
 BrewList.defaultProps = {

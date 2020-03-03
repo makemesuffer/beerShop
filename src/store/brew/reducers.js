@@ -4,7 +4,8 @@ const initialState = {
   beerNames: [],
   singleBeer: [],
   brewList: [],
-  singleBrew: null
+  singleBrew: null,
+  rating: 0
 };
 
 const brewReducer = (state = initialState, action) => {
@@ -28,6 +29,11 @@ const brewReducer = (state = initialState, action) => {
       return {
         ...state,
         singleBrew: action.payload
+      };
+    case actionTypes.GET_RATING_CHANGE:
+      return {
+        ...state,
+        rating: action.payload
       };
     default:
       return state;

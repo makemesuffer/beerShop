@@ -154,14 +154,16 @@ module.exports = class BrewServices {
     if (user.login === brew.author.login) {
       return {
         success: false,
-        message: "Can't like or dislike your own brew"
+        message: "Can't like or dislike your own brew",
+        status: 400
       };
     }
 
     if (brew.likedBy.includes(user.login)) {
       return {
         success: false,
-        message: "You already liked this post"
+        message: "You already liked this post",
+        status: 400
       };
     }
 
@@ -172,7 +174,9 @@ module.exports = class BrewServices {
       await brew.save();
       return {
         success: true,
-        message: "You removed dislike from post"
+        message: "You removed dislike from post",
+        rating: brew.likes - brew.dislikes,
+        status: 200
       };
     }
 
@@ -182,7 +186,9 @@ module.exports = class BrewServices {
 
     return {
       success: true,
-      message: "Post was liked"
+      message: "Post was liked",
+      rating: brew.likes - brew.dislikes,
+      status: 200
     };
   }
 
@@ -199,14 +205,16 @@ module.exports = class BrewServices {
     if (user.login === brew.author.login) {
       return {
         success: false,
-        message: "Can't like or dislike your own brew"
+        message: "Can't like or dislike your own brew",
+        status: 400
       };
     }
 
     if (brew.dislikedBy.includes(user.login)) {
       return {
         success: false,
-        message: "You already disliked this post"
+        message: "You already disliked this post",
+        status: 400
       };
     }
 
@@ -217,7 +225,9 @@ module.exports = class BrewServices {
       await brew.save();
       return {
         success: true,
-        message: "You removed like from post"
+        message: "You removed like from post",
+        rating: brew.likes - brew.dislikes,
+        status: 200
       };
     }
 
@@ -227,7 +237,9 @@ module.exports = class BrewServices {
 
     return {
       success: true,
-      message: "Post was disliked"
+      message: "Post was disliked",
+      rating: brew.likes - brew.dislikes,
+      status: 200
     };
   }
 };

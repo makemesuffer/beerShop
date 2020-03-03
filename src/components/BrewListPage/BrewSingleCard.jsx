@@ -36,16 +36,11 @@ const useStyles = makeStyles({
 });
 
 export default function BrewSingleCard(props) {
-  const { brew, handleRating, index } = props;
+  const { brew, handleRating, index, rating } = props;
   const classes = useStyles();
-
   return (
     <Card className={classes.root}>
-      <img
-        src={brew.images.shift()}
-        alt="brew img!"
-        className={classes.media}
-      />
+      <img src={brew.images[0]} alt="brew img!" className={classes.media} />
       <CardContent>
         <Typography gutterBottom variant="h5" component="h2">
           {brew.brewName} review, written by{" "}
@@ -83,7 +78,7 @@ export default function BrewSingleCard(props) {
           </Button>
           <Typography variant="h5" component="span">
             {" "}
-            {brew.likes - brew.dislikes}{" "}
+            {rating[index]}{" "}
           </Typography>
           <Button size="small" color="primary">
             <AddBoxIcon
@@ -101,5 +96,6 @@ export default function BrewSingleCard(props) {
 BrewSingleCard.propTypes = {
   brew: PropTypes.objectOf(PropTypes.any).isRequired,
   handleRating: PropTypes.func.isRequired,
-  index: PropTypes.number.isRequired
+  index: PropTypes.number.isRequired,
+  rating: PropTypes.arrayOf(PropTypes.number).isRequired
 };

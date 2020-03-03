@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 
 import BrewList from "../../components/BrewListPage/BrewList";
 import { getUser } from "../../store/user/actions";
-import { getBrewList } from "../../store/brew/actions";
-import { dislikePost, likePost } from "../../dataAccess/brewRepository/helpers";
+import { getBrewList, getRatingChange } from "../../store/brew/actions";
+// import { dislikePost, likePost } from "../../dataAccess/brewRepository/helpers";
 
 class BrewListContainer extends React.PureComponent {
   constructor(props) {
@@ -22,7 +22,8 @@ class BrewListContainer extends React.PureComponent {
         "Pale Ale",
         "Weissbier",
         "Belgian Ale"
-      ]
+      ],
+      rating: []
     };
   }
 
@@ -34,26 +35,37 @@ class BrewListContainer extends React.PureComponent {
     waitUser();
     const waitBrewList = async () => {
       await this.props.getBrewList();
+      const { brewList } = this.props;
+      const count = brewList.map(brew => {
+        return brew.likes - brew.dislikes;
+      });
+      this.setState({ rating: count });
     };
     waitBrewList();
   }
 
   handleRating = async (decision, index) => {
     const { user, brewList } = this.props;
-    const payload = { userId: user.id, id: brewList[index]._id };
-    const response =
-      decision === "+" ? await likePost(payload) : await dislikePost(payload);
+    const { rating: rate } = this.state;
+    const payload = { userId: user.id, id: brewList[index]._id, index };
 
-    console.log(response.data);
+    const copy = [...rate];
+
+    await this.props.getRatingChange(decision, payload);
+    const { rating } = this.props;
+    copy[index] = rating;
+
+    this.setState({ rating: copy });
   };
 
   render() {
     const { allowed, brewList } = this.props;
-    const { time, beerType } = this.state;
+    const { time, beerType, rating } = this.state;
     return (
       <>
         <BrewList
           allowed={allowed}
+          rating={rating}
           brewList={brewList}
           time={time}
           beerType={beerType}
@@ -69,7 +81,9 @@ BrewListContainer.propTypes = {
   brewList: PropTypes.arrayOf(PropTypes.object),
   user: PropTypes.objectOf(PropTypes.any),
   getUser: PropTypes.func.isRequired,
-  getBrewList: PropTypes.func.isRequired
+  getBrewList: PropTypes.func.isRequired,
+  getRatingChange: PropTypes.func.isRequired,
+  rating: PropTypes.number.isRequired
 };
 
 BrewListContainer.defaultProps = {
@@ -81,10 +95,13 @@ const mapStateToProps = state => {
   return {
     allowed: state.user.allowed,
     user: state.user.user,
-    brewList: state.brew.brewList
+    brewList: state.brew.brewList,
+    rating: state.brew.rating
   };
 };
 
-export default connect(mapStateToProps, { getUser, getBrewList })(
-  BrewListContainer
-);
+export default connect(mapStateToProps, {
+  getUser,
+  getBrewList,
+  getRatingChange
+})(BrewListContainer);

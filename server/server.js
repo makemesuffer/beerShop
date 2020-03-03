@@ -68,3 +68,6 @@ app.use(errorController);
 server.listen(cfg.EXPRESS_PORT, () => {
   console.log(`Express server running on port ${cfg.EXPRESS_PORT}.`);
 });
+
+// TODO: переписать бейс в абстрактный класс, заэкстендить его
+// TODO: создать (имя) слой и запихнуть туда клауды и функцию подключения дб

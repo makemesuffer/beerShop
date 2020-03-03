@@ -1,7 +1,9 @@
 import { getListOfBeers } from "../../dataAccess/beerRepository/helpers";
 import {
   findBrews,
-  findSingleBrew
+  findSingleBrew,
+  dislikePost,
+  likePost
 } from "../../dataAccess/brewRepository/helpers";
 import actionTypes from "./actionTypes";
 
@@ -46,4 +48,20 @@ const getBrewByIdSuccess = response => ({
 export const getBrewById = id => async dispatch => {
   const response = await findSingleBrew(id);
   dispatch(getBrewByIdSuccess(response.data));
+};
+
+const getRatingChangeSuccess = response => ({
+  type: actionTypes.GET_RATING_CHANGE,
+  payload: response
+});
+
+export const getRatingChange = (decision, payload) => async dispatch => {
+  try {
+    const response =
+      decision === "+" ? await likePost(payload) : await dislikePost(payload);
+    dispatch(getRatingChangeSuccess(response.data.rating));
+  } catch (e) {
+    // TODO: improve
+    console.log(e);
+  }
 };
