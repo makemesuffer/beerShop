@@ -116,7 +116,8 @@ export default function BrewPreview(props) {
     beer,
     createListData,
     createdAt,
-    rating,
+    likes,
+    dislikes,
     handleRating,
     handleReturn,
     userBeerList,
@@ -204,7 +205,7 @@ export default function BrewPreview(props) {
 
         <div className={classes.footerContainer}>
           <Typography component="p" variant="h6" className={classes.rating}>
-            Rating {rating === null ? "[rating]" : rating}
+            {likes === null ? "rating" : likes - dislikes}
             <IndeterminateCheckBoxIcon
               className={classes.icons}
               onClick={() => {
@@ -244,7 +245,8 @@ BrewPreview.propTypes = {
   beer: PropTypes.objectOf(PropTypes.any),
   createListData: PropTypes.func.isRequired,
   createdAt: PropTypes.string,
-  rating: PropTypes.number,
+  likes: PropTypes.number,
+  dislikes: PropTypes.number,
   handleRating: PropTypes.func,
   handleReturn: PropTypes.func,
   userBeerList: PropTypes.arrayOf(PropTypes.number),
@@ -254,9 +256,10 @@ BrewPreview.propTypes = {
 BrewPreview.defaultProps = {
   beer: null,
   createdAt: null,
-  rating: null,
   handleRating: null,
   handleReturn: null,
   userBeerList: null,
-  handleFavorite: null
+  handleFavorite: null,
+  likes: null,
+  dislikes: null
 };

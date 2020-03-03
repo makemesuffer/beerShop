@@ -22,9 +22,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Comments(props) {
-  const { comments, userId, handleDelete } = props;
+  const { brew, user, handleDelete } = props;
   const classes = useStyles();
-
+  const { comments } = brew;
   return (
     <List className={classes.root}>
       {comments.map(comment => {
@@ -32,10 +32,7 @@ export default function Comments(props) {
           <div key={comment.userId}>
             <ListItem alignItems="flex-start">
               <ListItemAvatar>
-                <Avatar
-                  alt="[First Name of profile]"
-                  src="/static/images/avatar/1.jpg"
-                />
+                <Avatar alt={comment.name} src={comment.img} />
               </ListItemAvatar>
               <ListItemText
                 primary={comment.name}
@@ -52,7 +49,7 @@ export default function Comments(props) {
                   </>
                 }
               />
-              {userId === comment.userId ? (
+              {user.id === comment.userId ? (
                 <Button
                   onClick={() => {
                     handleDelete(comment);
@@ -73,7 +70,11 @@ export default function Comments(props) {
 }
 
 Comments.propTypes = {
-  comments: PropTypes.arrayOf(PropTypes.object).isRequired,
-  userId: PropTypes.string.isRequired,
-  handleDelete: PropTypes.func.isRequired
+  user: PropTypes.objectOf(PropTypes.any),
+  handleDelete: PropTypes.func.isRequired,
+  brew: PropTypes.objectOf(PropTypes.any).isRequired
+};
+
+Comments.defaultProps = {
+  user: null
 };

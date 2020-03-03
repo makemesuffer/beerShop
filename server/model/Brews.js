@@ -9,7 +9,10 @@ const BrewSchema = mongoose.Schema({
   images: { type: [String] },
   impressions: { type: String },
   brewType: { type: String },
-  rating: { type: Number },
+  likes: { type: Number, default: 0 },
+  likedBy: { type: [String] },
+  dislikes: { type: Number, default: 0 },
+  dislikedBy: { type: [String] },
   comments: { type: [Object] },
   author: { type: mongoose.Schema.Types.ObjectId, ref: "Users" }
 });

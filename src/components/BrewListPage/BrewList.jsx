@@ -19,11 +19,13 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(4),
     display: "grid",
     alignItems: "stretch",
+    justifyContent: "stretch",
     gridTemplateColumns: "1fr 1fr",
     gridGap: 50
   },
   gridElem: {
-    margin: "0 auto"
+    margin: "0 auto",
+    width: "100%"
   },
   inputs: {
     marginTop: theme.spacing(4),
@@ -35,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function BrewList(props) {
-  const { allowed, brewList, time, beerType } = props;
+  const { allowed, brewList, time, beerType, handleRating } = props;
   const classes = useStyles();
   return (
     <Container component="main" maxWidth="lg" className={classes.container}>
@@ -80,10 +82,14 @@ export default function BrewList(props) {
       </div>
       {brewList !== null ? (
         <div className={classes.grid}>
-          {brewList.map(elem => {
+          {brewList.map((elem, index) => {
             return (
               <div key={elem._id} className={classes.gridElem}>
-                <BrewSingleCard brew={elem} />
+                <BrewSingleCard
+                  brew={elem}
+                  handleRating={handleRating}
+                  index={index}
+                />
               </div>
             );
           })}
@@ -99,7 +105,8 @@ BrewList.propTypes = {
   allowed: PropTypes.bool.isRequired,
   brewList: PropTypes.arrayOf(PropTypes.object),
   beerType: PropTypes.arrayOf(PropTypes.string).isRequired,
-  time: PropTypes.arrayOf(PropTypes.string).isRequired
+  time: PropTypes.arrayOf(PropTypes.string).isRequired,
+  handleRating: PropTypes.func.isRequired
 };
 
 BrewList.defaultProps = {

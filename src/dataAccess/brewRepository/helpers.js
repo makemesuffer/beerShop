@@ -10,8 +10,10 @@ export const findBrews = () => api.get(`/brews`);
 
 export const findSingleBrew = id => api.get(`/brews/${id}`);
 
-export const ratingChange = payload => api.post(`/brews/rating`, payload);
-
 export const messageAdd = payload => api.post(`/brews/message`, payload);
 
 export const deleteComment = payload => api.post(`/brews/delete`, payload);
+
+export const likePost = payload => api.put(`/likeBrew`, payload);
+
+export const dislikePost = payload => api.put(`/dislikeBrew`, payload);

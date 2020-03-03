@@ -4,6 +4,7 @@ const moment = require("moment");
 const db = require("../loaders/db");
 const config = require("../config");
 const Brews = require("../model/Brews");
+const Users = require("../model/Users");
 
 const cloudinaryConfig = config.cloudinary;
 
@@ -116,29 +117,15 @@ module.exports = class BrewServices {
     return db.Base.find(Brews, "_id", id).populate("author", "firstName");
   }
 
-  async ratingChange(data) {
-    const { id, change } = data;
-    const res = await db.Base.find(Brews, "_id", id);
-    res.rating += change;
-    await db.Base.update(Brews, {
-      _id: id,
-      action: { rating: res.rating }
-    });
-
-    return {
-      message: "updated"
-    };
-  }
-
   async messageAdd(data) {
-    const { id, name, message, userId } = data;
+    const { id, name, message, userId, img } = data;
     if (await db.Base.find(Brews, "comments.userId", userId)) {
       return {
         success: false,
         message: "You can't leave comments twice, only 1 comment per user"
       };
     }
-    const comment = { id, payload: { userId, name, message } };
+    const comment = { id, payload: { userId, name, message, img } };
     await db.Brew.pushComment(comment);
     return {
       success: true
@@ -146,11 +133,101 @@ module.exports = class BrewServices {
   }
 
   async deleteMessage(data) {
-    const { id, userId, name, message } = data;
-    const comment = { id, payload: { userId, name, message } };
+    const { id, userId } = data;
+    const comment = { id, payload: { userId } };
     await db.Brew.deleteComment(comment);
     return {
       success: true
+    };
+  }
+
+  async likeBrew(data) {
+    const { id, userId } = data;
+
+    const brew = await db.Base.find(Brews, "_id", id).populate(
+      "author",
+      "login"
+    );
+
+    const user = await db.Base.find(Users, "_id", userId);
+
+    if (user.login === brew.author.login) {
+      return {
+        success: false,
+        message: "Can't like or dislike your own brew"
+      };
+    }
+
+    if (brew.likedBy.includes(user.login)) {
+      return {
+        success: false,
+        message: "You already liked this post"
+      };
+    }
+
+    if (brew.dislikedBy.includes(user.login)) {
+      brew.dislikes -= 1;
+      const arrayIndex = brew.dislikedBy.indexOf(user.login);
+      brew.dislikedBy.splice(arrayIndex, 1);
+      await brew.save();
+      return {
+        success: true,
+        message: "You removed dislike from post"
+      };
+    }
+
+    brew.likes += 1;
+    brew.likedBy.push(user.login);
+    await brew.save();
+
+    return {
+      success: true,
+      message: "Post was liked"
+    };
+  }
+
+  async dislikeBrew(data) {
+    const { id, userId } = data;
+
+    const brew = await db.Base.find(Brews, "_id", id).populate(
+      "author",
+      "login"
+    );
+
+    const user = await db.Base.find(Users, "_id", userId);
+
+    if (user.login === brew.author.login) {
+      return {
+        success: false,
+        message: "Can't like or dislike your own brew"
+      };
+    }
+
+    if (brew.dislikedBy.includes(user.login)) {
+      return {
+        success: false,
+        message: "You already disliked this post"
+      };
+    }
+
+    if (brew.likedBy.includes(user.login)) {
+      brew.likes -= 1;
+      const arrayIndex = brew.likedBy.indexOf(user.login);
+      brew.likedBy.splice(arrayIndex, 1);
+      await brew.save();
+      return {
+        success: true,
+        message: "You removed like from post"
+      };
+    }
+
+    brew.dislikes += 1;
+    brew.dislikedBy.push(user.login);
+    await brew.save();
+
+    return {
+      success: true,
+      message: "Post was disliked"
     };
   }
 };

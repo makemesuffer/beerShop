@@ -7,7 +7,8 @@ import { Container } from "@material-ui/core";
 import { getBeerByName, getBrewById } from "../../store/brew/actions";
 import { getUser } from "../../store/user/actions";
 import {
-  ratingChange,
+  likePost,
+  dislikePost,
   messageAdd,
   deleteComment
 } from "../../dataAccess/brewRepository/helpers";
@@ -62,7 +63,7 @@ class SingleBrewContainer extends React.PureComponent {
   addMessage = async message => {
     const response = await messageAdd(message);
     if (response.data.success === true) {
-      this.setState({ message: "" });
+      this.setState({ message: "", error: "" });
     } else {
       this.setState({ error: response.data.message });
     }
@@ -84,7 +85,8 @@ class SingleBrewContainer extends React.PureComponent {
         userId: user.id,
         id,
         name: `${user.firstName} ${user.lastName}`,
-        message
+        message,
+        img: user.profilePicture
       };
       this.setState({ error: "" });
       this.ws.send(JSON.stringify(payload));
@@ -121,24 +123,19 @@ class SingleBrewContainer extends React.PureComponent {
   };
 
   handleRating = async decision => {
-    const { brew } = this.props;
+    const { user, brew } = this.props;
+    const payload = { userId: user.id, id: brew._id };
+    const response =
+      decision === "+" ? await likePost(payload) : await dislikePost(payload);
 
-    if (decision === "+") {
-      const payload = { id: brew._id, change: 1 };
-      await ratingChange(payload);
-    } else {
-      const payload = { id: brew._id, change: -1 };
-      await ratingChange(payload);
-    }
+    console.log(response.data);
   };
 
   handleDelete = async comment => {
     const { id } = this.props;
     const payload = {
       id,
-      userId: comment.userId,
-      name: comment.name,
-      message: comment.message
+      userId: comment.userId
     };
     await deleteComment(payload);
   };
@@ -163,7 +160,8 @@ class SingleBrewContainer extends React.PureComponent {
             photos={brew.images}
             impressions={brew.impressions}
             createdAt={brew.createdAt}
-            rating={brew.rating}
+            likes={brew.likes}
+            dislikes={brew.dislikes}
             beer={beer}
             handleRating={this.handleRating}
             handleReturn={this.handleReturn}
@@ -174,9 +172,9 @@ class SingleBrewContainer extends React.PureComponent {
         <CommentSection
           submitMessage={this.submitMessage}
           handleChange={this.handleChange}
+          brew={brew}
           error={error}
-          comments={brew.comments}
-          userId={user.id}
+          user={user}
           handleDelete={this.handleDelete}
         />
       </>

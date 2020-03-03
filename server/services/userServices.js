@@ -86,11 +86,21 @@ module.exports = class userServices {
         status: 400
       };
     }
+
     const userData = {
       login: data.login,
       password: md5(data.password)
     };
     const result = await db.Users.login(userData.login, userData.password);
+
+    if (result && result.available === false) {
+      return {
+        success: false,
+        error: "You need to confirm your account via email",
+        status: 400
+      };
+    }
+
     if (result && result.available === true) {
       const user = {
         id: result._id,

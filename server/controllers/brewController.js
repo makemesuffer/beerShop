@@ -21,11 +21,6 @@ module.exports = class BrewController {
     return res.json(message);
   });
 
-  changeRating = wrapAsync(async function(req, res) {
-    const message = await brewServices.ratingChange(req.body);
-    return res.json(message);
-  });
-
   addMessage = wrapAsync(async function(req, res) {
     const message = await brewServices.messageAdd(req.body);
     return res.json(message);
@@ -33,6 +28,16 @@ module.exports = class BrewController {
 
   deleteMessage = wrapAsync(async function(req, res) {
     const message = await brewServices.deleteMessage(req.body);
+    return res.json(message);
+  });
+
+  likeBrew = wrapAsync(async function(req, res) {
+    const message = await brewServices.likeBrew(req.body);
+    return res.json(message);
+  });
+
+  dislikeBrew = wrapAsync(async function(req, res) {
+    const message = await brewServices.dislikeBrew(req.body);
     return res.json(message);
   });
 };

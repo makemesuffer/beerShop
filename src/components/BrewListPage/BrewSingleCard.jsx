@@ -36,7 +36,7 @@ const useStyles = makeStyles({
 });
 
 export default function BrewSingleCard(props) {
-  const { brew } = props;
+  const { brew, handleRating, index } = props;
   const classes = useStyles();
 
   return (
@@ -75,14 +75,22 @@ export default function BrewSingleCard(props) {
         </div>
         <div>
           <Button size="small" color="primary">
-            <AddBoxIcon />
+            <IndeterminateCheckBoxIcon
+              onClick={() => {
+                handleRating("-", index);
+              }}
+            />
           </Button>
           <Typography variant="h5" component="span">
             {" "}
-            {brew.rating}{" "}
+            {brew.likes - brew.dislikes}{" "}
           </Typography>
           <Button size="small" color="primary">
-            <IndeterminateCheckBoxIcon />
+            <AddBoxIcon
+              onClick={() => {
+                handleRating("+", index);
+              }}
+            />
           </Button>
         </div>
       </CardActions>
@@ -91,5 +99,7 @@ export default function BrewSingleCard(props) {
 }
 
 BrewSingleCard.propTypes = {
-  brew: PropTypes.objectOf(PropTypes.any).isRequired
+  brew: PropTypes.objectOf(PropTypes.any).isRequired,
+  handleRating: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired
 };

@@ -10,7 +10,9 @@ router.get("/brews", brewController.findBrew);
 
 router.get("/brews/:id", brewController.findSingleBrew);
 
-router.post("/brews/rating", brewController.changeRating);
+router.put("/likeBrew", brewController.likeBrew);
+
+router.put("/dislikeBrew", brewController.dislikeBrew);
 
 router.post("/brews/message", brewController.addMessage);
 

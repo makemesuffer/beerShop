@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import BrewList from "../../components/BrewListPage/BrewList";
 import { getUser } from "../../store/user/actions";
 import { getBrewList } from "../../store/brew/actions";
+import { dislikePost, likePost } from "../../dataAccess/brewRepository/helpers";
 
 class BrewListContainer extends React.PureComponent {
   constructor(props) {
@@ -37,6 +38,15 @@ class BrewListContainer extends React.PureComponent {
     waitBrewList();
   }
 
+  handleRating = async (decision, index) => {
+    const { user, brewList } = this.props;
+    const payload = { userId: user.id, id: brewList[index]._id };
+    const response =
+      decision === "+" ? await likePost(payload) : await dislikePost(payload);
+
+    console.log(response.data);
+  };
+
   render() {
     const { allowed, brewList } = this.props;
     const { time, beerType } = this.state;
@@ -47,6 +57,7 @@ class BrewListContainer extends React.PureComponent {
           brewList={brewList}
           time={time}
           beerType={beerType}
+          handleRating={this.handleRating}
         />
       </>
     );
