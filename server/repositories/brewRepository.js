@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
+
 const Brews = require("../model/Brews");
+const BaseRepository = require("./baseRepository");
 
 const Brew = mongoose.model("Brews");
 
-module.exports = class BrewRepository {
+class BrewRepository extends BaseRepository {
   create(data) {
     const brew = new Brew({
       createdAt: new Date(),
@@ -21,16 +23,18 @@ module.exports = class BrewRepository {
   }
 
   pushComment(comment) {
-    return Brews.findOneAndUpdate(
+    return this.model.findOneAndUpdate(
       { _id: comment.id },
       { $push: { comments: comment.payload } }
     );
   }
 
   deleteComment(comment) {
-    return Brews.findOneAndUpdate(
+    return this.model.findOneAndUpdate(
       { _id: comment.id },
       { $pull: { comments: comment.payload } }
     );
   }
-};
+}
+
+module.exports = new BrewRepository(Brews);

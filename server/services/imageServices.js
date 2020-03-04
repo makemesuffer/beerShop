@@ -1,22 +1,11 @@
-const cloudinary = require("cloudinary").v2;
-
-const db = require("../loaders/db");
-const config = require("../config");
-const Users = require("../model/Users");
-
-const cloudinaryConfig = config.cloudinary;
-
-cloudinary.config({
-  cloud_name: cloudinaryConfig.cloudName,
-  api_key: cloudinaryConfig.cloudKey,
-  api_secret: cloudinaryConfig.cloudSecret
-});
+const userRepository = require("../repositories/userRepository");
+const cloudinary = require("../inregration/cloudinaryLoader");
 
 module.exports = class ImageServices {
   async imageAdd(data) {
     const { id, img } = data;
     const image = await cloudinary.uploader.upload(img);
-    await db.Base.update(Users, {
+    await userRepository.update({
       _id: id,
       action: { profilePicture: image.url }
     });
@@ -35,7 +24,7 @@ module.exports = class ImageServices {
       .split(".")
       .shift();
     await cloudinary.uploader.destroy(publicId);
-    await db.Base.update(Users, {
+    await userRepository.update({
       _id: id,
       action: { profilePicture: null }
     });

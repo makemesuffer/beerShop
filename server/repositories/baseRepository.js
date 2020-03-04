@@ -1,21 +1,30 @@
 const mongoose = require("mongoose");
 
-module.exports = class baseRepository {
-  update(model, object) {
-    return model.findOneAndUpdate({ _id: object._id }, { $set: object.action });
+class BaseRepository {
+  constructor(model) {
+    this.model = model;
   }
 
-  getOneByID(model, id) {
+  update(object) {
+    return this.model.findOneAndUpdate(
+      { _id: object._id },
+      { $set: object.action }
+    );
+  }
+
+  getOneByID(id) {
     if (mongoose.Types.ObjectId.isValid(id)) {
-      return model.findOne({ _id: id });
+      return this.model.findOne({ _id: id });
     }
   }
 
-  find(model, param, value) {
-    return model.findOne({ [param]: value });
+  find(param, value) {
+    return this.model.findOne({ [param]: value });
   }
 
-  findAll(model) {
-    return model.find({});
+  findAll() {
+    return this.model.find({});
   }
-};
+}
+
+module.exports = BaseRepository;

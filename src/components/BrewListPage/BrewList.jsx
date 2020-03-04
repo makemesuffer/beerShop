@@ -7,6 +7,7 @@ import { Link as RouterLink } from "react-router-dom";
 import Link from "@material-ui/core/Link";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
+import Alert from "@material-ui/lab/Alert";
 
 import BrewSingleCard from "./BrewSingleCard";
 
@@ -37,7 +38,15 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function BrewList(props) {
-  const { allowed, brewList, time, beerType, handleRating, rating } = props;
+  const {
+    allowed,
+    brewList,
+    time,
+    beerType,
+    handleRating,
+    rating,
+    error
+  } = props;
   const classes = useStyles();
   return (
     <Container component="main" maxWidth="lg" className={classes.container}>
@@ -90,6 +99,7 @@ export default function BrewList(props) {
                   handleRating={handleRating}
                   index={index}
                   rating={rating}
+                  error={error}
                 />
               </div>
             );
@@ -98,6 +108,10 @@ export default function BrewList(props) {
       ) : (
         <p> No brews registered</p>
       )}
+
+      <Container component="footer" maxWidth="sm">
+        {error === null ? <></> : <Alert severity="error">{error}</Alert>}
+      </Container>
     </Container>
   );
 }
@@ -108,9 +122,11 @@ BrewList.propTypes = {
   beerType: PropTypes.arrayOf(PropTypes.string).isRequired,
   time: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleRating: PropTypes.func.isRequired,
-  rating: PropTypes.arrayOf(PropTypes.number).isRequired
+  rating: PropTypes.arrayOf(PropTypes.number).isRequired,
+  error: PropTypes.string
 };
 
 BrewList.defaultProps = {
-  brewList: null
+  brewList: null,
+  error: null
 };

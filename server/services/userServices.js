@@ -3,10 +3,9 @@ const moment = require("moment");
 const validator = require("email-validator");
 const jwt = require("jsonwebtoken");
 
-const db = require("../loaders/db");
+const userRepository = require("../repositories/userRepository");
 const config = require("../config");
 const mailer = require("../helpers/mailer");
-const Users = require("../model/Users");
 
 module.exports = class userServices {
   async userRegister(data) {
@@ -44,7 +43,7 @@ module.exports = class userServices {
       };
     }
 
-    if (await db.Base.find(Users, "login", login)) {
+    if (await userRepository.find("login", login)) {
       return {
         success: false,
         error: "email is already taken",
@@ -59,7 +58,7 @@ module.exports = class userServices {
       firstName,
       lastName
     };
-    const result = await db.Users.create(userData);
+    const result = await userRepository.create(userData);
     if (result.login) {
       const link = `${config.url}/account/verify/${result._id}`;
       await mailer.send({
@@ -91,7 +90,10 @@ module.exports = class userServices {
       login: data.login,
       password: md5(data.password)
     };
-    const result = await db.Users.login(userData.login, userData.password);
+    const result = await userRepository.login(
+      userData.login,
+      userData.password
+    );
 
     if (result && result.available === false) {
       return {
@@ -131,7 +133,7 @@ module.exports = class userServices {
 
   async userFind(data) {
     const { id } = data;
-    const result = await db.Base.getOneByID(Users, id);
+    const result = await userRepository.getOneByID(id);
     if (result) {
       return {
         id: result._id,

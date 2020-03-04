@@ -55,13 +55,17 @@ const getRatingChangeSuccess = response => ({
   payload: response
 });
 
+const getError = error => ({
+  type: actionTypes.GET_ERROR,
+  payload: error
+});
+
 export const getRatingChange = (decision, payload) => async dispatch => {
   try {
     const response =
       decision === "+" ? await likePost(payload) : await dislikePost(payload);
     dispatch(getRatingChangeSuccess(response.data.rating));
   } catch (e) {
-    // TODO: improve
-    console.log(e);
+    dispatch(getError(e.response.data));
   }
 };

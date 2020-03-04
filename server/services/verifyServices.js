@@ -1,16 +1,15 @@
 const md5 = require("md5");
 
 const validator = require("email-validator");
-const db = require("../loaders/db");
+const userRepository = require("../repositories/userRepository");
 const mailer = require("../helpers/mailer");
-const Users = require("../model/Users");
 
 module.exports = class VerifyServices {
   userVerify(data) {
     const userData = {
       id: data.id
     };
-    return db.Base.update(Users, {
+    return userRepository.update({
       _id: userData.id,
       action: { available: true }
     });
@@ -25,7 +24,7 @@ module.exports = class VerifyServices {
         error: "Please, fill all the inputs"
       };
     }
-    const user = await db.Base.getOneByID(Users, id);
+    const user = await userRepository.getOneByID(id);
     if (md5(oldPassword) !== user.password) {
       return {
         success: false,
@@ -47,7 +46,7 @@ module.exports = class VerifyServices {
       };
     }
 
-    const userUpdate = await db.Base.update(Users, {
+    const userUpdate = await userRepository.update({
       _id: id,
       action: { password: md5(newPassword) }
     });
@@ -75,14 +74,14 @@ module.exports = class VerifyServices {
       };
     }
 
-    const result = await db.Base.find(Users, "login", email);
+    const result = await userRepository.find("login", email);
 
     if (result) {
       const generateCode = Math.random()
         .toString(36)
         .substring(2, 7);
 
-      await db.Users.update({
+      await userRepository.update({
         _id: result._id,
         action: { resetCode: generateCode }
       });
@@ -107,7 +106,7 @@ module.exports = class VerifyServices {
 
   async codeCheck(data) {
     const { code } = data;
-    const result = await db.Base.find(Users, "resetCode", code);
+    const result = await userRepository.find("resetCode", code);
     if (result) {
       return {
         success: true,
@@ -140,7 +139,7 @@ module.exports = class VerifyServices {
       };
     }
 
-    const userUpdate = await db.Base.update(Users, {
+    const userUpdate = await userRepository.update({
       _id: id,
       action: { password: md5(newPassword) }
     });

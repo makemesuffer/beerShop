@@ -59,11 +59,13 @@ class BrewListContainer extends React.PureComponent {
   };
 
   render() {
-    const { allowed, brewList } = this.props;
+    const { allowed, brewList, error } = this.props;
+    console.log(error);
     const { time, beerType, rating } = this.state;
     return (
       <>
         <BrewList
+          error={error}
           allowed={allowed}
           rating={rating}
           brewList={brewList}
@@ -77,6 +79,7 @@ class BrewListContainer extends React.PureComponent {
 }
 
 BrewListContainer.propTypes = {
+  error: PropTypes.string,
   allowed: PropTypes.bool.isRequired,
   brewList: PropTypes.arrayOf(PropTypes.object),
   user: PropTypes.objectOf(PropTypes.any),
@@ -88,7 +91,8 @@ BrewListContainer.propTypes = {
 
 BrewListContainer.defaultProps = {
   brewList: null,
-  user: null
+  user: null,
+  error: null
 };
 
 const mapStateToProps = state => {
@@ -96,7 +100,8 @@ const mapStateToProps = state => {
     allowed: state.user.allowed,
     user: state.user.user,
     brewList: state.brew.brewList,
-    rating: state.brew.rating
+    rating: state.brew.rating,
+    error: state.brew.error
   };
 };
 

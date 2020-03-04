@@ -1,11 +1,13 @@
 const mongoose = require("mongoose");
+
 const Users = require("../model/Users");
+const BaseRepository = require("./baseRepository");
 
 const User = mongoose.model("Users");
 
-module.exports = class UserRepository {
+class UserRepository extends BaseRepository {
   login(login, password) {
-    return Users.findOne({ login, password });
+    return this.model.findOne({ login, password });
   }
 
   create(data) {
@@ -23,16 +25,18 @@ module.exports = class UserRepository {
   }
 
   addBeer(data) {
-    return Users.findOneAndUpdate(
+    return this.model.findOneAndUpdate(
       { _id: data.userId },
       { $push: { beerList: data.id } }
     );
   }
 
   deleteBeer(data) {
-    return Users.findOneAndUpdate(
+    return this.model.findOneAndUpdate(
       { _id: data.userId },
       { $pull: { beerList: data.id } }
     );
   }
-};
+}
+
+module.exports = new UserRepository(Users);

@@ -1,4 +1,4 @@
-const db = require("../loaders/db");
+const userRepository = require("../repositories/userRepository");
 
 module.exports = class BeerServices {
   async beerAdd(data) {
@@ -7,7 +7,7 @@ module.exports = class BeerServices {
       id,
       userId
     };
-    await db.Users.addBeer(payload);
+    await userRepository.addBeer(payload);
     return {
       success: true,
       message: "beer added"
@@ -20,7 +20,7 @@ module.exports = class BeerServices {
       id,
       userId
     };
-    await db.Users.deleteBeer(payload);
+    await userRepository.deleteBeer(payload);
     return {
       success: true,
       message: "beer deleted"

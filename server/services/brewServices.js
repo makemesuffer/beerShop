@@ -1,18 +1,8 @@
-const cloudinary = require("cloudinary").v2;
 const moment = require("moment");
 
-const db = require("../loaders/db");
-const config = require("../config");
-const Brews = require("../model/Brews");
-const Users = require("../model/Users");
-
-const cloudinaryConfig = config.cloudinary;
-
-cloudinary.config({
-  cloud_name: cloudinaryConfig.cloudName,
-  api_key: cloudinaryConfig.cloudKey,
-  api_secret: cloudinaryConfig.cloudSecret
-});
+const userRepository = require("../repositories/userRepository");
+const brewRepository = require("../repositories/brewRepository");
+const cloudinary = require("../inregration/cloudinaryLoader");
 
 module.exports = class BrewServices {
   async brewRegister(data) {
@@ -63,7 +53,7 @@ module.exports = class BrewServices {
       author
     };
 
-    const result = await db.Brew.create(brewData);
+    const result = await brewRepository.create(brewData);
 
     if (result.location) {
       return {
@@ -89,7 +79,9 @@ module.exports = class BrewServices {
 
     const time = "all";
 
-    const posts = await db.Base.findAll(Brews).populate("author", "firstName");
+    const posts = await brewRepository
+      .findAll()
+      .populate("author", "firstName");
 
     switch (time) {
       case "day":
@@ -114,28 +106,24 @@ module.exports = class BrewServices {
   }
 
   getSingleBrew(id) {
-    return db.Base.find(Brews, "_id", id).populate("author", "firstName");
+    return brewRepository.find("_id", id).populate("author", "firstName");
   }
 
   async messageAdd(data) {
     const { id, name, message, userId, img } = data;
-    if (await db.Base.find(Brews, "comments.userId", userId)) {
-      return {
-        success: false,
-        message: "You can't leave comments twice, only 1 comment per user"
-      };
-    }
     const comment = { id, payload: { userId, name, message, img } };
-    await db.Brew.pushComment(comment);
+    await brewRepository.pushComment(comment);
     return {
       success: true
     };
   }
 
+  // TODO: чтобы не все комменты удалялись, пробрасывай целый объект
+
   async deleteMessage(data) {
     const { id, userId } = data;
     const comment = { id, payload: { userId } };
-    await db.Brew.deleteComment(comment);
+    await brewRepository.deleteComment(comment);
     return {
       success: true
     };
@@ -144,26 +132,25 @@ module.exports = class BrewServices {
   async likeBrew(data) {
     const { id, userId } = data;
 
-    const brew = await db.Base.find(Brews, "_id", id).populate(
-      "author",
-      "login"
-    );
+    const brew = await brewRepository
+      .find("_id", id)
+      .populate("author", "login");
 
-    const user = await db.Base.find(Users, "_id", userId);
+    const user = await userRepository.find("_id", userId);
 
     if (user.login === brew.author.login) {
       return {
-        success: false,
         message: "Can't like or dislike your own brew",
-        status: 400
+        status: 400,
+        rating: brew.likes - brew.dislikes
       };
     }
 
     if (brew.likedBy.includes(user.login)) {
       return {
-        success: false,
         message: "You already liked this post",
-        status: 400
+        status: 400,
+        rating: brew.likes - brew.dislikes
       };
     }
 
@@ -173,7 +160,6 @@ module.exports = class BrewServices {
       brew.dislikedBy.splice(arrayIndex, 1);
       await brew.save();
       return {
-        success: true,
         message: "You removed dislike from post",
         rating: brew.likes - brew.dislikes,
         status: 200
@@ -185,7 +171,6 @@ module.exports = class BrewServices {
     await brew.save();
 
     return {
-      success: true,
       message: "Post was liked",
       rating: brew.likes - brew.dislikes,
       status: 200
@@ -195,16 +180,15 @@ module.exports = class BrewServices {
   async dislikeBrew(data) {
     const { id, userId } = data;
 
-    const brew = await db.Base.find(Brews, "_id", id).populate(
-      "author",
-      "login"
-    );
+    const brew = await brewRepository
+      .find("_id", id)
+      .populate("author", "login");
 
-    const user = await db.Base.find(Users, "_id", userId);
+    const user = await userRepository.find("_id", userId);
 
     if (user.login === brew.author.login) {
       return {
-        success: false,
+        rating: brew.likes - brew.dislikes,
         message: "Can't like or dislike your own brew",
         status: 400
       };
@@ -212,7 +196,7 @@ module.exports = class BrewServices {
 
     if (brew.dislikedBy.includes(user.login)) {
       return {
-        success: false,
+        rating: brew.likes - brew.dislikes,
         message: "You already disliked this post",
         status: 400
       };
@@ -224,7 +208,6 @@ module.exports = class BrewServices {
       brew.likedBy.splice(arrayIndex, 1);
       await brew.save();
       return {
-        success: true,
         message: "You removed like from post",
         rating: brew.likes - brew.dislikes,
         status: 200
@@ -236,7 +219,6 @@ module.exports = class BrewServices {
     await brew.save();
 
     return {
-      success: true,
       message: "Post was disliked",
       rating: brew.likes - brew.dislikes,
       status: 200

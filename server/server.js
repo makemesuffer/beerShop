@@ -1,6 +1,5 @@
 const express = require("express");
 const passport = require("passport");
-const mongoose = require("mongoose");
 const http = require("http");
 const WebSocket = require("ws");
 const bodyParser = require("body-parser");
@@ -10,18 +9,9 @@ const enableWs = require("express-ws");
 
 require("dotenv").config();
 
-mongoose.connect(
-  `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.mongodb.net/test?retryWrites=true&w=majority`,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-  }
-);
+const setUpConnection = require("./inregration/dbLoader");
 
-require("./model/Users");
-require("./model/Brews");
+setUpConnection();
 
 const router = require("./routes/router");
 const cfg = require("./config.js");
@@ -68,6 +58,3 @@ app.use(errorController);
 server.listen(cfg.EXPRESS_PORT, () => {
   console.log(`Express server running on port ${cfg.EXPRESS_PORT}.`);
 });
-
-// TODO: переписать бейс в абстрактный класс, заэкстендить его
-// TODO: создать (имя) слой и запихнуть туда клауды и функцию подключения дб

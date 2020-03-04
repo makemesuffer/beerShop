@@ -69,23 +69,26 @@ export default function BrewSingleCard(props) {
           </Link>
         </div>
         <div>
-          <Button size="small" color="primary">
-            <IndeterminateCheckBoxIcon
-              onClick={() => {
-                handleRating("-", index);
-              }}
-            />
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => {
+              handleRating("-", index);
+            }}
+          >
+            <IndeterminateCheckBoxIcon />
           </Button>
           <Typography variant="h5" component="span">
-            {" "}
-            {rating[index]}{" "}
+            {rating[index]}
           </Typography>
-          <Button size="small" color="primary">
-            <AddBoxIcon
-              onClick={() => {
-                handleRating("+", index);
-              }}
-            />
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => {
+              handleRating("+", index);
+            }}
+          >
+            <AddBoxIcon />
           </Button>
         </div>
       </CardActions>
