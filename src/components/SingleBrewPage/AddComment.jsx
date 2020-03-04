@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
-import Alert from "@material-ui/lab/Alert";
 import { TextField } from "@material-ui/core";
 
 const useStyles = makeStyles({
@@ -19,11 +18,10 @@ const useStyles = makeStyles({
 });
 
 export default function AddComment(props) {
-  const { submitMessage, handleChange, error } = props;
+  const { submitMessage, handleChange, message } = props;
   const classes = useStyles();
   return (
     <>
-      {error === "" ? <></> : <Alert severity="error">{error}</Alert>}
       <FormControl className={classes.input} variant="outlined">
         <TextField
           variant="outlined"
@@ -31,6 +29,7 @@ export default function AddComment(props) {
           name="message"
           onChange={handleChange}
           label="Comment"
+          value={message}
         />
         <Button onClick={submitMessage} className={classes.button}>
           Submit message
@@ -43,5 +42,5 @@ export default function AddComment(props) {
 AddComment.propTypes = {
   submitMessage: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
-  error: PropTypes.string.isRequired
+  message: PropTypes.string.isRequired
 };

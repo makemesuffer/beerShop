@@ -200,7 +200,7 @@ const mapStateToProps = state => {
   return {
     beerList: state.brew.beerNames,
     user: state.user.user,
-    beer: state.brew.singleBeer[0]
+    beer: state.brew.singleBeer
   };
 };
 

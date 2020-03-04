@@ -4,10 +4,8 @@ const BeerController = require("../controllers/beerController");
 
 const beerController = new BeerController();
 
-// TODO: посмотри правильный рест-апи нейминг и исправь че можно
+router.put("/users/:userId/beers/:beerId", beerController.addBeer);
 
-router.post("/add-beer", beerController.addBeer);
-
-router.post("/delete-beer", beerController.deleteBeer);
+router.delete("/users/:userId/beers/:beerId", beerController.deleteBeer);
 
 module.exports = router;

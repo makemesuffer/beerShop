@@ -20,19 +20,24 @@ export default function CommentSection(props) {
   const {
     submitMessage,
     handleChange,
-    error,
     handleDelete,
     user,
-    brew
+    brew,
+    allowed,
+    message
   } = props;
   const classes = useStyles();
   return (
     <Container className={classes.container}>
-      <AddComment
-        submitMessage={submitMessage}
-        handleChange={handleChange}
-        error={error}
-      />
+      {allowed ? (
+        <AddComment
+          submitMessage={submitMessage}
+          handleChange={handleChange}
+          message={message}
+        />
+      ) : (
+        <></>
+      )}
       <Comments user={user} brew={brew} handleDelete={handleDelete} />
     </Container>
   );
@@ -41,10 +46,11 @@ export default function CommentSection(props) {
 CommentSection.propTypes = {
   submitMessage: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
-  error: PropTypes.string.isRequired,
   user: PropTypes.objectOf(PropTypes.any),
   handleDelete: PropTypes.func.isRequired,
-  brew: PropTypes.objectOf(PropTypes.any).isRequired
+  brew: PropTypes.objectOf(PropTypes.any).isRequired,
+  allowed: PropTypes.bool.isRequired,
+  message: PropTypes.string.isRequired
 };
 
 CommentSection.defaultProps = {

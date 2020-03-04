@@ -29,7 +29,7 @@ export default function Comments(props) {
     <List className={classes.root}>
       {comments.map(comment => {
         return (
-          <div key={comment.userId}>
+          <div key={comment.commentId}>
             <ListItem alignItems="flex-start">
               <ListItemAvatar>
                 <Avatar alt={comment.name} src={comment.img} />

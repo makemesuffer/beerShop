@@ -9,6 +9,7 @@ import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox"
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 import { Link as RouterLink } from "react-router-dom";
 import moment from "moment";
 
@@ -36,7 +37,7 @@ const useStyles = makeStyles({
 });
 
 export default function BrewSingleCard(props) {
-  const { brew, handleRating, index, rating } = props;
+  const { brew, handleRating, index, rating, error, id } = props;
   const classes = useStyles();
   return (
     <Card className={classes.root}>
@@ -60,6 +61,11 @@ export default function BrewSingleCard(props) {
           {moment(brew.createdAt).format("LL")}
         </Typography>
       </CardContent>
+      {id === brew._id && error !== null ? (
+        <Alert severity="error">{error}</Alert>
+      ) : (
+        <></>
+      )}
       <CardActions className={classes.grid}>
         <div>
           <Link component={RouterLink} to={`/brews/${brew._id}`}>
@@ -100,5 +106,12 @@ BrewSingleCard.propTypes = {
   brew: PropTypes.objectOf(PropTypes.any).isRequired,
   handleRating: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
-  rating: PropTypes.arrayOf(PropTypes.number).isRequired
+  rating: PropTypes.arrayOf(PropTypes.number).isRequired,
+  error: PropTypes.string,
+  id: PropTypes.string
+};
+
+BrewSingleCard.defaultProps = {
+  error: null,
+  id: null
 };

@@ -110,22 +110,28 @@ module.exports = class BrewServices {
   }
 
   async messageAdd(data) {
-    const { id, name, message, userId, img } = data;
-    const comment = { id, payload: { userId, name, message, img } };
+    const { id, name, message, userId, img, commentId } = data;
+    const comment = { id, payload: { commentId, userId, name, message, img } };
     await brewRepository.pushComment(comment);
+    const brew = await brewRepository
+      .getOneByID(id)
+      .populate("author", "firstName");
     return {
-      success: true
+      success: true,
+      brew
     };
   }
 
-  // TODO: чтобы не все комменты удалялись, пробрасывай целый объект
-
   async deleteMessage(data) {
-    const { id, userId } = data;
-    const comment = { id, payload: { userId } };
+    const { id, commentId } = data;
+    const comment = { id, payload: { commentId } };
     await brewRepository.deleteComment(comment);
+    const brew = await brewRepository
+      .getOneByID(id)
+      .populate("author", "firstName");
     return {
-      success: true
+      success: true,
+      brew
     };
   }
 
@@ -140,6 +146,7 @@ module.exports = class BrewServices {
 
     if (user.login === brew.author.login) {
       return {
+        id,
         message: "Can't like or dislike your own brew",
         status: 400,
         rating: brew.likes - brew.dislikes
@@ -148,6 +155,7 @@ module.exports = class BrewServices {
 
     if (brew.likedBy.includes(user.login)) {
       return {
+        id,
         message: "You already liked this post",
         status: 400,
         rating: brew.likes - brew.dislikes
@@ -188,6 +196,7 @@ module.exports = class BrewServices {
 
     if (user.login === brew.author.login) {
       return {
+        id,
         rating: brew.likes - brew.dislikes,
         message: "Can't like or dislike your own brew",
         status: 400
@@ -196,6 +205,7 @@ module.exports = class BrewServices {
 
     if (brew.dislikedBy.includes(user.login)) {
       return {
+        id,
         rating: brew.likes - brew.dislikes,
         message: "You already disliked this post",
         status: 400

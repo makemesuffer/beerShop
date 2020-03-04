@@ -10,7 +10,9 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
 import StarIcon from "@material-ui/icons/Star";
 import Button from "@material-ui/core/Button";
+import Alert from "@material-ui/lab/Alert";
 
+import Container from "@material-ui/core/Container";
 import beer1 from "./tempAssets/beer1.jpg";
 import beer2 from "./tempAssets/beer2.jpeg";
 import beer3 from "./tempAssets/beer3.jpeg";
@@ -81,10 +83,14 @@ const useStyles = makeStyles(theme => ({
     maxWidth: "80%",
     marginLeft: "15%"
   },
-  footerContainer: {
+  errorContainer: {
     marginTop: theme.spacing(7),
+    textAlign: "center"
+  },
+  footerContainer: {
+    marginTop: theme.spacing(2),
     display: "grid",
-    gridTemplateColumns: "1fr 1fr 1.5fr",
+    gridTemplateColumns: "1fr 1fr 1.2fr",
     paddingBottom: theme.spacing(5)
   },
   icons: {
@@ -116,12 +122,12 @@ export default function BrewPreview(props) {
     beer,
     createListData,
     createdAt,
-    likes,
-    dislikes,
+    rating,
     handleRating,
     handleReturn,
     userBeerList,
-    handleFavorite
+    handleFavorite,
+    error
   } = props;
   const classes = useStyles();
   let haveInFav = false;
@@ -203,9 +209,12 @@ export default function BrewPreview(props) {
           </div>
         </div>
 
+        <Container maxWidth="xs" className={classes.errorContainer}>
+          {error === null ? <></> : <Alert severity="error">{error}</Alert>}
+        </Container>
         <div className={classes.footerContainer}>
           <Typography component="p" variant="h6" className={classes.rating}>
-            {likes === null ? "rating" : likes - dislikes}
+            {rating === null ? "rating" : rating}
             <IndeterminateCheckBoxIcon
               className={classes.icons}
               onClick={() => {
@@ -245,12 +254,12 @@ BrewPreview.propTypes = {
   beer: PropTypes.objectOf(PropTypes.any),
   createListData: PropTypes.func.isRequired,
   createdAt: PropTypes.string,
-  likes: PropTypes.number,
-  dislikes: PropTypes.number,
   handleRating: PropTypes.func,
   handleReturn: PropTypes.func,
   userBeerList: PropTypes.arrayOf(PropTypes.number),
-  handleFavorite: PropTypes.func
+  handleFavorite: PropTypes.func,
+  error: PropTypes.string,
+  rating: PropTypes.number
 };
 
 BrewPreview.defaultProps = {
@@ -260,6 +269,6 @@ BrewPreview.defaultProps = {
   handleReturn: null,
   userBeerList: null,
   handleFavorite: null,
-  likes: null,
-  dislikes: null
+  rating: null,
+  error: null
 };

@@ -4,14 +4,14 @@ import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Container } from "@material-ui/core";
 
-import { getBeerByName, getBrewById } from "../../store/brew/actions";
-import { getUser } from "../../store/user/actions";
 import {
-  likePost,
-  dislikePost,
-  messageAdd,
-  deleteComment
-} from "../../dataAccess/brewRepository/helpers";
+  getBeerByName,
+  getBrewById,
+  deleteMessage,
+  addComment,
+  getRatingChange
+} from "../../store/brew/actions";
+import { getUser } from "../../store/user/actions";
 import BrewPreview from "../../components/BrewFormPage/BrewPreview";
 import Loader from "../../components/Loader";
 import { addBeer, deleteBeer } from "../../dataAccess/userRepository/helpers";
@@ -24,7 +24,7 @@ class SingleBrewContainer extends React.PureComponent {
     super(props);
     this.state = {
       message: "",
-      error: ""
+      rating: 0
     };
   }
 
@@ -34,6 +34,7 @@ class SingleBrewContainer extends React.PureComponent {
     const findBrewPost = async aidi => {
       await this.props.getBrewById(aidi);
       const { brew } = this.props;
+      this.setState({ rating: brew.likes - brew.dislikes });
       await this.props.getBeerByName(brew.brewName);
     };
 
@@ -61,12 +62,8 @@ class SingleBrewContainer extends React.PureComponent {
   }
 
   addMessage = async message => {
-    const response = await messageAdd(message);
-    if (response.data.success === true) {
-      this.setState({ message: "", error: "" });
-    } else {
-      this.setState({ error: response.data.message });
-    }
+    this.setState({ message: "" });
+    await this.props.addComment(message);
   };
 
   handleChange = e => {
@@ -77,20 +74,16 @@ class SingleBrewContainer extends React.PureComponent {
   submitMessage = () => {
     const { message } = this.state;
     const { user, id } = this.props;
-
-    if (message.length < 20) {
-      this.setState({ error: "Message need to be at least 20 characters" });
-    } else {
-      const payload = {
-        userId: user.id,
-        id,
-        name: `${user.firstName} ${user.lastName}`,
-        message,
-        img: user.profilePicture
-      };
-      this.setState({ error: "" });
-      this.ws.send(JSON.stringify(payload));
-    }
+    const commentId = `f${(+new Date()).toString(16)}`;
+    const payload = {
+      commentId,
+      userId: user.id,
+      id,
+      name: `${user.firstName} ${user.lastName}`,
+      message,
+      img: user.profilePicture
+    };
+    this.ws.send(JSON.stringify(payload));
   };
 
   handleReturn = () => {
@@ -125,26 +118,23 @@ class SingleBrewContainer extends React.PureComponent {
   handleRating = async decision => {
     const { user, brew } = this.props;
     const payload = { userId: user.id, id: brew._id };
-    const response =
-      decision === "+" ? await likePost(payload) : await dislikePost(payload);
-
-    console.log(response.data);
+    await this.props.getRatingChange(decision, payload);
+    const { rating } = this.props;
+    this.setState({ rating });
   };
 
   handleDelete = async comment => {
     const { id } = this.props;
     const payload = {
       id,
-      userId: comment.userId
+      commentId: comment.commentId
     };
-    await deleteComment(payload);
+    this.props.deleteMessage(payload);
   };
 
-  // TODO: создай комментс в редакс сторе!!!!!!!
-
   render() {
-    const { user, brew, beer } = this.props;
-    const { error } = this.state;
+    const { user, brew, beer, allowed, error } = this.props;
+    const { message, rating } = this.state;
     if (brew === null || beer === null) {
       return <Loader />;
     }
@@ -160,8 +150,8 @@ class SingleBrewContainer extends React.PureComponent {
             photos={brew.images}
             impressions={brew.impressions}
             createdAt={brew.createdAt}
-            likes={brew.likes}
-            dislikes={brew.dislikes}
+            rating={rating}
+            error={error}
             beer={beer}
             handleRating={this.handleRating}
             handleReturn={this.handleReturn}
@@ -173,9 +163,10 @@ class SingleBrewContainer extends React.PureComponent {
           submitMessage={this.submitMessage}
           handleChange={this.handleChange}
           brew={brew}
-          error={error}
           user={user}
           handleDelete={this.handleDelete}
+          allowed={allowed}
+          message={message}
         />
       </>
     );
@@ -184,31 +175,44 @@ class SingleBrewContainer extends React.PureComponent {
 
 SingleBrewContainer.propTypes = {
   brew: PropTypes.objectOf(PropTypes.any),
+  allowed: PropTypes.bool.isRequired,
   id: PropTypes.string.isRequired,
   getBrewById: PropTypes.func.isRequired,
   beer: PropTypes.objectOf(PropTypes.any),
   getBeerByName: PropTypes.func.isRequired,
   history: PropTypes.objectOf(PropTypes.any).isRequired,
   user: PropTypes.objectOf(PropTypes.any),
-  getUser: PropTypes.func.isRequired
+  getUser: PropTypes.func.isRequired,
+  deleteMessage: PropTypes.func.isRequired,
+  addComment: PropTypes.func.isRequired,
+  getRatingChange: PropTypes.func.isRequired,
+  rating: PropTypes.number.isRequired,
+  error: PropTypes.string
 };
 
 SingleBrewContainer.defaultProps = {
   brew: null,
   beer: null,
-  user: null
+  user: null,
+  error: null
 };
 
 const mapStateToProps = state => {
   return {
+    allowed: state.user.allowed,
     brew: state.brew.singleBrew,
-    beer: state.brew.singleBeer[0],
-    user: state.user.user
+    beer: state.brew.singleBeer,
+    user: state.user.user,
+    rating: state.brew.rating,
+    error: state.brew.error
   };
 };
 
 export default connect(mapStateToProps, {
   getBrewById,
   getBeerByName,
-  getUser
+  getUser,
+  deleteMessage,
+  addComment,
+  getRatingChange
 })(withRouter(SingleBrewContainer));

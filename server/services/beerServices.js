@@ -2,9 +2,9 @@ const userRepository = require("../repositories/userRepository");
 
 module.exports = class BeerServices {
   async beerAdd(data) {
-    const { id, userId } = data;
+    const { beerId, userId } = data;
     const payload = {
-      id,
+      beerId,
       userId
     };
     await userRepository.addBeer(payload);
@@ -15,9 +15,9 @@ module.exports = class BeerServices {
   }
 
   async beerDelete(data) {
-    const { id, userId } = data;
+    const { beerId, userId } = data;
     const payload = {
-      id,
+      beerId,
       userId
     };
     await userRepository.deleteBeer(payload);

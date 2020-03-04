@@ -27,14 +27,14 @@ class UserRepository extends BaseRepository {
   addBeer(data) {
     return this.model.findOneAndUpdate(
       { _id: data.userId },
-      { $push: { beerList: data.id } }
+      { $push: { beerList: data.beerId } }
     );
   }
 
   deleteBeer(data) {
     return this.model.findOneAndUpdate(
       { _id: data.userId },
-      { $pull: { beerList: data.id } }
+      { $pull: { beerList: data.beerId } }
     );
   }
 }

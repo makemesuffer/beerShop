@@ -18,7 +18,8 @@ const userReducer = (state = initialState, action) => {
         ...state,
         user: action.payload[0],
         rememberMe: action.payload[1],
-        error: null
+        error: null,
+        allowed: true
       };
     case actionTypes.SAVE_USER_SESSION_ERROR: {
       return {

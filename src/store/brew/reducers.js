@@ -2,11 +2,12 @@ import actionTypes from "./actionTypes";
 
 const initialState = {
   beerNames: [],
-  singleBeer: [],
+  singleBeer: null,
   brewList: [],
   singleBrew: null,
   rating: 0,
-  error: null
+  error: null,
+  id: null
 };
 
 const brewReducer = (state = initialState, action) => {
@@ -14,12 +15,14 @@ const brewReducer = (state = initialState, action) => {
     case actionTypes.GET_BEER_NAMES:
       return {
         ...state,
-        beerNames: action.payload
+        beerNames: action.payload,
+        error: null
       };
     case actionTypes.GET_BEER_BY_NAME:
       return {
         ...state,
-        singleBeer: action.payload
+        singleBeer: action.payload,
+        error: null
       };
     case actionTypes.GET_BREWS_LIST:
       return {
@@ -41,7 +44,13 @@ const brewReducer = (state = initialState, action) => {
       return {
         ...state,
         error: action.payload.message,
-        rating: action.payload.rating
+        rating: action.payload.rating,
+        id: action.payload.id
+      };
+    case actionTypes.ADD_DELETE_COMMENT:
+      return {
+        ...state,
+        singleBrew: action.payload
       };
     default:
       return state;

@@ -27,7 +27,7 @@ module.exports = class BrewController {
   });
 
   deleteMessage = wrapAsync(async function(req, res) {
-    const message = await brewServices.deleteMessage(req.body);
+    const message = await brewServices.deleteMessage(req.params);
     return res.json(message);
   });
 

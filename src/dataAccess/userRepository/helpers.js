@@ -7,22 +7,31 @@ const api = axios.create({
 export const createUser = payload => api.post(`/sign`, payload);
 
 export const loginUser = payload => api.post(`/login`, payload);
+// POST: create new session? or PUT: /login/:userId ???
 
 export const findUser = id => api.get(`/users/${id}`);
 
-export const addBeer = payload => api.post(`/add-beer`, payload);
+export const addBeer = payload =>
+  api.put(`/users/${payload.userId}/beers/${payload.id}`);
 
-export const deleteBeer = payload => api.post(`/delete-beer`, payload);
+export const deleteBeer = payload =>
+  api.delete(`/users/${payload.userId}/beers/${payload.id}`);
 
 export const changePassword = payload =>
-  api.post(`/users/:id/change-password`, payload);
+  api.put(`/users/${payload.id}/password/`, payload);
 
 export const forgotPassword = payload => api.post(`/password`, payload);
+// POST: create new password
 
-export const checkMessage = payload => api.post(`/confirm`, payload);
+export const checkMessage = payload => api.get(`/confirmation/${payload.code}`);
+// GET: get confirmation code
 
-export const replacePassword = payload => api.post(`/pass`, payload);
+export const replacePassword = payload =>
+  api.put(`/password/${payload.id}`, payload);
+// PUT: update password for userID
 
-export const uploadImage = payload => api.post(`/add-image`, payload);
+export const uploadImage = payload =>
+  api.put(`/users/${payload.userId}/images`, payload);
 
-export const deleteImage = payload => api.post(`/delete-image`, payload);
+export const deleteImage = payload =>
+  api.delete(`/users/${payload.userId}/images/${payload.imgId}`);

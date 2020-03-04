@@ -3,10 +3,10 @@ const cloudinary = require("../inregration/cloudinaryLoader");
 
 module.exports = class ImageServices {
   async imageAdd(data) {
-    const { id, img } = data;
+    const { userId, img } = data;
     const image = await cloudinary.uploader.upload(img);
     await userRepository.update({
-      _id: id,
+      _id: userId,
       action: { profilePicture: image.url }
     });
 
@@ -17,15 +17,10 @@ module.exports = class ImageServices {
   }
 
   async deleteImg(data) {
-    const { id, img } = data;
-    const publicId = img
-      .split("/")
-      .pop()
-      .split(".")
-      .shift();
-    await cloudinary.uploader.destroy(publicId);
+    const { userId, imgId } = data;
+    await cloudinary.uploader.destroy(imgId);
     await userRepository.update({
-      _id: id,
+      _id: userId,
       action: { profilePicture: null }
     });
 

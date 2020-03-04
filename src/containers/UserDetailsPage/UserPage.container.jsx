@@ -75,7 +75,7 @@ class UserPageContainer extends React.PureComponent {
     const reader = new FileReader();
     const file = e.target.files[0];
     reader.onloadend = async () => {
-      const payload = { id: user.id, img: reader.result };
+      const payload = { userId: user.id, img: reader.result };
       const result = await uploadImage(payload);
       if (result.data.success === true) {
         await this.props.getUser(user.id);
@@ -91,7 +91,12 @@ class UserPageContainer extends React.PureComponent {
   handleDelete = async e => {
     e.preventDefault();
     const { user } = this.props;
-    const payload = { id: user.id, img: user.profilePicture };
+    const imgId = user.profilePicture
+      .split("/")
+      .pop()
+      .split(".")
+      .shift();
+    const payload = { userId: user.id, imgId };
     const result = await deleteImage(payload);
     if (result.data.success === true) {
       await this.props.getUser(user.id);

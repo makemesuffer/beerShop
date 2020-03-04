@@ -4,7 +4,7 @@ const BrewController = require("../controllers/brewController");
 
 const brewController = new BrewController();
 
-router.post("/add-brew", brewController.addBrew);
+router.post("/brew", brewController.addBrew);
 
 router.get("/brews", brewController.findBrew);
 
@@ -14,8 +14,8 @@ router.put("/likeBrew", brewController.likeBrew);
 
 router.put("/dislikeBrew", brewController.dislikeBrew);
 
-router.post("/brews/message", brewController.addMessage);
+router.put("/brews/:id/messages/:commentId", brewController.addMessage);
 
-router.post("/brews/delete", brewController.deleteMessage);
+router.delete("/brews/:id/messages/:commentId", brewController.deleteMessage);
 
 module.exports = router;

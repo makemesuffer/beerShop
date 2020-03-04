@@ -23,7 +23,7 @@ module.exports = class VerifyController {
   });
 
   checkCode = wrapAsync(async function(req, res) {
-    const message = await verifyServices.codeCheck(req.body);
+    const message = await verifyServices.codeCheck(req.params);
     return res.json(message);
   });
 
