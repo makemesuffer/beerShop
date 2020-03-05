@@ -3,12 +3,12 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { addBeer, deleteBeer } from "../../dataAccess/userRepository/helpers";
-import { getUser } from "../../store/user/actions";
 import TitleDescription from "../../components/BeerDetailsPage/TitleDescription";
 import {
   getBeerDetails,
   getBeerDetailsPending
 } from "../../store/details/actions";
+import { saveUserProgress } from "../../store/user/actions";
 import PropertiesPairing from "../../components/BeerDetailsPage/PropertiesPairing";
 import BrewingInfo from "../../components/BeerDetailsPage/BrewingInfo";
 import Loader from "../../components/Loader";
@@ -22,9 +22,8 @@ class SingleBeerContainer extends React.PureComponent {
 
   componentDidMount() {
     this.props.getBeerDetailsPending(true);
-    const { user, id } = this.props;
+    const { id } = this.props;
     const waitUser = async () => {
-      await this.props.getUser(user.id);
       this.props.getBeerDetailsPending(false);
       this.props.getBeerDetails(id);
     };
@@ -44,14 +43,14 @@ class SingleBeerContainer extends React.PureComponent {
   };
 
   handleFavorite = async id => {
-    const { user } = this.props;
-    if (Object.entries(user).length !== 0) {
+    const { user, rememberMe } = this.props;
+    if (user !== null) {
       if (user.beerList.includes(id)) {
         await deleteBeer({ id, userId: user.id });
-        await this.props.getUser(user.id);
+        await this.props.saveUserProgress(user, rememberMe);
       } else {
         await addBeer({ id, userId: user.id });
-        await this.props.getUser(user.id);
+        await this.props.saveUserProgress(user, rememberMe);
       }
     }
   };
@@ -67,7 +66,7 @@ class SingleBeerContainer extends React.PureComponent {
     return (
       <>
         <TitleDescription
-          userBeerList={user.beerList === undefined ? null : user.beerList}
+          userBeerList={user === null ? null : user.beerList}
           beer={details[0]}
           handleFavorite={this.handleFavorite}
         />
@@ -88,7 +87,8 @@ SingleBeerContainer.propTypes = {
   getBeerDetailsPending: PropTypes.func.isRequired,
   error: PropTypes.string,
   user: PropTypes.objectOf(PropTypes.any),
-  getUser: PropTypes.func.isRequired
+  saveUserProgress: PropTypes.func.isRequired,
+  rememberMe: PropTypes.bool.isRequired
 };
 
 SingleBeerContainer.defaultProps = {
@@ -102,12 +102,13 @@ const mapStateToProps = state => {
     details: state.details.item,
     isBusy: state.details.isBusy,
     error: state.details.error,
-    user: state.user.user
+    user: state.user.user,
+    rememberMe: state.user.rememberMe
   };
 };
 
 export default connect(mapStateToProps, {
   getBeerDetails,
   getBeerDetailsPending,
-  getUser
+  saveUserProgress
 })(SingleBeerContainer);

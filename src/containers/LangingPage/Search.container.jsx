@@ -31,7 +31,7 @@ class SearchContainer extends React.PureComponent {
     const { value } = this.state;
     this.props.setValueSuccess(value);
     if (value === "") this.props.getBeer(9);
-    this.props.getBeer(9, null, value);
+    else this.props.getBeer(9, null, value);
   }, 500);
 
   constructor(props) {

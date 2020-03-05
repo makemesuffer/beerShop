@@ -2,12 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import UserInfo from "../../components/UserDetailsPage/UserInfo";
-import {
-  getUser,
-  getForeignUser,
-  getFavorites,
-  removeFavorite
-} from "../../store/user/actions";
+import { getFavoritesById, saveUserProgress } from "../../store/user/actions";
 import Loader from "../../components/Loader";
 import UserBeerList from "../../components/UserDetailsPage/UserBeerList";
 import ErrorBoundary from "../../components/ErrorBoundary";
@@ -27,26 +22,12 @@ class UserPageContainer extends React.PureComponent {
   }
 
   componentDidMount() {
-    const { id, user } = this.props;
+    // const {id} = this.props
+    const { user } = this.props;
     const getUserBeerList = async () => {
-      if (user.id !== id || Object.entries(user).length === 0) {
-        await this.props.getForeignUser(id);
-        const { foreignUser } = this.props;
-        if (Object.entries(foreignUser).length !== 0) {
-          foreignUser.beerList.forEach(elem => {
-            this.props.getFavorites(elem);
-          });
-        }
-      } else {
-        await this.props.getUser(id);
-        if (Object.entries(user).length !== 0) {
-          user.beerList.forEach(elem => {
-            this.props.getFavorites(elem);
-          });
-        }
-      }
+      await this.props.getFavoritesById(user.beerList);
     };
-    getUserBeerList();
+    if (user !== null) getUserBeerList();
   }
 
   currentPageIncrement = () => {
@@ -62,11 +43,11 @@ class UserPageContainer extends React.PureComponent {
   };
 
   handleRemove = async id => {
-    const { user } = this.props;
-    if (Object.entries(user).length !== 0) {
-      await deleteBeer({ id, userId: user.id });
-      this.props.removeFavorite(id);
-    }
+    const { user, rememberMe } = this.props;
+    await deleteBeer({ id, userId: user.id });
+    await this.props.saveUserProgress(user, rememberMe);
+    const { user: newUser } = this.props;
+    await this.props.getFavoritesById(newUser.beerList);
   };
 
   handleUpload = async e => {
@@ -78,10 +59,7 @@ class UserPageContainer extends React.PureComponent {
       const payload = { userId: user.id, img: reader.result };
       const result = await uploadImage(payload);
       if (result.data.success === true) {
-        await this.props.getUser(user.id);
-        user.beerList.forEach(elem => {
-          this.props.getFavorites(elem);
-        });
+        await getFavoritesById(user.beerList);
       }
     };
 
@@ -99,10 +77,7 @@ class UserPageContainer extends React.PureComponent {
     const payload = { userId: user.id, imgId };
     const result = await deleteImage(payload);
     if (result.data.success === true) {
-      await this.props.getUser(user.id);
-      user.beerList.forEach(elem => {
-        this.props.getFavorites(elem);
-      });
+      await getFavoritesById(user.beerList);
     }
   };
 
@@ -185,15 +160,14 @@ class UserPageContainer extends React.PureComponent {
 
 UserPageContainer.propTypes = {
   id: PropTypes.string.isRequired,
-  getUser: PropTypes.func.isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   error: PropTypes.string,
   favoritesBeers: PropTypes.arrayOf(PropTypes.object).isRequired,
-  getFavorites: PropTypes.func.isRequired,
-  getForeignUser: PropTypes.func.isRequired,
   foreignUser: PropTypes.objectOf(PropTypes.any).isRequired,
   allowed: PropTypes.bool.isRequired,
-  removeFavorite: PropTypes.func.isRequired
+  getFavoritesById: PropTypes.func.isRequired,
+  rememberMe: PropTypes.bool.isRequired,
+  saveUserProgress: PropTypes.func.isRequired
 };
 
 UserPageContainer.defaultProps = {
@@ -206,13 +180,12 @@ const mapStateToProps = state => {
     error: state.user.error,
     favoritesBeers: state.user.favoritesBeers,
     foreignUser: state.user.foreignUser,
-    allowed: state.user.allowed
+    allowed: state.user.allowed,
+    rememberMe: state.user.rememberMe
   };
 };
 
 export default connect(mapStateToProps, {
-  getUser,
-  getFavorites,
-  getForeignUser,
-  removeFavorite
+  saveUserProgress,
+  getFavoritesById
 })(UserPageContainer);

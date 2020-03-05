@@ -10,6 +10,8 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { Link as RouterLink } from "react-router-dom";
 
+import beerImage from "../BeerDetailsPage/img/beer.jpg";
+
 const useStyles = makeStyles({
   card: {
     maxWidth: 345,
@@ -32,7 +34,7 @@ export default function BeerItem(props) {
       <CardActionArea>
         <CardMedia
           className={classes.media}
-          image={beer.image_url}
+          image={beer.image_url === null ? beerImage : beer.image_url}
           title="Pivas"
         />
         <CardContent>

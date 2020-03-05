@@ -135,7 +135,7 @@ module.exports = class userServices {
     const { id } = data;
     const result = await userRepository.getOneByID(id);
     if (result) {
-      return {
+      const user = {
         id: result._id,
         login: result.login,
         firstName: result.firstName,
@@ -145,6 +145,16 @@ module.exports = class userServices {
         profilePicture: result.profilePicture,
         beerList: result.beerList
       };
+      const ans = {
+        success: true,
+        status: 200
+      };
+
+      ans.accessTOKEN = await jwt.sign(user, config.secretOrKey, {
+        expiresIn: "14 days"
+      });
+
+      return ans;
     }
     return {
       success: false,

@@ -7,18 +7,10 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { addBeer, deleteBeer } from "../../dataAccess/userRepository/helpers";
 import { continueBeerName, setBeerList } from "../../store/beer/actions";
 import { getBeerDetails } from "../../store/details/actions";
+import { saveUserProgress } from "../../store/user/actions";
 import BeerGrid from "../../components/LandingPage/BeerGrid";
-import { getUser } from "../../store/user/actions";
 
 class BeerListContainer extends React.PureComponent {
-  componentDidMount() {
-    const { user } = this.props;
-    const waitUser = async () => {
-      await this.props.getUser(user.id);
-    };
-    waitUser();
-  }
-
   handleLoad = () => {
     const {
       beerList,
@@ -46,14 +38,14 @@ class BeerListContainer extends React.PureComponent {
   };
 
   handleFavorite = async id => {
-    const { user } = this.props;
-    if (Object.entries(user).length !== 0) {
+    const { user, rememberMe } = this.props;
+    if (user !== null) {
       if (user.beerList.includes(id)) {
         await deleteBeer({ id, userId: user.id });
-        await this.props.getUser(user.id);
+        await this.props.saveUserProgress(user, rememberMe);
       } else {
         await addBeer({ id, userId: user.id });
-        await this.props.getUser(user.id);
+        await this.props.saveUserProgress(user, rememberMe);
       }
     }
   };
@@ -74,7 +66,7 @@ class BeerListContainer extends React.PureComponent {
           threshold={100}
         >
           <BeerGrid
-            userBeerList={user.beerList === undefined ? null : user.beerList}
+            userBeerList={user === null ? null : user.beerList}
             beerList={beerList}
             handleFavorite={this.handleFavorite}
           />
@@ -96,7 +88,8 @@ BeerListContainer.propTypes = {
   bitternessValue: PropTypes.number.isRequired,
   colorValue: PropTypes.number.isRequired,
   user: PropTypes.objectOf(PropTypes.any),
-  getUser: PropTypes.func.isRequired
+  saveUserProgress: PropTypes.func.isRequired,
+  rememberMe: PropTypes.bool.isRequired
 };
 
 BeerListContainer.defaultProps = {
@@ -112,7 +105,8 @@ const mapStateToProps = state => {
     alcoholValue: state.beer.alcoholValue,
     bitternessValue: state.beer.bitternessValue,
     colorValue: state.beer.colorValue,
-    user: state.user.user
+    user: state.user.user,
+    rememberMe: state.user.rememberMe
   };
 };
 
@@ -120,5 +114,5 @@ export default connect(mapStateToProps, {
   continueBeerName,
   setBeerList,
   getBeerDetails,
-  getUser
+  saveUserProgress
 })(BeerListContainer);

@@ -49,7 +49,7 @@ export default function Comments(props) {
                   </>
                 }
               />
-              {user.id === comment.userId ? (
+              {user !== null && user.id === comment.userId ? (
                 <Button
                   onClick={() => {
                     handleDelete(comment);

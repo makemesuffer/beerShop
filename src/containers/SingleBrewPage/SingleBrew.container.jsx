@@ -4,6 +4,7 @@ import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Container } from "@material-ui/core";
 
+import { saveUserProgress } from "../../store/user/actions";
 import {
   getBeerByName,
   getBrewById,
@@ -11,7 +12,6 @@ import {
   addComment,
   getRatingChange
 } from "../../store/brew/actions";
-import { getUser } from "../../store/user/actions";
 import BrewPreview from "../../components/BrewFormPage/BrewPreview";
 import Loader from "../../components/Loader";
 import { addBeer, deleteBeer } from "../../dataAccess/userRepository/helpers";
@@ -103,24 +103,26 @@ class SingleBrewContainer extends React.PureComponent {
   };
 
   handleFavorite = async id => {
-    const { user } = this.props;
-    if (Object.entries(user).length !== 0) {
+    const { user, rememberMe } = this.props;
+    if (user !== null) {
       if (user.beerList.includes(id)) {
         await deleteBeer({ id, userId: user.id });
-        await this.props.getUser(user.id);
+        await this.props.saveUserProgress(user, rememberMe);
       } else {
         await addBeer({ id, userId: user.id });
-        await this.props.getUser(user.id);
+        await this.props.saveUserProgress(user, rememberMe);
       }
     }
   };
 
   handleRating = async decision => {
     const { user, brew } = this.props;
-    const payload = { userId: user.id, id: brew._id };
-    await this.props.getRatingChange(decision, payload);
-    const { rating } = this.props;
-    this.setState({ rating });
+    if (user !== null) {
+      const payload = { userId: user.id, id: brew._id };
+      await this.props.getRatingChange(decision, payload);
+      const { rating } = this.props;
+      this.setState({ rating });
+    }
   };
 
   handleDelete = async comment => {
@@ -156,7 +158,7 @@ class SingleBrewContainer extends React.PureComponent {
             handleRating={this.handleRating}
             handleReturn={this.handleReturn}
             handleFavorite={this.handleFavorite}
-            userBeerList={user.beerList === undefined ? null : user.beerList}
+            userBeerList={user === null ? null : user.beerList}
           />
         </Container>
         <CommentSection
@@ -182,12 +184,13 @@ SingleBrewContainer.propTypes = {
   getBeerByName: PropTypes.func.isRequired,
   history: PropTypes.objectOf(PropTypes.any).isRequired,
   user: PropTypes.objectOf(PropTypes.any),
-  getUser: PropTypes.func.isRequired,
   deleteMessage: PropTypes.func.isRequired,
   addComment: PropTypes.func.isRequired,
   getRatingChange: PropTypes.func.isRequired,
   rating: PropTypes.number.isRequired,
-  error: PropTypes.string
+  error: PropTypes.string,
+  saveUserProgress: PropTypes.func.isRequired,
+  rememberMe: PropTypes.bool.isRequired
 };
 
 SingleBrewContainer.defaultProps = {
@@ -204,15 +207,16 @@ const mapStateToProps = state => {
     beer: state.brew.singleBeer,
     user: state.user.user,
     rating: state.brew.rating,
-    error: state.brew.error
+    error: state.brew.error,
+    rememberMe: state.user.rememberMe
   };
 };
 
 export default connect(mapStateToProps, {
   getBrewById,
   getBeerByName,
-  getUser,
   deleteMessage,
   addComment,
-  getRatingChange
+  getRatingChange,
+  saveUserProgress
 })(withRouter(SingleBrewContainer));

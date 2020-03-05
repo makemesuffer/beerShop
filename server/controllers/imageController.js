@@ -10,7 +10,6 @@ module.exports = class ImageController {
   });
 
   deleteBeer = wrapAsync(async function(req, res) {
-    console.log(req.params);
     const message = await imageServices.deleteImg(req.params);
     return res.json(message);
   });

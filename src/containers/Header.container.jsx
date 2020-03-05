@@ -17,7 +17,7 @@ class HeaderContainer extends React.PureComponent {
 
   componentDidMount() {
     const { user } = this.props;
-    if (Object.entries(user).length !== 0) {
+    if (user !== null) {
       this.setState({ auth: true });
     } else {
       this.setState({ auth: false });

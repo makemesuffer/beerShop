@@ -31,6 +31,7 @@ class SignInContainer extends React.PureComponent {
     e.preventDefault();
     const { history } = this.props;
     const { login, password, rememberMe } = this.state;
+    console.log(rememberMe);
     const payload = { login, password };
     await this.props.saveUserSession({
       payload,

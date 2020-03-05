@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { getUser, exitUserSession } from "../../store/user/actions";
+import { exitUserSession } from "../../store/user/actions";
 import { changePassword } from "../../dataAccess/userRepository/helpers";
 import ChangePassword from "../../components/ChangePasswordPage/ChangePassword";
 
@@ -17,14 +17,6 @@ class ChangePasswordContainer extends React.PureComponent {
       error: "",
       success: ""
     };
-  }
-
-  componentDidMount() {
-    const { id } = this.props;
-    const waitUser = async () => {
-      await this.props.getUser(id);
-    };
-    waitUser();
   }
 
   handleChange = e => {
@@ -66,7 +58,6 @@ class ChangePasswordContainer extends React.PureComponent {
 
 ChangePasswordContainer.propTypes = {
   id: PropTypes.string.isRequired,
-  getUser: PropTypes.func.isRequired,
   history: PropTypes.objectOf(PropTypes.any).isRequired,
   exitUserSession: PropTypes.func.isRequired
 };
@@ -77,7 +68,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, {
-  getUser,
-  exitUserSession
-})(withRouter(ChangePasswordContainer));
+export default connect(mapStateToProps, { exitUserSession })(
+  withRouter(ChangePasswordContainer)
+);

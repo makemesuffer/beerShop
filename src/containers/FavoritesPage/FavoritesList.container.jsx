@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getFavorites, removeFavorite } from "../../store/user/actions";
+import { getFavoritesById, saveUserProgress } from "../../store/user/actions";
 import FavoritesCard from "../../components/FavoritesPage/FavoritesCard";
 import FavoritesPagination from "../../components/FavoritesPage/FavoritesPagination";
 import { deleteBeer } from "../../dataAccess/userRepository/helpers";
@@ -16,15 +16,11 @@ class FavoritesListContainer extends React.PureComponent {
   }
 
   componentDidMount() {
-    const { user, favoritesBeers } = this.props;
-    const ids = favoritesBeers.map(elem => {
-      return elem.id;
-    });
-    if (Object.entries(user).length !== 0) {
-      user.beerList.forEach(elem => {
-        if (!ids.includes(elem)) this.props.getFavorites(elem);
-      });
-    }
+    const { user } = this.props;
+    const getBeers = async () => {
+      await this.props.getFavoritesById(user.beerList);
+    };
+    if (user !== null) getBeers();
   }
 
   currentPageIncrement = () => {
@@ -40,15 +36,17 @@ class FavoritesListContainer extends React.PureComponent {
   };
 
   handleRemove = async id => {
-    const { user } = this.props;
-    if (Object.entries(user).length !== 0) {
+    const { rememberMe, user } = this.props;
+    if (user !== null) {
       await deleteBeer({ id, userId: user.id });
-      this.props.removeFavorite(id);
+      await this.props.saveUserProgress(user, rememberMe);
+      const { user: newUser } = this.props;
+      await this.props.getFavoritesById(newUser.beerList);
     }
   };
 
   render() {
-    const { favoritesBeers, user } = this.props;
+    const { user, favoritesBeers } = this.props;
     const { currentPage } = this.state;
 
     const index = currentPage === 1 ? 0 : (currentPage - 1) * 5;
@@ -96,10 +94,11 @@ class FavoritesListContainer extends React.PureComponent {
 }
 
 FavoritesListContainer.propTypes = {
-  getFavorites: PropTypes.func.isRequired,
-  favoritesBeers: PropTypes.arrayOf(PropTypes.object).isRequired,
   user: PropTypes.objectOf(PropTypes.any),
-  removeFavorite: PropTypes.func.isRequired
+  getFavoritesById: PropTypes.func.isRequired,
+  favoritesBeers: PropTypes.arrayOf(PropTypes.any).isRequired,
+  rememberMe: PropTypes.bool.isRequired,
+  saveUserProgress: PropTypes.func.isRequired
 };
 
 FavoritesListContainer.defaultProps = {
@@ -108,11 +107,13 @@ FavoritesListContainer.defaultProps = {
 
 const mapStateToProps = state => {
   return {
+    user: state.user.user,
     favoritesBeers: state.user.favoritesBeers,
-    user: state.user.user
+    rememberMe: state.user.rememberMe
   };
 };
 
-export default connect(mapStateToProps, { getFavorites, removeFavorite })(
-  FavoritesListContainer
-);
+export default connect(mapStateToProps, {
+  getFavoritesById,
+  saveUserProgress
+})(FavoritesListContainer);

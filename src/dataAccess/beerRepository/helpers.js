@@ -8,6 +8,10 @@ export const getSingleBeer = id => {
   return axios.get(`${singleBeer(id)}`);
 };
 
+export const getBeersById = array => {
+  return array.map(id => getSingleBeer(id));
+};
+
 const listedBeer = () => {
   return `https://api.punkapi.com/v2/beers`;
 };

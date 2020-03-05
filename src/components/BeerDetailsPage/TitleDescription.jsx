@@ -4,6 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
+import beerImage from "./img/beer.jpg";
+
 const useStyles = makeStyles(theme => ({
   container: {
     marginLeft: 20
@@ -64,7 +66,11 @@ export default function TitleDescription(props) {
       <div className={classes.grid}>
         <span className={classes.description}>{beer.description}</span>
         <div className={classes.imageContainer}>
-          <img src={beer.image_url} alt="pivasik" className={classes.image} />
+          <img
+            src={beer.image_url === null ? beerImage : beer.image_url}
+            alt="pivasik"
+            className={classes.image}
+          />
         </div>
       </div>
     </div>

@@ -28,6 +28,7 @@ class UserRepository extends BaseRepository {
     return this.model.findOneAndUpdate(
       { _id: data.userId },
       { $push: { beerList: data.beerId } }
+      // TODO:  super.update
     );
   }
 

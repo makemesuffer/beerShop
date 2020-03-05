@@ -138,6 +138,13 @@ module.exports = class BrewServices {
   async likeBrew(data) {
     const { id, userId } = data;
 
+    if (userId === null) {
+      return {
+        status: 400,
+        message: "You have to be registered to like brews"
+      };
+    }
+
     const brew = await brewRepository
       .find("_id", id)
       .populate("author", "login");
@@ -188,6 +195,12 @@ module.exports = class BrewServices {
   async dislikeBrew(data) {
     const { id, userId } = data;
 
+    if (userId === null) {
+      return {
+        status: 400,
+        message: "You have to be registered to like brews"
+      };
+    }
     const brew = await brewRepository
       .find("_id", id)
       .populate("author", "login");

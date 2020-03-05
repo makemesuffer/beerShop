@@ -9,10 +9,11 @@ module.exports = class BeerServices {
     };
     await userRepository.addBeer(payload);
     return {
-      success: true,
-      message: "beer added"
+      success: "true"
     };
   }
+
+  // TODO: baseService
 
   async beerDelete(data) {
     const { beerId, userId } = data;
@@ -22,8 +23,7 @@ module.exports = class BeerServices {
     };
     await userRepository.deleteBeer(payload);
     return {
-      success: true,
-      message: "beer deleted"
+      success: "true"
     };
   }
 };
