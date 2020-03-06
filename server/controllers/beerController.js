@@ -1,7 +1,5 @@
 const wrapAsync = require("../helpers/asyncErrorHandler");
-const BeerServices = require("../services/beerServices");
-
-const beerServices = new BeerServices();
+const beerServices = require("../services/beerServices");
 
 module.exports = class BeerController {
   addBeer = wrapAsync(async function(req, res) {

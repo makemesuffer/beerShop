@@ -1,9 +1,5 @@
-const BrewServices = require("../services/brewServices");
+const brewServices = require("../services/brewServices");
 const wrapAsync = require("../helpers/asyncErrorHandler");
-
-const brewServices = new BrewServices();
-
-// TODO: обработчик ошибок отправляй статусы, если НАДО
 
 module.exports = class BrewController {
   addBrew = wrapAsync(async function(req, res) {
@@ -39,5 +35,10 @@ module.exports = class BrewController {
   dislikeBrew = wrapAsync(async function(req, res) {
     const message = await brewServices.dislikeBrew(req.body);
     return res.status(message.status).json(message);
+  });
+
+  filterBrews = wrapAsync(async function(req, res) {
+    const message = await brewServices.filterBrews(req.body);
+    return res.json(message);
   });
 };

@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Container } from "@material-ui/core";
+import socketIoClient from "socket.io-client";
 
 import { saveUserProgress } from "../../store/user/actions";
 import {
@@ -17,9 +18,9 @@ import Loader from "../../components/Loader";
 import { addBeer, deleteBeer } from "../../dataAccess/userRepository/helpers";
 import CommentSection from "../../components/SingleBrewPage/CommentSection";
 
-class SingleBrewContainer extends React.PureComponent {
-  ws = new WebSocket("ws://localhost:1337");
+const socket = socketIoClient("http://localhost:1337");
 
+class SingleBrewContainer extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -37,33 +38,13 @@ class SingleBrewContainer extends React.PureComponent {
       this.setState({ rating: brew.likes - brew.dislikes });
       await this.props.getBeerByName(brew.brewName);
     };
-
-    const setupWebSocket = () => {
-      this.ws = new WebSocket("ws://localhost:1337");
-      this.ws.onopen = () => {
-        console.log("opened");
-      };
-      this.ws.onerror = error => {
-        console.log(`WebSocket error: ${error}`);
-      };
-      this.ws.onmessage = evt => {
-        const message = JSON.parse(evt.data);
-        this.addMessage(message);
-      };
-      this.ws.onclose = () => {
-        console.log("closed");
-        setupWebSocket();
-      };
-    };
-
-    setupWebSocket();
-
     findBrewPost(id);
   }
 
   addMessage = async message => {
     this.setState({ message: "" });
     await this.props.addComment(message);
+    socket.on("message", message);
   };
 
   handleChange = e => {
@@ -83,7 +64,7 @@ class SingleBrewContainer extends React.PureComponent {
       message,
       img: user.profilePicture
     };
-    this.ws.send(JSON.stringify(payload));
+    this.addMessage(payload);
   };
 
   handleReturn = () => {

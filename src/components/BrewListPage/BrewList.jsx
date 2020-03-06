@@ -45,7 +45,10 @@ export default function BrewList(props) {
     handleRating,
     rating,
     error,
-    id
+    id,
+    handleTypeChange,
+    handleTimeChange,
+    handleFilter
   } = props;
   const classes = useStyles();
   return (
@@ -65,12 +68,14 @@ export default function BrewList(props) {
         <Autocomplete
           options={beerType}
           className={classes.input}
+          onChange={handleTypeChange}
           renderInput={params => (
             <TextField
               {...params}
               variant="outlined"
               label="Brew Type"
               fullWidth
+              onChange={handleTypeChange}
               name="brewType"
             />
           )}
@@ -78,6 +83,7 @@ export default function BrewList(props) {
         <Autocomplete
           options={time}
           className={classes.input}
+          onChange={handleTimeChange}
           renderInput={params => (
             <TextField
               {...params}
@@ -85,10 +91,14 @@ export default function BrewList(props) {
               label="Time"
               fullWidth
               name="time"
+              onChange={handleTimeChange}
             />
           )}
         />
       </div>
+      <Button variant="contained" color="primary" onClick={handleFilter}>
+        Filter results
+      </Button>
       {brewList !== null ? (
         <div className={classes.grid}>
           {brewList.map((elem, index) => {
@@ -121,7 +131,10 @@ BrewList.propTypes = {
   handleRating: PropTypes.func.isRequired,
   rating: PropTypes.arrayOf(PropTypes.number).isRequired,
   error: PropTypes.string,
-  id: PropTypes.string
+  id: PropTypes.string,
+  handleTypeChange: PropTypes.func.isRequired,
+  handleTimeChange: PropTypes.func.isRequired,
+  handleFilter: PropTypes.func.isRequired
 };
 
 BrewList.defaultProps = {

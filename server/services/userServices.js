@@ -133,7 +133,7 @@ module.exports = class userServices {
 
   async userFind(data) {
     const { id } = data;
-    const result = await userRepository.getOneByID(id);
+    const result = await userRepository.find("_id", id);
     if (result) {
       const user = {
         id: result._id,

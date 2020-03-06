@@ -19,3 +19,5 @@ export const deleteComment = payload =>
 export const likePost = payload => api.put(`/likeBrew`, payload);
 
 export const dislikePost = payload => api.put(`/dislikeBrew`, payload);
+
+export const filterBrews = payload => api.put(`/filterBrews`, payload);

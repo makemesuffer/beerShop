@@ -23,21 +23,6 @@ class UserRepository extends BaseRepository {
     });
     return user.save();
   }
-
-  addBeer(data) {
-    return this.model.findOneAndUpdate(
-      { _id: data.userId },
-      { $push: { beerList: data.beerId } }
-      // TODO:  super.update
-    );
-  }
-
-  deleteBeer(data) {
-    return this.model.findOneAndUpdate(
-      { _id: data.userId },
-      { $pull: { beerList: data.beerId } }
-    );
-  }
 }
 
 module.exports = new UserRepository(Users);

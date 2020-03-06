@@ -1,11 +1,10 @@
 const express = require("express");
 const passport = require("passport");
 const http = require("http");
-const WebSocket = require("ws");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const morgan = require("morgan");
-const enableWs = require("express-ws");
+const socketIo = require("socket.io");
 
 require("dotenv").config();
 
@@ -39,17 +38,22 @@ app.use(passport.initialize());
 
 passportCfg(passport);
 
-enableWs(app);
-
 const server = http.createServer(app);
 
-const wss = new WebSocket.Server({ server });
+const io = socketIo(server);
 
-wss.on("connection", ws => {
-  ws.on("message", message => {
-    ws.send(message);
+io.on("connection", socket => {
+  console.log("working");
+  socket.on("message", message => {
+    console.log(message);
+    io.emit("message", message);
+  });
+  socket.on("disconnect", () => {
+    console.log("Disconnected!");
   });
 });
+
+// app.use(io);
 
 app.use(router);
 

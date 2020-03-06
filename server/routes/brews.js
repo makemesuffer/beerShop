@@ -18,4 +18,6 @@ router.put("/brews/:id/messages/:commentId", brewController.addMessage);
 
 router.delete("/brews/:id/messages/:commentId", brewController.deleteMessage);
 
+router.put("/filterBrews", brewController.filterBrews);
+
 module.exports = router;

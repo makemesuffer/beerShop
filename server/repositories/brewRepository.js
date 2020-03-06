@@ -21,20 +21,6 @@ class BrewRepository extends BaseRepository {
     });
     return brew.save();
   }
-
-  pushComment(comment) {
-    return this.model.findOneAndUpdate(
-      { _id: comment.id },
-      { $push: { comments: comment.payload } }
-    );
-  }
-
-  deleteComment(comment) {
-    return this.model.findOneAndUpdate(
-      { _id: comment.id },
-      { $pull: { comments: comment.payload } }
-    );
-  }
 }
 
 module.exports = new BrewRepository(Brews);

@@ -1,5 +1,3 @@
-const mongoose = require("mongoose");
-
 class BaseRepository {
   constructor(model) {
     this.model = model;
@@ -12,15 +10,29 @@ class BaseRepository {
     );
   }
 
-  getOneByID(id) {
-    if (mongoose.Types.ObjectId.isValid(id)) {
-      return this.model.findOne({ _id: id });
-    }
+  push(object) {
+    return this.model.findOneAndUpdate(
+      { _id: object._id },
+      { $push: object.action }
+    );
+  }
+
+  pull(object) {
+    return this.model.findOneAndUpdate(
+      { _id: object._id },
+      { $pull: object.action }
+    );
   }
 
   find(param, value) {
     return this.model.findOne({ [param]: value });
   }
+
+  findAllByValue(param, value) {
+    return this.model.find({ [param]: value });
+  }
+
+  // TODO: Че за говно андрюх
 
   findAll() {
     return this.model.find({});

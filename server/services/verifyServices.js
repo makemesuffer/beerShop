@@ -24,7 +24,7 @@ module.exports = class VerifyServices {
         error: "Please, fill all the inputs"
       };
     }
-    const user = await userRepository.getOneByID(id);
+    const user = await userRepository.find("_id", id);
     if (md5(oldPassword) !== user.password) {
       return {
         success: false,

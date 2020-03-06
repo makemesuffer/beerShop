@@ -52,6 +52,11 @@ const brewReducer = (state = initialState, action) => {
         ...state,
         singleBrew: action.payload
       };
+    case actionTypes.FILTER_BREWS_SUCCESS:
+      return {
+        ...state,
+        brewList: action.payload
+      };
     default:
       return state;
   }

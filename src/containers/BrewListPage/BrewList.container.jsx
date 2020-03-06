@@ -3,7 +3,11 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import BrewList from "../../components/BrewListPage/BrewList";
-import { getBrewList, getRatingChange } from "../../store/brew/actions";
+import {
+  getBrewList,
+  getRatingChange,
+  getFilteredBrews
+} from "../../store/brew/actions";
 
 class BrewListContainer extends React.PureComponent {
   constructor(props) {
@@ -21,6 +25,8 @@ class BrewListContainer extends React.PureComponent {
         "Weissbier",
         "Belgian Ale"
       ],
+      brewType: "",
+      whatTime: "",
       rating: []
     };
   }
@@ -36,6 +42,24 @@ class BrewListContainer extends React.PureComponent {
     };
     waitBrewList();
   }
+
+  handleTypeChange = (e, values) => {
+    if (values !== undefined && values !== null) {
+      this.setState({ brewType: values });
+    }
+  };
+
+  handleTimeChange = (e, values) => {
+    if (values !== undefined && values !== null) {
+      this.setState({ whatTime: values });
+    }
+  };
+
+  handleFilter = async () => {
+    const { brewType, whatTime } = this.state;
+    const response = await this.props.getFilteredBrews({ brewType, whatTime });
+    console.log(response);
+  };
 
   handleRating = async (decision, index) => {
     const { user, brewList } = this.props;
@@ -67,6 +91,9 @@ class BrewListContainer extends React.PureComponent {
           beerType={beerType}
           handleRating={this.handleRating}
           id={id}
+          handleTypeChange={this.handleTypeChange}
+          handleTimeChange={this.handleTimeChange}
+          handleFilter={this.handleFilter}
         />
       </>
     );
@@ -81,7 +108,8 @@ BrewListContainer.propTypes = {
   getBrewList: PropTypes.func.isRequired,
   getRatingChange: PropTypes.func.isRequired,
   rating: PropTypes.number.isRequired,
-  id: PropTypes.string
+  id: PropTypes.string,
+  getFilteredBrews: PropTypes.func.isRequired
 };
 
 BrewListContainer.defaultProps = {
@@ -104,5 +132,6 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps, {
   getBrewList,
-  getRatingChange
+  getRatingChange,
+  getFilteredBrews
 })(BrewListContainer);

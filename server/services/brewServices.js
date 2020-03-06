@@ -2,9 +2,10 @@ const moment = require("moment");
 
 const userRepository = require("../repositories/userRepository");
 const brewRepository = require("../repositories/brewRepository");
+const BaseService = require("./baseService");
 const cloudinary = require("../inregration/cloudinaryLoader");
 
-module.exports = class BrewServices {
+class BrewServices extends BaseService {
   async brewRegister(data) {
     const {
       location,
@@ -70,70 +71,26 @@ module.exports = class BrewServices {
     };
   }
 
-  async getAllReviews() {
-    // day, week, month, year, all
-    /*
-    const { time } = data;
-    console.log(time);
-     */
-
-    const time = "all";
-
-    const posts = await brewRepository
-      .findAll()
-      .populate("author", "firstName");
-
-    switch (time) {
-      case "day":
-        return posts.filter(post => {
-          return moment().diff(post.createdAt, "days") < 1;
-        });
-      case "week":
-        return posts.filter(post => {
-          return moment().diff(post.createdAt, "days") < 7;
-        });
-      case "month":
-        return posts.filter(post => {
-          return moment().diff(post.createdAt, "days") < 30;
-        });
-      case "year":
-        return posts.filter(post => {
-          return moment().diff(post.createdAt, "days") < 365;
-        });
-      default:
-        return posts;
-    }
+  getAllReviews() {
+    return brewRepository.findAll().populate("author", "firstName");
   }
 
   getSingleBrew(id) {
-    return brewRepository.find("_id", id).populate("author", "firstName");
+    return this.find(id).populate("author", "firstName"); // improved
   }
 
   async messageAdd(data) {
     const { id, name, message, userId, img, commentId } = data;
-    const comment = { id, payload: { commentId, userId, name, message, img } };
-    await brewRepository.pushComment(comment);
-    const brew = await brewRepository
-      .getOneByID(id)
-      .populate("author", "firstName");
-    return {
-      success: true,
-      brew
-    };
-  }
+    const payload = { commentId, userId, name, message, img };
+    await this.add({ id, param: "comments", payload });
+    return this.find(id).populate("author", "firstName");
+  } // improved
 
   async deleteMessage(data) {
     const { id, commentId } = data;
-    const comment = { id, payload: { commentId } };
-    await brewRepository.deleteComment(comment);
-    const brew = await brewRepository
-      .getOneByID(id)
-      .populate("author", "firstName");
-    return {
-      success: true,
-      brew
-    };
-  }
+    await this.delete({ id, param: "comments", payload: { commentId } });
+    return this.find(id).populate("author", "firstName");
+  } // improved
 
   async likeBrew(data) {
     const { id, userId } = data;
@@ -247,4 +204,34 @@ module.exports = class BrewServices {
       status: 200
     };
   }
-};
+
+  async filterBrews(data) {
+    const { brewType, whatTime } = data;
+    const brews = await brewRepository
+      .findAllByValue("brewType", brewType)
+      .populate("author", "firstName");
+    console.log(brews);
+
+    switch (whatTime) {
+      case "day":
+        return brews.filter(post => {
+          return moment().diff(post.createdAt, "days") < 1;
+        });
+      case "week":
+        return brews.filter(post => {
+          return moment().diff(post.createdAt, "days") < 7;
+        });
+      case "month":
+        return brews.filter(post => {
+          return moment().diff(post.createdAt, "days") < 30;
+        });
+      case "year":
+        return brews.filter(post => {
+          return moment().diff(post.createdAt, "days") < 365;
+        });
+      default:
+        return brews;
+    }
+  }
+}
+module.exports = new BrewServices(brewRepository);

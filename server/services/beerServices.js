@@ -1,29 +1,17 @@
 const userRepository = require("../repositories/userRepository");
 
-module.exports = class BeerServices {
-  async beerAdd(data) {
-    const { beerId, userId } = data;
-    const payload = {
-      beerId,
-      userId
-    };
-    await userRepository.addBeer(payload);
-    return {
-      success: "true"
-    };
-  }
+const BaseService = require("./baseService");
 
-  // TODO: baseService
+class BeerServices extends BaseService {
+  async beerAdd(data) {
+    const { userId, beerId } = data;
+    return this.add({ id: userId, param: "beerList", payload: beerId });
+  }
 
   async beerDelete(data) {
-    const { beerId, userId } = data;
-    const payload = {
-      beerId,
-      userId
-    };
-    await userRepository.deleteBeer(payload);
-    return {
-      success: "true"
-    };
+    const { userId, beerId } = data;
+    return this.delete({ id: userId, param: "beerList", payload: beerId });
   }
-};
+}
+
+module.exports = new BeerServices(userRepository);

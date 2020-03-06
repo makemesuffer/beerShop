@@ -5,7 +5,8 @@ import {
   dislikePost,
   likePost,
   messageAdd,
-  deleteComment
+  deleteComment,
+  filterBrews
 } from "../../dataAccess/brewRepository/helpers";
 import actionTypes from "./actionTypes";
 
@@ -80,7 +81,7 @@ const addDeleteCommentSuccess = response => ({
 export const addComment = message => async dispatch => {
   try {
     const response = await messageAdd(message);
-    dispatch(addDeleteCommentSuccess(response.data.brew));
+    dispatch(addDeleteCommentSuccess(response.data));
   } catch (e) {
     dispatch(getError(e.response.data));
   }
@@ -89,9 +90,22 @@ export const addComment = message => async dispatch => {
 export const deleteMessage = payload => async dispatch => {
   try {
     const response = await deleteComment(payload);
-    dispatch(addDeleteCommentSuccess(response.data.brew));
+    dispatch(addDeleteCommentSuccess(response.data));
+  } catch (e) {
+    dispatch(getError(e.response.data));
+  }
+};
+
+const getFilteredBrewsSuccess = response => ({
+  type: actionTypes.FILTER_BREWS_SUCCESS,
+  payload: response
+});
+
+export const getFilteredBrews = type => async dispatch => {
+  try {
+    const response = await filterBrews(type);
+    dispatch(getFilteredBrewsSuccess(response.data));
   } catch (e) {
     console.log(e.response.data);
-    dispatch(getError(e.response.data));
   }
 };
