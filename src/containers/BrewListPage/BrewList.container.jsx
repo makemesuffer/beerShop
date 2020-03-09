@@ -6,15 +6,17 @@ import BrewList from "../../components/BrewListPage/BrewList";
 import {
   getBrewList,
   getRatingChange,
-  getFilteredBrews
+  getFilteredBrews,
+  getFilteredTime
 } from "../../store/brew/actions";
 
 class BrewListContainer extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      time: ["day", "week", "month", "year", "all"],
+      time: ["Day", "Week", "Month", "Year", "All"],
       beerType: [
+        "All",
         "Ale",
         "Lager",
         "Stout",
@@ -25,8 +27,8 @@ class BrewListContainer extends React.PureComponent {
         "Weissbier",
         "Belgian Ale"
       ],
-      brewType: "",
-      whatTime: "",
+      brewType: "All",
+      whatTime: "Day",
       rating: []
     };
   }
@@ -36,7 +38,7 @@ class BrewListContainer extends React.PureComponent {
       await this.props.getBrewList();
       const { brewList } = this.props;
       const count = brewList.map(brew => {
-        return brew.likes - brew.dislikes;
+        return brew.rating;
       });
       this.setState({ rating: count });
     };
@@ -44,6 +46,9 @@ class BrewListContainer extends React.PureComponent {
   }
 
   handleTypeChange = (e, values) => {
+    if (values === null) {
+      this.setState({ brewType: "All" });
+    }
     if (values !== undefined && values !== null) {
       this.setState({ brewType: values });
     }
@@ -57,8 +62,14 @@ class BrewListContainer extends React.PureComponent {
 
   handleFilter = async () => {
     const { brewType, whatTime } = this.state;
-    const response = await this.props.getFilteredBrews({ brewType, whatTime });
-    console.log(response);
+    await this.props.getFilteredBrews({ brewType });
+    const { brewList } = this.props;
+    this.props.getFilteredTime(whatTime, brewList);
+    const { brewList: newBrewList } = this.props;
+    const count = newBrewList.map(brew => {
+      return brew.rating;
+    });
+    this.setState({ rating: count });
   };
 
   handleRating = async (decision, index) => {
@@ -66,20 +77,17 @@ class BrewListContainer extends React.PureComponent {
     const { rating: rate } = this.state;
     if (user !== null) {
       const payload = { userId: user.id, id: brewList[index]._id };
-
       const copy = [...rate];
-
       await this.props.getRatingChange(decision, payload);
       const { rating } = this.props;
       copy[index] = rating;
-
       this.setState({ rating: copy });
     }
   };
 
   render() {
     const { allowed, brewList, error, id } = this.props;
-    const { time, beerType, rating } = this.state;
+    const { time, beerType, rating, brewType, whatTime } = this.state;
     return (
       <>
         <BrewList
@@ -94,6 +102,8 @@ class BrewListContainer extends React.PureComponent {
           handleTypeChange={this.handleTypeChange}
           handleTimeChange={this.handleTimeChange}
           handleFilter={this.handleFilter}
+          whatTime={whatTime}
+          brewType={brewType}
         />
       </>
     );
@@ -109,7 +119,8 @@ BrewListContainer.propTypes = {
   getRatingChange: PropTypes.func.isRequired,
   rating: PropTypes.number.isRequired,
   id: PropTypes.string,
-  getFilteredBrews: PropTypes.func.isRequired
+  getFilteredBrews: PropTypes.func.isRequired,
+  getFilteredTime: PropTypes.func.isRequired
 };
 
 BrewListContainer.defaultProps = {
@@ -133,5 +144,6 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
   getBrewList,
   getRatingChange,
-  getFilteredBrews
+  getFilteredBrews,
+  getFilteredTime
 })(BrewListContainer);

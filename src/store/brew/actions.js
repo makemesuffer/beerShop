@@ -1,3 +1,5 @@
+import moment from "moment";
+
 import { getListOfBeers } from "../../dataAccess/beerRepository/helpers";
 import {
   findBrews,
@@ -40,7 +42,13 @@ const getBrewListSuccess = response => ({
 
 export const getBrewList = () => async dispatch => {
   const response = await findBrews();
-  dispatch(getBrewListSuccess(response.data));
+  dispatch(
+    getBrewListSuccess(
+      response.data.sort((a, b) => {
+        return b.rating - a.rating;
+      })
+    )
+  );
 };
 
 const getBrewByIdSuccess = response => ({
@@ -105,6 +113,75 @@ export const getFilteredBrews = type => async dispatch => {
   try {
     const response = await filterBrews(type);
     dispatch(getFilteredBrewsSuccess(response.data));
+  } catch (e) {
+    console.log(e.response.data);
+  }
+};
+
+export const getFilteredTime = (time, brews) => async dispatch => {
+  try {
+    switch (time) {
+      case "Day":
+        dispatch(
+          getFilteredBrewsSuccess(
+            brews
+              .filter(post => {
+                return moment().diff(post.createdAt, "days") < 1;
+              })
+              .sort((a, b) => {
+                return b.rating - a.rating;
+              })
+          )
+        );
+        break;
+      case "Week":
+        dispatch(
+          getFilteredBrewsSuccess(
+            brews
+              .filter(post => {
+                return moment().diff(post.createdAt, "days") < 7;
+              })
+              .sort((a, b) => {
+                return b.rating - a.rating;
+              })
+          )
+        );
+        break;
+      case "Month":
+        dispatch(
+          getFilteredBrewsSuccess(
+            brews
+              .filter(post => {
+                return moment().diff(post.createdAt, "days") < 30;
+              })
+              .sort((a, b) => {
+                return b.rating - a.rating;
+              })
+          )
+        );
+        break;
+      case "Year":
+        dispatch(
+          getFilteredBrewsSuccess(
+            brews
+              .filter(post => {
+                return moment().diff(post.createdAt, "days") < 365;
+              })
+              .sort((a, b) => {
+                return b.rating - a.rating;
+              })
+          )
+        );
+        break;
+      default:
+        return dispatch(
+          getFilteredBrewsSuccess(
+            brews.sort((a, b) => {
+              return b.rating - a.rating;
+            })
+          )
+        );
+    }
   } catch (e) {
     console.log(e.response.data);
   }

@@ -38,7 +38,12 @@ module.exports = class BrewController {
   });
 
   filterBrews = wrapAsync(async function(req, res) {
-    const message = await brewServices.filterBrews(req.body);
+    const message = await brewServices.filterBrews(req.params);
+    return res.json(message);
+  });
+
+  filterTime = wrapAsync(async function(req, res) {
+    const message = await brewServices.filterTime(req.params);
     return res.json(message);
   });
 };

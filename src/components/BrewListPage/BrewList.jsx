@@ -7,6 +7,7 @@ import { Link as RouterLink } from "react-router-dom";
 import Link from "@material-ui/core/Link";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 
 import BrewSingleCard from "./BrewSingleCard";
 
@@ -33,6 +34,10 @@ const useStyles = makeStyles(theme => ({
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gridGap: 50
+  },
+  typography: {
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4)
   }
 }));
 
@@ -48,7 +53,9 @@ export default function BrewList(props) {
     id,
     handleTypeChange,
     handleTimeChange,
-    handleFilter
+    handleFilter,
+    whatTime,
+    brewType
   } = props;
   const classes = useStyles();
   return (
@@ -77,6 +84,7 @@ export default function BrewList(props) {
               fullWidth
               onChange={handleTypeChange}
               name="brewType"
+              placeholder="All"
             />
           )}
         />
@@ -97,8 +105,11 @@ export default function BrewList(props) {
         />
       </div>
       <Button variant="contained" color="primary" onClick={handleFilter}>
-        Filter results
+        Filter brews
       </Button>
+      <Typography variant="h4" className={classes.typography}>
+        Selected Type: {brewType}, Selected Time: {whatTime}
+      </Typography>
       {brewList !== null ? (
         <div className={classes.grid}>
           {brewList.map((elem, index) => {
@@ -134,7 +145,9 @@ BrewList.propTypes = {
   id: PropTypes.string,
   handleTypeChange: PropTypes.func.isRequired,
   handleTimeChange: PropTypes.func.isRequired,
-  handleFilter: PropTypes.func.isRequired
+  handleFilter: PropTypes.func.isRequired,
+  brewType: PropTypes.string.isRequired,
+  whatTime: PropTypes.string.isRequired
 };
 
 BrewList.defaultProps = {

@@ -22,5 +22,15 @@ ReactDOM.render(
 
 serviceWorker.unregister();
 
-// TODO: Добавь логики нормальной к этим импутам для сортировки
-// TODO: пусть при фильтре приходят пивас так {today: [{beer1}, {beer2}], week: и тд },
+// TODO: 7. умный импут(закончи со временным списком, просто можно получать фулл аррей в апи колл, а потом фильтрить его уже в компоненте уже по времени
+// TODO: filtered by user preferences, grouped by date and ordered by rating
+/*
+ {
+ today: {
+ beerList
+ }
+ week: {
+ beerList
+ }
+}
+ */
