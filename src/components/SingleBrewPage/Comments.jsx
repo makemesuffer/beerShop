@@ -22,9 +22,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Comments(props) {
-  const { brew, user, handleDelete } = props;
+  const { user, handleDelete, comments } = props;
   const classes = useStyles();
-  const { comments } = brew;
   return (
     <List className={classes.root}>
       {comments.map(comment => {
@@ -72,7 +71,7 @@ export default function Comments(props) {
 Comments.propTypes = {
   user: PropTypes.objectOf(PropTypes.any),
   handleDelete: PropTypes.func.isRequired,
-  brew: PropTypes.objectOf(PropTypes.any).isRequired
+  comments: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
 Comments.defaultProps = {

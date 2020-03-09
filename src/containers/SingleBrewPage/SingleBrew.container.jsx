@@ -25,7 +25,8 @@ class SingleBrewContainer extends React.PureComponent {
     super(props);
     this.state = {
       message: "",
-      rating: 0
+      rating: 0,
+      comments: []
     };
   }
 
@@ -35,7 +36,8 @@ class SingleBrewContainer extends React.PureComponent {
     const findBrewPost = async aidi => {
       await this.props.getBrewById(aidi);
       const { brew } = this.props;
-      this.setState({ rating: brew.likes - brew.dislikes });
+      this.setState({ rating: brew.rating });
+      this.setState({ comments: brew.comments });
       await this.props.getBeerByName(brew.brewName);
     };
     findBrewPost(id);
@@ -44,7 +46,6 @@ class SingleBrewContainer extends React.PureComponent {
   addMessage = async message => {
     this.setState({ message: "" });
     await this.props.addComment(message);
-    socket.on("message", message);
   };
 
   handleChange = e => {
@@ -107,17 +108,31 @@ class SingleBrewContainer extends React.PureComponent {
   };
 
   handleDelete = async comment => {
+    const { brew } = this.props;
     const { id } = this.props;
     const payload = {
       id,
       commentId: comment.commentId
     };
-    this.props.deleteMessage(payload);
+    await this.props.deleteMessage(payload);
+    socket.emit("add-message", brew._id);
+    socket.on("get_data", singleBrew => {
+      this.setState({ comments: singleBrew.comments });
+    });
+  };
+
+  loadComments = async e => {
+    const { id } = this.props;
+    e.preventDefault();
+    socket.emit("add-message", id);
+    socket.on("get_data", singleBrew => {
+      this.setState({ comments: singleBrew.comments });
+    });
   };
 
   render() {
     const { user, brew, beer, allowed, error } = this.props;
-    const { message, rating } = this.state;
+    const { message, rating, comments } = this.state;
     if (brew === null || beer === null) {
       return <Loader />;
     }
@@ -143,6 +158,7 @@ class SingleBrewContainer extends React.PureComponent {
           />
         </Container>
         <CommentSection
+          loadComments={this.loadComments}
           submitMessage={this.submitMessage}
           handleChange={this.handleChange}
           brew={brew}
@@ -150,6 +166,7 @@ class SingleBrewContainer extends React.PureComponent {
           handleDelete={this.handleDelete}
           allowed={allowed}
           message={message}
+          comments={comments}
         />
       </>
     );

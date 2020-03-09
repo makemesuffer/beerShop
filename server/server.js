@@ -9,6 +9,7 @@ const socketIo = require("socket.io");
 require("dotenv").config();
 
 const setUpConnection = require("./inregration/dbLoader");
+const sockets = require("./inregration/webSocket");
 
 setUpConnection();
 
@@ -42,23 +43,10 @@ const server = http.createServer(app);
 
 const io = socketIo(server);
 
-io.on("connection", socket => {
-  console.log("working");
-  socket.on("message", message => {
-    console.log(message);
-    io.emit("message", message);
-  });
-  socket.on("disconnect", () => {
-    console.log("Disconnected!");
-  });
-});
-
-// app.use(io);
+sockets(io);
 
 app.use(router);
 
 app.use(errorController);
 
-server.listen(cfg.EXPRESS_PORT, () => {
-  console.log(`Express server running on port ${cfg.EXPRESS_PORT}.`);
-});
+server.listen(cfg.EXPRESS_PORT);

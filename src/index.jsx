@@ -22,15 +22,5 @@ ReactDOM.render(
 
 serviceWorker.unregister();
 
-// TODO: 7. умный импут(закончи со временным списком, просто можно получать фулл аррей в апи колл, а потом фильтрить его уже в компоненте уже по времени
-// TODO: filtered by user preferences, grouped by date and ordered by rating
-/*
- {
- today: {
- beerList
- }
- week: {
- beerList
- }
-}
- */
+// TODO: socket io load button!!!!
+// TODO: reducer rewrite

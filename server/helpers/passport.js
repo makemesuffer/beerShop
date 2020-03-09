@@ -12,14 +12,12 @@ opts.secretOrKey = keys.secretOrKey; // secret
 module.exports = passport => {
   passport.use(
     new JwtStrategy(opts, (jwtPayload, done) => {
-      User.findById(jwtPayload.id)
-        .then(user => {
-          if (user) {
-            return done(null, user);
-          }
-          return done(null, false);
-        })
-        .catch(err => console.log(err));
+      User.findById(jwtPayload.id).then(user => {
+        if (user) {
+          return done(null, user);
+        }
+        return done(null, false);
+      });
     })
   );
 };

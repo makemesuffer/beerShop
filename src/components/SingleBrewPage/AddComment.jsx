@@ -11,14 +11,17 @@ const useStyles = makeStyles({
     display: "flex",
     flexDirection: "column"
   },
+  buttons: {
+    display: "flex",
+    justifyContent: "space-between"
+  },
   button: {
-    width: "20%",
-    alignSelf: "end"
+    width: "30%"
   }
 });
 
 export default function AddComment(props) {
-  const { submitMessage, handleChange, message } = props;
+  const { submitMessage, handleChange, message, loadComments } = props;
   const classes = useStyles();
   return (
     <>
@@ -31,9 +34,14 @@ export default function AddComment(props) {
           label="Comment"
           value={message}
         />
-        <Button onClick={submitMessage} className={classes.button}>
-          Submit message
-        </Button>
+        <div className={classes.buttons}>
+          <Button onClick={submitMessage} className={classes.button}>
+            Submit message
+          </Button>
+          <Button onClick={loadComments} className={classes.button}>
+            Load new comments
+          </Button>
+        </div>
       </FormControl>
     </>
   );
@@ -42,5 +50,6 @@ export default function AddComment(props) {
 AddComment.propTypes = {
   submitMessage: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
-  message: PropTypes.string.isRequired
+  message: PropTypes.string.isRequired,
+  loadComments: PropTypes.func.isRequired
 };
