@@ -22,5 +22,4 @@ ReactDOM.render(
 
 serviceWorker.unregister();
 
-// TODO: socket io load button!!!!
 // TODO: reducer rewrite

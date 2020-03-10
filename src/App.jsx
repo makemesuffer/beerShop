@@ -11,6 +11,8 @@ import { exitUserSession, saveUserSessionSuccess } from "./store/user/actions";
 
 export const store = createStore(reducer, applyMiddleware(thunk, logger));
 
+// TODO: перенеси в экшоны!
+
 if (sessionStorage.poken) {
   const { poken } = sessionStorage;
   setAuthToken(poken);
