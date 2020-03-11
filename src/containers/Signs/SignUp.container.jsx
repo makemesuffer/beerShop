@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import PropTypes from "prop-types";
-import { userCreate } from "../../store/user/actions";
 import SignUpForm from "../../components/Signs/SignUpForm";
+import { userCreate } from "../../braveNewStore/userDetails/actions";
 
 class SignUpContainer extends React.PureComponent {
   constructor(props) {
@@ -14,8 +14,7 @@ class SignUpContainer extends React.PureComponent {
       lastName: "",
       login: "",
       birthDate: "",
-      password: "",
-      error: null
+      password: ""
     };
   }
 
@@ -31,15 +30,14 @@ class SignUpContainer extends React.PureComponent {
     const payload = { login, password, firstName, lastName, birthDate };
     await this.props.userCreate(payload);
     const { error } = this.props;
+    console.log(error);
     if (error === null) {
       history.push("/search");
-    } else {
-      this.setState({ error });
     }
   };
 
   render() {
-    const { error } = this.state;
+    const { error } = this.props;
     return (
       <>
         <SignUpForm
@@ -64,7 +62,7 @@ SignUpContainer.defaultProps = {
 
 const mapStateToProps = state => {
   return {
-    error: state.user.error
+    error: state.userDetails.error
   };
 };
 

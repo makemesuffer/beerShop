@@ -51,13 +51,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function UserBeerList(props) {
-  const {
-    beers,
-    favoritesBeers,
-    handleRemove,
-    currentPageDecrement,
-    allowed
-  } = props;
+  const { beers, favoritesBeers, handleRemove, currentPageDecrement } = props;
   const classes = useStyles();
 
   useEffect(() => {
@@ -90,19 +84,15 @@ export default function UserBeerList(props) {
                     >
                       Open
                     </Button>
-                    {allowed ? (
-                      <Button
-                        size="small"
-                        color="primary"
-                        onClick={() => {
-                          handleRemove(elem.id);
-                        }}
-                      >
-                        Remove Favorite
-                      </Button>
-                    ) : (
-                      <></>
-                    )}
+                    <Button
+                      size="small"
+                      color="primary"
+                      onClick={() => {
+                        handleRemove(elem.id);
+                      }}
+                    >
+                      Remove Favorite
+                    </Button>
                   </CardActions>
                 </CardContent>
               </Card>
@@ -118,6 +108,5 @@ UserBeerList.propTypes = {
   beers: PropTypes.arrayOf(PropTypes.object).isRequired,
   favoritesBeers: PropTypes.arrayOf(PropTypes.object).isRequired,
   currentPageDecrement: PropTypes.func.isRequired,
-  handleRemove: PropTypes.func.isRequired,
-  allowed: PropTypes.bool.isRequired
+  handleRemove: PropTypes.func.isRequired
 };

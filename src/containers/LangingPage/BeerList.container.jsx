@@ -4,14 +4,16 @@ import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroller";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
+import { continueBeerList } from "../../braveNewStore/beerList/actions";
+import { setScroll, setPage } from "../../braveNewStore/searchValues/actions";
 import { addBeer, deleteBeer } from "../../dataAccess/userRepository/helpers";
-import { continueBeerName, setBeerList } from "../../store/beer/actions";
 import { getBeerDetails } from "../../store/details/actions";
 import { saveUserProgress } from "../../store/user/actions";
 import BeerGrid from "../../components/LandingPage/BeerGrid";
+import Loader from "../../components/Loader";
 
 class BeerListContainer extends React.PureComponent {
-  handleLoad = () => {
+  handleLoad = async () => {
     const {
       beerList,
       value,
@@ -20,20 +22,17 @@ class BeerListContainer extends React.PureComponent {
       bitternessValue,
       colorValue
     } = this.props;
-    if (value === "") {
-      this.props.continueBeerName(9, null, page);
-    } else {
-      this.props.continueBeerName(
-        9,
-        value,
-        page,
-        alcoholValue,
-        bitternessValue,
-        colorValue
-      );
-    }
+    await this.props.continueBeerList({
+      perPage: 9,
+      page,
+      name: value === "" ? null : value,
+      abv: alcoholValue,
+      ibu: bitternessValue,
+      ebc: colorValue
+    });
+    await this.props.setPage({ page: page + 1 });
     if (beerList.length < 9) {
-      this.props.setBeerList(false);
+      this.props.setScroll({ hasMoreBeers: false });
     }
   };
 
@@ -51,7 +50,10 @@ class BeerListContainer extends React.PureComponent {
   };
 
   render() {
-    const { beerList, user, hasMoreBeers } = this.props;
+    const { beerList, user, hasMoreBeers, isBusy } = this.props;
+    if (isBusy === true) {
+      return <Loader />;
+    }
     if (beerList.length !== 0) {
       return (
         <InfiniteScroll
@@ -79,40 +81,53 @@ class BeerListContainer extends React.PureComponent {
 
 BeerListContainer.propTypes = {
   beerList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  value: PropTypes.string.isRequired,
-  page: PropTypes.number.isRequired,
-  continueBeerName: PropTypes.func.isRequired,
-  setBeerList: PropTypes.func.isRequired,
-  hasMoreBeers: PropTypes.bool.isRequired,
-  alcoholValue: PropTypes.number.isRequired,
-  bitternessValue: PropTypes.number.isRequired,
-  colorValue: PropTypes.number.isRequired,
+  value: PropTypes.string,
+  page: PropTypes.number,
+  continueBeerList: PropTypes.func.isRequired,
+  setScroll: PropTypes.func.isRequired,
+  hasMoreBeers: PropTypes.bool,
+  alcoholValue: PropTypes.number,
+  bitternessValue: PropTypes.number,
+  colorValue: PropTypes.number,
   user: PropTypes.objectOf(PropTypes.any),
   saveUserProgress: PropTypes.func.isRequired,
-  rememberMe: PropTypes.bool.isRequired
+  rememberMe: PropTypes.bool,
+  isBusy: PropTypes.bool.isRequired,
+  setPage: PropTypes.func.isRequired
 };
 
 BeerListContainer.defaultProps = {
-  user: null
+  user: null,
+  value: "",
+  page: 2,
+  hasMoreBeers: true,
+  alcoholValue: 2,
+  bitternessValue: 0,
+  colorValue: 4,
+  rememberMe: false // rewrite
 };
 
 const mapStateToProps = state => {
   return {
-    beerList: state.beer.beerList,
-    value: state.beer.value,
-    page: state.beer.page,
-    hasMoreBeers: state.beer.hasMoreBeers,
-    alcoholValue: state.beer.alcoholValue,
-    bitternessValue: state.beer.bitternessValue,
-    colorValue: state.beer.colorValue,
-    user: state.user.user,
-    rememberMe: state.user.rememberMe
+    beerList: state.beerList.items,
+    isBusy: state.beerList.isBusy,
+    alcoholValue: state.searchValues.model.alcoholValue,
+    bitternessValue: state.searchValues.model.bitternessValue,
+    colorValue: state.searchValues.model.colorValue,
+    page: state.searchValues.model.page,
+    value: state.searchValues.model.value
   };
 };
 
+/*
+  user: state.user.user,
+    rememberMe: state.user.rememberMe
+ */
+
 export default connect(mapStateToProps, {
-  continueBeerName,
-  setBeerList,
   getBeerDetails,
-  saveUserProgress
+  saveUserProgress,
+  continueBeerList,
+  setScroll,
+  setPage
 })(BeerListContainer);

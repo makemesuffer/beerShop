@@ -12,8 +12,7 @@ const favoritesReducer = createReducer(
     [actionTypes.GET_FAVORITES_ERROR]: baseReducer.error,
     [actionTypes.GET_FAVORITES_PENDING]: baseReducer.pending,
     [actionTypes.GET_FAVORITES_SUCCESS]: baseReducer.success,
-    [actionTypes.ADD_FAVORITE]: baseReducer.addToArray,
-    [actionTypes.REMOVE_FAVORITE]: baseReducer.deleteFromArray
+    [actionTypes.CHANGE_FAVORITES]: baseReducer.success
   }
 );
 

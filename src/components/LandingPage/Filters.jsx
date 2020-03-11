@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Slider from "@material-ui/core/Slider";
 import Box from "@material-ui/core/Box";
-import debounce from "lodash/debounce";
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -81,7 +80,7 @@ export default function Filters(props) {
             defaultValue={4}
             title="colorValue"
             value={colorValue}
-            onChange={debounce(handleSliderChange, 1000)}
+            onChange={handleSliderChange}
             aria-labelledby="discrete-slider"
             valueLabelDisplay="auto"
             step={1}

@@ -4,15 +4,11 @@ import PropTypes from "prop-types";
 
 import { addBeer, deleteBeer } from "../../dataAccess/userRepository/helpers";
 import TitleDescription from "../../components/BeerDetailsPage/TitleDescription";
-import {
-  getBeerDetails,
-  getBeerDetailsPending
-} from "../../store/details/actions";
+import getBeerDetails from "../../braveNewStore/beerDetails/actions";
 import { saveUserProgress } from "../../store/user/actions";
 import PropertiesPairing from "../../components/BeerDetailsPage/PropertiesPairing";
 import BrewingInfo from "../../components/BeerDetailsPage/BrewingInfo";
 import Loader from "../../components/Loader";
-import ErrorBoundary from "../../components/ErrorBoundary";
 
 class SingleBeerContainer extends React.PureComponent {
   constructor(props) {
@@ -21,11 +17,9 @@ class SingleBeerContainer extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.props.getBeerDetailsPending(true);
     const { id } = this.props;
     const waitUser = async () => {
-      this.props.getBeerDetailsPending(false);
-      this.props.getBeerDetails(id);
+      await this.props.getBeerDetails(id);
     };
     waitUser();
   }
@@ -56,25 +50,22 @@ class SingleBeerContainer extends React.PureComponent {
   };
 
   render() {
-    const { user, details, error } = this.props;
-    if (error !== null) {
-      return <ErrorBoundary error={error} />;
-    }
-    if (!details.length) {
+    const { user, details, isBusy } = this.props;
+    if (isBusy === true) {
       return <Loader />;
     }
     return (
       <>
         <TitleDescription
           userBeerList={user === null ? null : user.beerList}
-          beer={details[0]}
+          beer={details}
           handleFavorite={this.handleFavorite}
         />
         <PropertiesPairing
-          beer={details[0]}
+          beer={details}
           createTableData={this.createListData}
         />
-        <BrewingInfo beer={details[0]} createListData={this.createListData} />
+        <BrewingInfo beer={details} createListData={this.createListData} />
       </>
     );
   }
@@ -83,32 +74,34 @@ class SingleBeerContainer extends React.PureComponent {
 SingleBeerContainer.propTypes = {
   id: PropTypes.number.isRequired,
   getBeerDetails: PropTypes.func.isRequired,
-  details: PropTypes.arrayOf(PropTypes.object).isRequired,
-  getBeerDetailsPending: PropTypes.func.isRequired,
-  error: PropTypes.string,
+  details: PropTypes.objectOf(PropTypes.any),
   user: PropTypes.objectOf(PropTypes.any),
   saveUserProgress: PropTypes.func.isRequired,
-  rememberMe: PropTypes.bool.isRequired
+  isBusy: PropTypes.bool.isRequired,
+  rememberMe: PropTypes.bool
 };
 
 SingleBeerContainer.defaultProps = {
   user: null,
-  error: null
+  details: null,
+  rememberMe: undefined
 };
 
 const mapStateToProps = state => {
   return {
-    beerList: state.beer.beerList,
-    details: state.details.item,
-    isBusy: state.details.isBusy,
-    error: state.details.error,
-    user: state.user.user,
-    rememberMe: state.user.rememberMe
+    details: state.beerDetails.model,
+    isBusy: state.beerDetails.isBusy,
+    error: state.beerDetails.error
   };
 };
 
+/*
+    beerList: state.beerList.model, - К ЮЗЕРУ
+    user: state.user.user,
+    rememberMe: state.user.rememberMe
+ */
+
 export default connect(mapStateToProps, {
   getBeerDetails,
-  getBeerDetailsPending,
   saveUserProgress
 })(SingleBeerContainer);

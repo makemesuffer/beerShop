@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { saveUserSession } from "../../store/user/actions";
+import { saveUserSession } from "../../braveNewStore/userDetails/actions";
 import SignInForm from "../../components/Signs/SignInForm";
 
 class SignInContainer extends React.PureComponent {
@@ -12,8 +12,7 @@ class SignInContainer extends React.PureComponent {
     this.state = {
       login: "",
       password: "",
-      rememberMe: false,
-      error: null
+      rememberMe: false
     };
   }
 
@@ -39,13 +38,11 @@ class SignInContainer extends React.PureComponent {
     const { error } = this.props;
     if (error === null) {
       history.push("/search");
-    } else {
-      this.setState({ error });
     }
   };
 
   render() {
-    const { error } = this.state;
+    const { error } = this.props;
     return (
       <>
         <SignInForm
@@ -71,8 +68,8 @@ SignInContainer.defaultProps = {
 
 const mapStateToProps = state => {
   return {
-    user: state.user.user,
-    error: state.user.error
+    user: state.userDetails.model,
+    error: state.userDetails.error
   };
 };
 

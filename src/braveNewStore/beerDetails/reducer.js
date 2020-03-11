@@ -5,7 +5,7 @@ import baseReducer from "../base/baseReducer";
 const beerDetailsReducer = createReducer(
   {
     model: null,
-    isBusy: false,
+    isBusy: true,
     error: null
   },
   {

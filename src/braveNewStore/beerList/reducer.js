@@ -12,7 +12,8 @@ const beerReducer = createReducer(
     [actionTypes.GET_BEER_PENDING]: baseReducer.pending,
     [actionTypes.GET_BEER_ERROR]: baseReducer.error,
     [actionTypes.GET_BEER_SUCCESS]: baseReducer.success,
-    [actionTypes.UPDATE_BEER]: baseReducer.continueArray
+    [actionTypes.UPDATE_BEER_ERROR]: baseReducer.error,
+    [actionTypes.UPDATE_BEER_SUCCESS]: baseReducer.continueArray
   }
 );
 

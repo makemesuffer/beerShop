@@ -2,11 +2,11 @@ import jwt_decode from "jwt-decode";
 import { createAction } from "redux-actions";
 
 import actionTypes from "./actionTypes";
-import { loginUser } from "../../dataAccess/userRepository/helpers";
+import { loginUser, createUser } from "../../dataAccess/userRepository/helpers";
 import setAuthToken from "../../dataAccess/userRepository/setAuthToken";
 
-const saveUserSession = createAction(
-  actionTypes.SAVE_USER_SESSION_SUCCESS,
+export const saveUserSession = createAction(
+  actionTypes.SAVE_USER_SESSION,
   async data => {
     const { payload, rememberMe } = data;
     const response = await loginUser(payload);
@@ -22,7 +22,11 @@ const saveUserSession = createAction(
   }
 );
 
-export default saveUserSession;
+export const userCreate = createAction(actionTypes.CREATE_USER, payload => {
+  return createUser(payload);
+});
+
+export const logoutUser = createAction(actionTypes.LOGOUT_USER);
 
 // Спорный момент конечно
 

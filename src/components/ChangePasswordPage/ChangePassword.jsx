@@ -27,7 +27,7 @@ export default function ChangePassword(props) {
     <Container component="main" maxWidth="sm" className={classes.container}>
       <Typography variant="h4">Enter a new password</Typography>
       {success !== "" ? <Alert severity="success">{success}</Alert> : <></>}
-      {error !== "" ? <Alert severity="error">{error}</Alert> : <></>}
+      {error !== null ? <Alert severity="error">{error}</Alert> : <></>}
       <form className={classes.form} noValidate>
         <TextField
           name="oldPassword"

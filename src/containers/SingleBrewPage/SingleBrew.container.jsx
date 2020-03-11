@@ -210,6 +210,10 @@ const mapStateToProps = state => {
   };
 };
 
+/*
+
+ */
+
 export default connect(mapStateToProps, {
   getBrewById,
   getBeerByName,

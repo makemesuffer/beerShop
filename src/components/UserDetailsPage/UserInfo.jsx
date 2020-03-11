@@ -61,7 +61,7 @@ const useStyles = makeStyles({
 });
 
 export default function UserInfo(props) {
-  const { user, allowed, handleUpload, handleDelete } = props;
+  const { user, handleUpload, handleDelete } = props;
   const classes = useStyles();
   return (
     <Container component="main" maxWidth="lg">
@@ -76,57 +76,51 @@ export default function UserInfo(props) {
               className={classes.media}
             />
             <Card className={classes.buttons}>
-              {allowed ? (
-                <>
-                  <input
-                    accept="image/*"
-                    className={classes.hide}
-                    id="raised-button-file"
-                    multiple
-                    type="file"
-                    onChange={handleUpload}
-                  />
-                  <label htmlFor="raised-button-file">
-                    <Button
-                      component="span"
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                    >
-                      Upload image
-                    </Button>
-                  </label>
-                  <Link
-                    color="inherit"
-                    component={RouterLink}
-                    to={`/users/${user.id}/change-password`}
+              <>
+                <input
+                  accept="image/*"
+                  className={classes.hide}
+                  id="raised-button-file"
+                  multiple
+                  type="file"
+                  onChange={handleUpload}
+                />
+                <label htmlFor="raised-button-file">
+                  <Button
+                    component="span"
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
                   >
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                    >
-                      Change Password
-                    </Button>
-                  </Link>
-                  {user.profilePicture === null ? (
-                    <></>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      onClick={handleDelete}
-                    >
-                      Delete image
-                    </Button>
-                  )}
-                </>
-              ) : (
-                <Button variant="contained" color="primary">
-                  Add to friends
-                </Button>
-              )}
+                    Upload image
+                  </Button>
+                </label>
+                <Link
+                  color="inherit"
+                  component={RouterLink}
+                  to={`/users/${user.id}/change-password`}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                  >
+                    Change Password
+                  </Button>
+                </Link>
+                {user.profilePicture === null ? (
+                  <></>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleDelete}
+                  >
+                    Delete image
+                  </Button>
+                )}
+              </>
             </Card>
           </div>
           <div className={classes.secondColumn}>
@@ -171,7 +165,6 @@ export default function UserInfo(props) {
 
 UserInfo.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
-  allowed: PropTypes.bool.isRequired,
   handleUpload: PropTypes.func.isRequired,
   handleDelete: PropTypes.func.isRequired
 };

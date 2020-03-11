@@ -2,10 +2,12 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import UserInfo from "../../components/UserDetailsPage/UserInfo";
-import { getFavoritesById, saveUserProgress } from "../../store/user/actions";
 import Loader from "../../components/Loader";
 import UserBeerList from "../../components/UserDetailsPage/UserBeerList";
-import ErrorBoundary from "../../components/ErrorBoundary";
+import {
+  getFavorites,
+  changeFavorites
+} from "../../braveNewStore/favoritesList/actions";
 import {
   deleteBeer,
   uploadImage,
@@ -22,10 +24,9 @@ class UserPageContainer extends React.PureComponent {
   }
 
   componentDidMount() {
-    // const {id} = this.props
     const { user } = this.props;
     const getUserBeerList = async () => {
-      await this.props.getFavoritesById(user.beerList);
+      await this.props.getFavorites(user.beerList);
     };
     if (user !== null) getUserBeerList();
   }
@@ -43,11 +44,10 @@ class UserPageContainer extends React.PureComponent {
   };
 
   handleRemove = async id => {
-    const { user, rememberMe } = this.props;
+    const { user, favoritesBeers } = this.props;
     await deleteBeer({ id, userId: user.id });
-    await this.props.saveUserProgress(user, rememberMe);
-    const { user: newUser } = this.props;
-    await this.props.getFavoritesById(newUser.beerList);
+    const updatedFavorites = favoritesBeers.filter(elem => elem.id !== id);
+    await this.props.changeFavorites(updatedFavorites);
   };
 
   handleUpload = async e => {
@@ -59,7 +59,7 @@ class UserPageContainer extends React.PureComponent {
       const payload = { userId: user.id, img: reader.result };
       const result = await uploadImage(payload);
       if (result.data.success === true) {
-        await getFavoritesById(user.beerList);
+        await getFavorites(user.beerList);
       }
     };
 
@@ -75,24 +75,18 @@ class UserPageContainer extends React.PureComponent {
       .split(".")
       .shift();
     const payload = { userId: user.id, imgId };
-    const result = await deleteImage(payload);
-    if (result.data.success === true) {
-      await getFavoritesById(user.beerList);
-    }
+    await deleteImage(payload);
   };
 
   render() {
     const { currentPage } = this.state;
-    const {
-      user,
-      error,
-      favoritesBeers,
-      foreignUser,
-      allowed,
-      id
-    } = this.props;
+    const { user, error, favoritesBeers, isBusy } = this.props;
 
-    const thisUser = user.id === id ? user : foreignUser;
+    if (isBusy === true) {
+      return <Loader />;
+    }
+
+    const thisUser = user;
 
     const index = currentPage === 1 ? 0 : (currentPage - 1) * 6;
     const beers = favoritesBeers.slice(index, index + 6);
@@ -116,22 +110,16 @@ class UserPageContainer extends React.PureComponent {
     } else {
       paginationFinal = [...pageArray];
     }
-    if (
-      Object.entries(user).length === 0 &&
-      error === null &&
-      Object.entries(foreignUser).length === 0
-    ) {
-      return <Loader />;
-    }
+
     return (
       <>
         {error !== null ? (
-          <ErrorBoundary error={error} />
+          <> </>
         ) : (
           <>
             <UserInfo
               user={thisUser}
-              allowed={allowed}
+              // allowed={allowed}
               handleUpload={this.handleUpload}
               handleDelete={this.handleDelete}
             />
@@ -140,7 +128,7 @@ class UserPageContainer extends React.PureComponent {
               handleRemove={this.handleRemove}
               favoritesBeers={favoritesBeers}
               currentPageDecrement={this.currentPageDecrement}
-              allowed={allowed}
+              // allowed={allowed}
             />
             <FavoritesPagination
               userId={thisUser !== null ? thisUser.id : null}
@@ -163,11 +151,9 @@ UserPageContainer.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   error: PropTypes.string,
   favoritesBeers: PropTypes.arrayOf(PropTypes.object).isRequired,
-  foreignUser: PropTypes.objectOf(PropTypes.any).isRequired,
-  allowed: PropTypes.bool.isRequired,
-  getFavoritesById: PropTypes.func.isRequired,
-  rememberMe: PropTypes.bool.isRequired,
-  saveUserProgress: PropTypes.func.isRequired
+  getFavorites: PropTypes.func.isRequired,
+  isBusy: PropTypes.bool.isRequired,
+  changeFavorites: PropTypes.func.isRequired
 };
 
 UserPageContainer.defaultProps = {
@@ -176,16 +162,14 @@ UserPageContainer.defaultProps = {
 
 const mapStateToProps = state => {
   return {
-    user: state.user.user,
-    error: state.user.error,
-    favoritesBeers: state.user.favoritesBeers,
-    foreignUser: state.user.foreignUser,
-    allowed: state.user.allowed,
-    rememberMe: state.user.rememberMe
+    user: state.userDetails.model,
+    error: state.userDetails.error,
+    favoritesBeers: state.favorites.items,
+    isBusy: state.userDetails.isBusy
   };
 };
 
 export default connect(mapStateToProps, {
-  saveUserProgress,
-  getFavoritesById
+  getFavorites,
+  changeFavorites
 })(UserPageContainer);

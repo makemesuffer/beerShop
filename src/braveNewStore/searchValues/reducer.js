@@ -12,7 +12,8 @@ const searchReducer = createReducer(
     [actionTypes.SET_SCROLL]: baseReducer.success,
     [actionTypes.SET_PARAMS]: baseReducer.success,
     [actionTypes.SET_FILTERS]: baseReducer.success,
-    [actionTypes.SET_VALUE]: baseReducer.success
+    [actionTypes.SET_VALUE]: baseReducer.success,
+    [actionTypes.SET_PAGE]: baseReducer.success
   }
 );
 

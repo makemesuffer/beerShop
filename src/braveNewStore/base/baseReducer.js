@@ -4,12 +4,14 @@ const pending = state => {
 
 const success = (state, action) => {
   const newState = {
-    isBusy: false
+    isBusy: false,
+    error: null
   };
 
   if (Array.isArray(action.payload)) {
     newState.items = action.payload;
   } else {
+    newState.model = { ...state.model };
     // eslint-disable-next-line no-restricted-syntax
     for (const [key, value] of Object.entries(action.payload)) {
       newState.model[key] = value;
@@ -20,12 +22,13 @@ const success = (state, action) => {
 };
 
 const error = (state, action) => {
-  const errorMsg = action.payload;
+  // eslint-disable-next-line no-shadow
+  const { error } = action.payload.response.data;
 
   return {
     ...state,
     isBusy: false,
-    errorMsg
+    error
   };
 };
 
@@ -58,21 +61,8 @@ const setArray = (state, action) => {
 const continueArray = (state, action) => {
   return {
     ...state,
+    isBusy: false,
     items: [...state.items, ...action.payload]
-  };
-};
-
-const deleteFromArray = (state, action) => {
-  return {
-    ...state,
-    items: state.items.filter(elem => elem !== action.payload)
-  };
-};
-
-const addToArray = (state, action) => {
-  return {
-    ...state,
-    items: state.items.push(action.payload)
   };
 };
 
@@ -83,7 +73,5 @@ export default {
   success,
   error,
   reset,
-  setModel,
-  deleteFromArray,
-  addToArray
+  setModel
 };

@@ -4,34 +4,38 @@ import PropTypes from "prop-types";
 import debounce from "lodash/debounce";
 
 import {
-  setValueSuccess,
+  setValue,
   setFilters,
-  getBeer,
-  setFiltersValue
-} from "../../store/beer/actions";
+  setParams
+} from "../../braveNewStore/searchValues/actions";
+import { getBeerList } from "../../braveNewStore/beerList/actions";
 import Input from "../../components/LandingPage/Input";
 import Filters from "../../components/LandingPage/Filters";
 
 class SearchContainer extends React.PureComponent {
-  filterResult = debounce(() => {
+  filterResult = debounce(async () => {
     const { value } = this.props;
     const { colorValue, bitternessValue, alcoholValue } = this.state;
-    this.props.setFiltersValue([alcoholValue, bitternessValue, colorValue]);
-    this.props.getBeer(
-      9,
-      null,
-      value,
-      alcoholValue,
-      bitternessValue,
-      colorValue
-    );
+    await this.props.setParams({ alcoholValue, bitternessValue, colorValue });
+    await this.props.getBeerList({
+      perPage: 9,
+      page: null,
+      name: value === "" ? null : value,
+      abv: alcoholValue,
+      ibu: bitternessValue,
+      ebc: colorValue
+    });
   }, 500);
 
-  getResults = debounce(() => {
+  getResults = debounce(async () => {
     const { value } = this.state;
-    this.props.setValueSuccess(value);
-    if (value === "") this.props.getBeer(9);
-    else this.props.getBeer(9, null, value);
+    this.props.setValue({ value });
+    await this.props.getBeerList({
+      perPage: 9,
+      page: null,
+      name: value === "" ? null : value
+    });
+    await this.props.setFilters({ showFilters: true });
   }, 500);
 
   constructor(props) {
@@ -84,24 +88,30 @@ class SearchContainer extends React.PureComponent {
 }
 
 SearchContainer.propTypes = {
-  setValueSuccess: PropTypes.func.isRequired,
-  showFilters: PropTypes.bool.isRequired,
-  getBeer: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
-  setFiltersValue: PropTypes.func.isRequired
+  setValue: PropTypes.func.isRequired,
+  showFilters: PropTypes.bool,
+  getBeerList: PropTypes.func.isRequired,
+  value: PropTypes.string,
+  setFilters: PropTypes.func.isRequired,
+  setParams: PropTypes.func.isRequired
+};
+
+SearchContainer.defaultProps = {
+  showFilters: false,
+  value: ""
 };
 
 const mapStateToProps = state => {
   return {
-    beerList: state.beer.beerList,
-    showFilters: state.beer.showFilters,
-    value: state.beer.value
+    beerList: state.beerList.items,
+    showFilters: state.searchValues.model.showFilters,
+    value: state.searchValues.model.value
   };
 };
 
 export default connect(mapStateToProps, {
-  setValueSuccess,
   setFilters,
-  getBeer,
-  setFiltersValue
+  setParams,
+  setValue,
+  getBeerList
 })(SearchContainer);

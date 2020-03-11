@@ -79,8 +79,8 @@ HeaderContainer.defaultProps = {
 
 const mapStateToProps = state => {
   return {
-    user: state.user.user,
-    isLogout: state.user.isLogout
+    user: state.userDetails.model,
+    isLogout: state.userDetails.logout
   };
 };
 
