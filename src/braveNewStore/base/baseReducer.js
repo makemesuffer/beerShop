@@ -12,17 +12,14 @@ const success = (state, action) => {
     newState.items = action.payload;
   } else {
     newState.model = { ...state.model };
-    // eslint-disable-next-line no-restricted-syntax
     for (const [key, value] of Object.entries(action.payload)) {
       newState.model[key] = value;
     }
   }
-
   return { ...state, ...newState };
 };
 
 const error = (state, action) => {
-  // eslint-disable-next-line no-shadow
   const { error } = action.payload.response.data;
 
   return {
@@ -41,8 +38,6 @@ const reset = state => {
     error: null
   };
 };
-
-// TODO: возможен реврайт
 
 const setModel = (state, action) => {
   return {

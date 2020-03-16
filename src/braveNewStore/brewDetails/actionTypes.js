@@ -1,9 +1,13 @@
-// У тебя будет тут только моделька, в которую попадут только базовые
-// валью дб. Но так же вместе с этим будет вызываться и реврайтиться синглБир,
-// бирЛист(неймс). ТОЛЬКО ПРОВЕРЬ КАК ЭТО БУЦДЕТ РАБОТАТЬ С РАЗНЫМИ СТРАНИЦАМИ!!!
-
 export default {
+  GET_BREW: "GET_BREW",
   GET_BREW_PENDING: "GET_BREW_PENDING",
   GET_BREW_ERROR: "GET_BREW_ERROR",
-  GET_BREW_SUCCESS: "GET_BREW_SUCCESS"
+  GET_BREW_SUCCESS: "GET_BREW_SUCCESS",
+  GET_BEER: "GET_BEER",
+  GET_BEER_PENDING: "GET_BEER_PENDING",
+  GET_BEER_ERROR: "GER_BEER_ERROR",
+  GET_BEER_SUCCESS: "GET_BEER_SUCCESS",
+  CHANGE_RATING: "CHANGE_RATING",
+  CHANGE_RATING_SUCCESS: "CHANGE_RATING_SUCCESS",
+  CHANGE_RATING_ERROR: "CHANGE_RATING_ERROR"
 };

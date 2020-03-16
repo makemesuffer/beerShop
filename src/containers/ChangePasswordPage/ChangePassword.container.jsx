@@ -3,11 +3,11 @@ import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { logoutUser } from "../../braveNewStore/userDetails/actions";
-import { changePassword } from "../../dataAccess/userRepository/helpers";
+import {
+  logoutUser,
+  changeUserPassword
+} from "../../braveNewStore/userDetails/actions";
 import ChangePassword from "../../components/ChangePasswordPage/ChangePassword";
-
-// TODO: прочекай это еще раз!!!
 
 class ChangePasswordContainer extends React.PureComponent {
   constructor(props) {
@@ -30,7 +30,7 @@ class ChangePasswordContainer extends React.PureComponent {
     const { id, history } = this.props;
     const { oldPassword, newPassword, repeatPassword } = this.state;
     const payload = { id, oldPassword, newPassword, repeatPassword };
-    const result = await changePassword(payload);
+    const result = await this.props.changeUserPassword(payload);
     if (result.data.success === true) {
       this.setState({ success: result.data.message });
       setTimeout(async () => {
@@ -43,6 +43,7 @@ class ChangePasswordContainer extends React.PureComponent {
   render() {
     const { success } = this.state;
     const { error } = this.props;
+    console.log(error);
     return (
       <>
         <ChangePassword
@@ -60,7 +61,8 @@ ChangePasswordContainer.propTypes = {
   id: PropTypes.string.isRequired,
   history: PropTypes.objectOf(PropTypes.any).isRequired,
   logoutUser: PropTypes.func.isRequired,
-  error: PropTypes.string
+  error: PropTypes.string,
+  changeUserPassword: PropTypes.func.isRequired
 };
 
 ChangePasswordContainer.defaultProps = {
@@ -69,10 +71,11 @@ ChangePasswordContainer.defaultProps = {
 
 const mapStateToProps = state => {
   return {
-    user: state.userDetails.model
+    user: state.userDetails.model,
+    error: state.userDetails.error
   };
 };
 
-export default connect(mapStateToProps, { logoutUser })(
+export default connect(mapStateToProps, { logoutUser, changeUserPassword })(
   withRouter(ChangePasswordContainer)
 );

@@ -21,28 +21,32 @@ module.exports = class VerifyServices {
     if (!oldPassword || !newPassword || !repeatPassword) {
       return {
         success: false,
-        error: "Please, fill all the inputs"
+        error: "Please, fill all the inputs",
+        status: 400
       };
     }
     const user = await userRepository.find("_id", id);
     if (md5(oldPassword) !== user.password) {
       return {
         success: false,
-        error: "Old Password doesn't match"
+        error: "Old Password doesn't match",
+        status: 400
       };
     }
 
     if (newPassword.length < 8) {
       return {
         success: false,
-        error: "Password must be at least 8 characters"
+        error: "Password must be at least 8 characters",
+        status: 400
       };
     }
 
     if (newPassword !== repeatPassword) {
       return {
         success: false,
-        error: "Passwords doesn't match with each others"
+        error: "Passwords doesn't match with each others",
+        status: 400
       };
     }
 
@@ -54,12 +58,14 @@ module.exports = class VerifyServices {
     if (userUpdate) {
       return {
         success: true,
-        message: "password was changed"
+        message: "password was changed",
+        status: 200
       };
     }
     return {
       success: false,
-      error: "Unknown error met"
+      error: "Unknown error met",
+      status: 400
     };
   }
 

@@ -2,7 +2,10 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getFavoritesById, saveUserProgress } from "../../store/user/actions";
+import {
+  getFavorites,
+  changeFavorites
+} from "../../braveNewStore/favoritesList/actions";
 import FavoritesCard from "../../components/FavoritesPage/FavoritesCard";
 import FavoritesPagination from "../../components/FavoritesPage/FavoritesPagination";
 import { deleteBeer } from "../../dataAccess/userRepository/helpers";
@@ -18,7 +21,7 @@ class FavoritesListContainer extends React.PureComponent {
   componentDidMount() {
     const { user } = this.props;
     const getBeers = async () => {
-      await this.props.getFavoritesById(user.beerList);
+      await this.props.getFavorites(user.beerList);
     };
     if (user !== null) getBeers();
   }
@@ -36,12 +39,11 @@ class FavoritesListContainer extends React.PureComponent {
   };
 
   handleRemove = async id => {
-    const { rememberMe, user } = this.props;
+    const { user, favoritesBeers } = this.props;
     if (user !== null) {
       await deleteBeer({ id, userId: user.id });
-      await this.props.saveUserProgress(user, rememberMe);
-      const { user: newUser } = this.props;
-      await this.props.getFavoritesById(newUser.beerList);
+      const updatedFavorites = favoritesBeers.filter(elem => elem.id !== id);
+      await this.props.changeFavorites(updatedFavorites);
     }
   };
 
@@ -95,10 +97,9 @@ class FavoritesListContainer extends React.PureComponent {
 
 FavoritesListContainer.propTypes = {
   user: PropTypes.objectOf(PropTypes.any),
-  getFavoritesById: PropTypes.func.isRequired,
+  getFavorites: PropTypes.func.isRequired,
   favoritesBeers: PropTypes.arrayOf(PropTypes.any).isRequired,
-  rememberMe: PropTypes.bool.isRequired,
-  saveUserProgress: PropTypes.func.isRequired
+  changeFavorites: PropTypes.func.isRequired
 };
 
 FavoritesListContainer.defaultProps = {
@@ -107,13 +108,12 @@ FavoritesListContainer.defaultProps = {
 
 const mapStateToProps = state => {
   return {
-    user: state.user.user,
-    favoritesBeers: state.user.favoritesBeers,
-    rememberMe: state.user.rememberMe
+    user: state.userDetails.model,
+    favoritesBeers: state.favorites.items
   };
 };
 
 export default connect(mapStateToProps, {
-  getFavoritesById,
-  saveUserProgress
+  changeFavorites,
+  getFavorites
 })(FavoritesListContainer);

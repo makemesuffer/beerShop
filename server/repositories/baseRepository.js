@@ -32,8 +32,6 @@ class BaseRepository {
     return this.model.find({ [param]: value });
   }
 
-  // TODO: Че за говно андрюх
-
   findAll() {
     return this.model.find({});
   }

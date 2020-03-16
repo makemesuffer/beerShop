@@ -29,6 +29,8 @@
     "camelcase": "off",
     "class-methods-use-this": "off",
     "func-names": "off",
-    "jsx-a11y/label-has-associated-control": "off"
+    "jsx-a11y/label-has-associated-control": "off",
+    "no-restricted-syntax": "off",
+    "no-shadow": "off"
   }
 }

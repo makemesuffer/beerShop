@@ -50,7 +50,6 @@ export default function BrewList(props) {
     handleRating,
     rating,
     error,
-    id,
     handleTypeChange,
     handleTimeChange,
     handleFilter,
@@ -116,7 +115,6 @@ export default function BrewList(props) {
             return (
               <div key={elem._id} className={classes.gridElem}>
                 <BrewSingleCard
-                  id={id}
                   brew={elem}
                   handleRating={handleRating}
                   index={index}
@@ -142,7 +140,7 @@ BrewList.propTypes = {
   handleRating: PropTypes.func.isRequired,
   rating: PropTypes.arrayOf(PropTypes.number).isRequired,
   error: PropTypes.string,
-  id: PropTypes.string,
+  ids: PropTypes.arrayOf(PropTypes.string),
   handleTypeChange: PropTypes.func.isRequired,
   handleTimeChange: PropTypes.func.isRequired,
   handleFilter: PropTypes.func.isRequired,
@@ -153,5 +151,5 @@ BrewList.propTypes = {
 BrewList.defaultProps = {
   brewList: null,
   error: null,
-  id: null
+  ids: null
 };

@@ -37,7 +37,7 @@ const useStyles = makeStyles({
 });
 
 export default function BrewSingleCard(props) {
-  const { brew, handleRating, index, rating, error, id } = props;
+  const { brew, handleRating, index, rating, error } = props;
   const classes = useStyles();
   return (
     <Card className={classes.root}>
@@ -61,8 +61,8 @@ export default function BrewSingleCard(props) {
           {moment(brew.createdAt).format("LL")}
         </Typography>
       </CardContent>
-      {id === brew._id && error !== null ? (
-        <Alert severity="error">{error}</Alert>
+      {error !== null && error.id === brew._id ? (
+        <Alert severity="error">{error.message}</Alert>
       ) : (
         <></>
       )}

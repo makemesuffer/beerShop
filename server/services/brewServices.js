@@ -72,14 +72,7 @@ class BrewServices extends BaseService {
   }
 
   getAllReviews() {
-    const yestada = moment()
-      .subtract(1, "days")
-      .format();
-    return brewRepository
-      .findAll()
-      .populate("author", "firstName")
-      .where("createdAt")
-      .gt(yestada);
+    return brewRepository.findAll().populate("author", "firstName");
   }
 
   getSingleBrew(id) {
@@ -105,7 +98,7 @@ class BrewServices extends BaseService {
     if (userId === null) {
       return {
         status: 400,
-        message: "You have to be registered to like brews"
+        error: { id, message: "You have to be registered to like brews" }
       };
     }
 
@@ -117,19 +110,15 @@ class BrewServices extends BaseService {
 
     if (user.login === brew.author.login) {
       return {
-        id,
-        message: "Can't like or dislike your own brew",
-        status: 400,
-        rating: brew.rating
+        error: { id, message: "Can't like or dislike your own brew" },
+        status: 400
       };
     }
 
     if (brew.likedBy.includes(user.login)) {
       return {
-        id,
-        message: "You already liked this post",
-        status: 400,
-        rating: brew.rating
+        error: { id, message: "You already liked this post" },
+        status: 400
       };
     }
 
@@ -138,9 +127,13 @@ class BrewServices extends BaseService {
       const arrayIndex = brew.dislikedBy.indexOf(user.login);
       brew.dislikedBy.splice(arrayIndex, 1);
       await brew.save();
+      const brews = await brewRepository
+        .findAll()
+        .populate("author", "firstName");
       return {
         message: "You removed dislike from post",
-        rating: brew.rating,
+        brew,
+        brews,
         status: 200
       };
     }
@@ -149,9 +142,14 @@ class BrewServices extends BaseService {
     brew.likedBy.push(user.login);
     await brew.save();
 
+    const brews = await brewRepository
+      .findAll()
+      .populate("author", "firstName");
+
     return {
       message: "Post was liked",
-      rating: brew.rating,
+      brews,
+      brew,
       status: 200
     };
   }
@@ -162,7 +160,7 @@ class BrewServices extends BaseService {
     if (userId === null) {
       return {
         status: 400,
-        message: "You have to be registered to like brews"
+        error: { id, message: "You have to be registered to like brews" }
       };
     }
     const brew = await brewRepository
@@ -174,8 +172,7 @@ class BrewServices extends BaseService {
     if (user.login === brew.author.login) {
       return {
         id,
-        rating: brew.rating,
-        message: "Can't like or dislike your own brew",
+        error: { id, message: "Can't like or dislike your own brew" },
         status: 400
       };
     }
@@ -183,8 +180,7 @@ class BrewServices extends BaseService {
     if (brew.dislikedBy.includes(user.login)) {
       return {
         id,
-        rating: brew.rating,
-        message: "You already disliked this post",
+        error: { id, message: "You already disliked this post" },
         status: 400
       };
     }
@@ -194,9 +190,13 @@ class BrewServices extends BaseService {
       const arrayIndex = brew.likedBy.indexOf(user.login);
       brew.likedBy.splice(arrayIndex, 1);
       await brew.save();
+      const brews = await brewRepository
+        .findAll()
+        .populate("author", "firstName");
       return {
         message: "You removed like from post",
-        rating: brew.rating,
+        brew,
+        brews,
         status: 200
       };
     }
@@ -205,9 +205,14 @@ class BrewServices extends BaseService {
     brew.dislikedBy.push(user.login);
     await brew.save();
 
+    const brews = await brewRepository
+      .findAll()
+      .populate("author", "firstName");
+
     return {
       message: "Post was disliked",
-      rating: brew.rating,
+      brews,
+      brew,
       status: 200
     };
   }

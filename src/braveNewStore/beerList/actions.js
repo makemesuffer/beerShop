@@ -17,3 +17,13 @@ export const continueBeerList = createAction(
     return response.data;
   }
 );
+
+export const getBeerNames = createAction(
+  actionTypes.GET_BEER_NAMES,
+  async name => {
+    const response = await getListOfBeers(50, null, name);
+    return response.data.map(elem => {
+      return { id: elem.id, name: elem.name };
+    });
+  }
+);

@@ -6,9 +6,9 @@ import BrewList from "../../components/BrewListPage/BrewList";
 import {
   getBrewList,
   getRatingChange,
-  getFilteredBrews,
-  getFilteredTime
-} from "../../store/brew/actions";
+  getFilteredBrews
+} from "../../braveNewStore/brewList/actions";
+import Loader from "../../components/Loader";
 
 class BrewListContainer extends React.PureComponent {
   constructor(props) {
@@ -28,7 +28,7 @@ class BrewListContainer extends React.PureComponent {
         "Belgian Ale"
       ],
       brewType: "All",
-      whatTime: "Day",
+      whatTime: "All",
       rating: []
     };
   }
@@ -62,9 +62,7 @@ class BrewListContainer extends React.PureComponent {
 
   handleFilter = async () => {
     const { brewType, whatTime } = this.state;
-    await this.props.getFilteredBrews({ brewType });
-    const { brewList } = this.props;
-    this.props.getFilteredTime(whatTime, brewList);
+    await this.props.getFilteredBrews({ brewType }, whatTime);
     const { brewList: newBrewList } = this.props;
     const count = newBrewList.map(brew => {
       return brew.rating;
@@ -78,27 +76,27 @@ class BrewListContainer extends React.PureComponent {
     if (user !== null) {
       const payload = { userId: user.id, id: brewList[index]._id };
       const copy = [...rate];
-      await this.props.getRatingChange(decision, payload);
-      const { rating } = this.props;
+      const response = await this.props.getRatingChange(decision, payload);
+      const { rating } = response.value[index];
       copy[index] = rating;
       this.setState({ rating: copy });
     }
   };
 
   render() {
-    const { allowed, brewList, error, id } = this.props;
+    const { brewList, error, user, isBusy } = this.props;
     const { time, beerType, rating, brewType, whatTime } = this.state;
+    if (isBusy === true) return <Loader />;
     return (
       <>
         <BrewList
           error={error}
-          allowed={allowed}
+          allowed={user !== null}
           rating={rating}
           brewList={brewList}
           time={time}
           beerType={beerType}
           handleRating={this.handleRating}
-          id={id}
           handleTypeChange={this.handleTypeChange}
           handleTimeChange={this.handleTimeChange}
           handleFilter={this.handleFilter}
@@ -112,38 +110,31 @@ class BrewListContainer extends React.PureComponent {
 
 BrewListContainer.propTypes = {
   error: PropTypes.string,
-  allowed: PropTypes.bool.isRequired,
   brewList: PropTypes.arrayOf(PropTypes.object),
   user: PropTypes.objectOf(PropTypes.any),
   getBrewList: PropTypes.func.isRequired,
   getRatingChange: PropTypes.func.isRequired,
-  rating: PropTypes.number.isRequired,
-  id: PropTypes.string,
   getFilteredBrews: PropTypes.func.isRequired,
-  getFilteredTime: PropTypes.func.isRequired
+  isBusy: PropTypes.bool.isRequired
 };
 
 BrewListContainer.defaultProps = {
   brewList: null,
   user: null,
-  error: null,
-  id: null
+  error: null
 };
 
 const mapStateToProps = state => {
   return {
-    allowed: state.user.allowed,
-    user: state.user.user,
-    brewList: state.brew.brewList,
-    rating: state.brew.rating,
-    error: state.brew.error,
-    id: state.brew.id
+    user: state.userDetails.model,
+    brewList: state.brewList.items,
+    error: state.brewList.error,
+    isBusy: state.brewList.isBusy
   };
 };
 
 export default connect(mapStateToProps, {
   getBrewList,
   getRatingChange,
-  getFilteredBrews,
-  getFilteredTime
+  getFilteredBrews
 })(BrewListContainer);

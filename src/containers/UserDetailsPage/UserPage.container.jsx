@@ -82,7 +82,7 @@ class UserPageContainer extends React.PureComponent {
     const { currentPage } = this.state;
     const { user, error, favoritesBeers, isBusy } = this.props;
 
-    if (isBusy === true) {
+    if (isBusy === true || user === null) {
       return <Loader />;
     }
 

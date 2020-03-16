@@ -1,11 +1,7 @@
 import jwt_decode from "jwt-decode";
 
 import actionTypes from "./actionTypes";
-import {
-  createUser,
-  loginUser,
-  findUser
-} from "../../dataAccess/userRepository/helpers";
+import { findUser } from "../../dataAccess/userRepository/helpers";
 import setAuthToken from "../../dataAccess/userRepository/setAuthToken";
 import { getBeersById } from "../../dataAccess/beerRepository/helpers";
 
@@ -18,23 +14,6 @@ export const saveUserSessionError = error => ({
   type: actionTypes.SAVE_USER_SESSION_ERROR,
   payload: error
 });
-
-export const saveUserSession = data => async dispatch => {
-  try {
-    const { payload, rememberMe } = data;
-    const response = await loginUser(payload);
-    setAuthToken(response.data.accessTOKEN);
-    const decoded = jwt_decode(response.data.accessTOKEN);
-    if (rememberMe === true) {
-      localStorage.setItem("token", response.data.accessTOKEN);
-    } else {
-      sessionStorage.setItem("poken", response.data.accessTOKEN);
-    }
-    dispatch(saveUserSessionSuccess([decoded, rememberMe]));
-  } catch (err) {
-    dispatch(saveUserSessionError(err.response.data.error));
-  }
-};
 
 export const saveUserProgress = (user, rememberMe) => async dispatch => {
   const response = await findUser(user.id);
@@ -62,14 +41,6 @@ export const exitUserSession = () => dispatch => {
 export const hideLogout = () => ({
   type: actionTypes.HIDE_LOGOUT
 });
-
-export const userCreate = payload => async dispatch => {
-  try {
-    await createUser(payload);
-  } catch (err) {
-    dispatch(saveUserSessionError(err.response.data.error));
-  }
-};
 
 const getFavoritesSuccess = response => ({
   type: actionTypes.GET_FAVORITES_SUCCESS,

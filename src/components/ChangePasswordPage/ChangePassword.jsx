@@ -79,6 +79,10 @@ export default function ChangePassword(props) {
 ChangePassword.propTypes = {
   handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  error: PropTypes.string.isRequired,
+  error: PropTypes.string,
   success: PropTypes.string.isRequired
+};
+
+ChangePassword.defaultProps = {
+  error: null
 };

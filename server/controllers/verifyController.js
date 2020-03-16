@@ -5,8 +5,6 @@ const config = require("../config");
 const clientOptions = config.client_Options;
 const verifyServices = new VerifyServices();
 
-// TODO: change forgot password error status добавь!!!!
-
 module.exports = class VerifyController {
   verifyUser = wrapAsync(async function(req, res) {
     const decision = await verifyServices.userVerify(req.params);
@@ -16,7 +14,7 @@ module.exports = class VerifyController {
 
   changePassword = wrapAsync(async function(req, res) {
     const message = await verifyServices.passwordChange(req.body);
-    return res.json(message);
+    return res.status(message.status).json(message);
   });
 
   forgotPassword = wrapAsync(async function(req, res) {

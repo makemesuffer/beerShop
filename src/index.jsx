@@ -5,7 +5,7 @@ import { MuiThemeProvider } from "@material-ui/core";
 import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
 
-import { App } from "./App";
+import App from "./App";
 import configureStore from "./braveNewStore/configurateStore";
 import theme from "./styles/theme";
 import "./index.css";
@@ -25,4 +25,6 @@ ReactDOM.render(
 
 serviceWorker.unregister();
 
-// TODO: reducer rewrite
+// TODO: фикс локал и сессион сторадж
+// TODO: сделай форейн юзеров!
+// TODO: закончи комменты!

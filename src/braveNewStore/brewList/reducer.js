@@ -11,7 +11,11 @@ const brewListReducer = createReducer(
   {
     [actionTypes.GET_BREWS_ERROR]: baseReducer.error,
     [actionTypes.GET_BREWS_PENDING]: baseReducer.pending,
-    [actionTypes.GET_BREWS_SUCCESS]: baseReducer.success
+    [actionTypes.GET_BREWS_SUCCESS]: baseReducer.success,
+    [actionTypes.CHANGE_RATING_ERROR]: baseReducer.error,
+    [actionTypes.CHANGE_RATING_SUCCESS]: baseReducer.success,
+    [actionTypes.GET_FILTERED_BREWS_PENDING]: baseReducer.pending,
+    [actionTypes.GET_FILTERED_BREWS_SUCCESS]: baseReducer.success
   }
 );
 

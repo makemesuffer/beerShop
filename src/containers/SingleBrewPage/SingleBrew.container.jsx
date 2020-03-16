@@ -5,18 +5,17 @@ import PropTypes from "prop-types";
 import { Container } from "@material-ui/core";
 import socketIoClient from "socket.io-client";
 
-import { saveUserProgress } from "../../store/user/actions";
+import { deleteMessage, addComment } from "../../store/brew/actions";
 import {
-  getBeerByName,
-  getBrewById,
-  deleteMessage,
-  addComment,
+  getBrewDetails,
   getRatingChange
-} from "../../store/brew/actions";
+} from "../../braveNewStore/brewDetails/actions";
+import { updateUser } from "../../braveNewStore/userDetails/actions";
 import BrewPreview from "../../components/BrewFormPage/BrewPreview";
 import Loader from "../../components/Loader";
 import { addBeer, deleteBeer } from "../../dataAccess/userRepository/helpers";
 import CommentSection from "../../components/SingleBrewPage/CommentSection";
+import getBeerDetails from "../../braveNewStore/beerDetails/actions";
 
 const socket = socketIoClient("http://localhost:1337");
 
@@ -34,11 +33,11 @@ class SingleBrewContainer extends React.PureComponent {
     const { id } = this.props;
 
     const findBrewPost = async aidi => {
-      await this.props.getBrewById(aidi);
+      await this.props.getBrewDetails(aidi);
       const { brew } = this.props;
       this.setState({ rating: brew.rating });
       this.setState({ comments: brew.comments });
-      await this.props.getBeerByName(brew.brewName);
+      await this.props.getBeerDetails(null, brew.beerName);
     };
     findBrewPost(id);
   }
@@ -85,14 +84,17 @@ class SingleBrewContainer extends React.PureComponent {
   };
 
   handleFavorite = async id => {
-    const { user, rememberMe } = this.props;
+    const { user } = this.props;
     if (user !== null) {
       if (user.beerList.includes(id)) {
         await deleteBeer({ id, userId: user.id });
-        await this.props.saveUserProgress(user, rememberMe);
+        const updatedFavorites = user.beerList.filter(elem => elem !== id);
+        await this.props.updateUser({ beerList: updatedFavorites });
       } else {
         await addBeer({ id, userId: user.id });
-        await this.props.saveUserProgress(user, rememberMe);
+        const updatedFavorites = [...user.beerList];
+        updatedFavorites.push(id);
+        await this.props.updateUser({ beerList: updatedFavorites });
       }
     }
   };
@@ -101,8 +103,8 @@ class SingleBrewContainer extends React.PureComponent {
     const { user, brew } = this.props;
     if (user !== null) {
       const payload = { userId: user.id, id: brew._id };
-      await this.props.getRatingChange(decision, payload);
-      const { rating } = this.props;
+      const response = await this.props.getRatingChange(decision, payload);
+      const { rating } = response.value;
       this.setState({ rating });
     }
   };
@@ -131,9 +133,9 @@ class SingleBrewContainer extends React.PureComponent {
   };
 
   render() {
-    const { user, brew, beer, allowed, error } = this.props;
+    const { user, brew, isBusy, error, beer } = this.props;
     const { message, rating, comments } = this.state;
-    if (brew === null || beer === null) {
+    if (isBusy || brew === null || beer === null) {
       return <Loader />;
     }
     return (
@@ -164,7 +166,7 @@ class SingleBrewContainer extends React.PureComponent {
           brew={brew}
           user={user}
           handleDelete={this.handleDelete}
-          allowed={allowed}
+          allowed={user !== null}
           message={message}
           comments={comments}
         />
@@ -175,50 +177,41 @@ class SingleBrewContainer extends React.PureComponent {
 
 SingleBrewContainer.propTypes = {
   brew: PropTypes.objectOf(PropTypes.any),
-  allowed: PropTypes.bool.isRequired,
+  isBusy: PropTypes.bool.isRequired,
   id: PropTypes.string.isRequired,
-  getBrewById: PropTypes.func.isRequired,
-  beer: PropTypes.objectOf(PropTypes.any),
-  getBeerByName: PropTypes.func.isRequired,
+  getBrewDetails: PropTypes.func.isRequired,
   history: PropTypes.objectOf(PropTypes.any).isRequired,
   user: PropTypes.objectOf(PropTypes.any),
   deleteMessage: PropTypes.func.isRequired,
   addComment: PropTypes.func.isRequired,
   getRatingChange: PropTypes.func.isRequired,
-  rating: PropTypes.number.isRequired,
   error: PropTypes.string,
-  saveUserProgress: PropTypes.func.isRequired,
-  rememberMe: PropTypes.bool.isRequired
+  updateUser: PropTypes.func.isRequired,
+  beer: PropTypes.objectOf(PropTypes.any).isRequired,
+  getBeerDetails: PropTypes.func.isRequired
 };
 
 SingleBrewContainer.defaultProps = {
   brew: null,
-  beer: null,
   user: null,
   error: null
 };
 
 const mapStateToProps = state => {
   return {
-    allowed: state.user.allowed,
-    brew: state.brew.singleBrew,
-    beer: state.brew.singleBeer,
-    user: state.user.user,
-    rating: state.brew.rating,
-    error: state.brew.error,
-    rememberMe: state.user.rememberMe
+    brew: state.brewDetails.model,
+    user: state.userDetails.model,
+    error: state.brewList.error,
+    isBusy: state.brewDetails.isBusy,
+    beer: state.beerDetails.model
   };
 };
 
-/*
-
- */
-
 export default connect(mapStateToProps, {
-  getBrewById,
-  getBeerByName,
+  getBrewDetails,
   deleteMessage,
   addComment,
   getRatingChange,
-  saveUserProgress
+  updateUser,
+  getBeerDetails
 })(withRouter(SingleBrewContainer));

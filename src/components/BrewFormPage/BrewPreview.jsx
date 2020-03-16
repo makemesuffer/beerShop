@@ -210,7 +210,11 @@ export default function BrewPreview(props) {
         </div>
 
         <Container maxWidth="xs" className={classes.errorContainer}>
-          {error === null ? <></> : <Alert severity="error">{error}</Alert>}
+          {error === null ? (
+            <></>
+          ) : (
+            <Alert severity="error">{error.message}</Alert>
+          )}
         </Container>
         <div className={classes.footerContainer}>
           <Typography component="p" variant="h6" className={classes.rating}>

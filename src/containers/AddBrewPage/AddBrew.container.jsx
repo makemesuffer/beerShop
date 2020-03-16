@@ -7,13 +7,14 @@ import cyrillicToTranslit from "cyrillic-to-translit-js";
 import getLocation from "../../dataAccess/mapsRepository/helpers";
 
 import BrewForm from "../../components/BrewFormPage/BrewForm";
-import { getBeerNames, getBeerByName } from "../../store/brew/actions";
 import { createBrew } from "../../dataAccess/brewRepository/helpers";
+import { getBeerNames } from "../../braveNewStore/beerList/actions";
+import getBeerDetails from "../../braveNewStore/beerDetails/actions";
 
 class AddBrewContainer extends React.PureComponent {
-  getResults = debounce(() => {
+  getResults = debounce(async () => {
     const { brewName } = this.state;
-    this.props.getBeerNames(brewName);
+    await this.props.getBeerNames(brewName);
   }, 200);
 
   constructor(props) {
@@ -59,10 +60,14 @@ class AddBrewContainer extends React.PureComponent {
     if (name === "brewName") this.getResults();
   };
 
-  handleBrewNameChange = (e, values) => {
+  handleBrewNameChange = async (e, values) => {
     if (values !== undefined && values !== null) {
+      console.log(values.name);
       this.setState({ brewName: values.name });
-      this.props.getBeerByName(values.name);
+      const { beerList } = this.props;
+      console.log(beerList);
+      const singleBeer = beerList.filter(beer => beer.name === values.name);
+      await this.props.getBeerDetails(singleBeer[0].id);
     }
   };
 
@@ -150,6 +155,7 @@ class AddBrewContainer extends React.PureComponent {
       error,
       success
     } = this.state;
+    console.log(beer);
     const beerNames = beerList.map(elem => {
       return { name: elem.name };
     });
@@ -187,7 +193,7 @@ AddBrewContainer.propTypes = {
   beerList: PropTypes.arrayOf(PropTypes.any),
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   beer: PropTypes.objectOf(PropTypes.any),
-  getBeerByName: PropTypes.func.isRequired,
+  getBeerDetails: PropTypes.func.isRequired,
   history: PropTypes.objectOf(PropTypes.any).isRequired
 };
 
@@ -198,12 +204,12 @@ AddBrewContainer.defaultProps = {
 
 const mapStateToProps = state => {
   return {
-    beerList: state.brew.beerNames,
-    user: state.user.user,
-    beer: state.brew.singleBeer
+    beerList: state.beerList.items,
+    user: state.userDetails.model,
+    beer: state.beerDetails.model
   };
 };
 
-export default connect(mapStateToProps, { getBeerNames, getBeerByName })(
+export default connect(mapStateToProps, { getBeerNames, getBeerDetails })(
   withRouter(AddBrewContainer)
 );

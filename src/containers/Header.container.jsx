@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import SimpleSnackbar from "../components/Signs/Snackbar";
-import { exitUserSession, hideLogout } from "../store/user/actions";
+import { logoutUser } from "../braveNewStore/userDetails/actions";
 import Header from "../components/Header";
 
 class HeaderContainer extends React.PureComponent {
@@ -33,19 +33,23 @@ class HeaderContainer extends React.PureComponent {
   };
 
   handleExit = () => {
-    this.props.exitUserSession();
+    this.props.logoutUser();
   };
 
+  /*
   handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
     this.props.hideLogout();
   };
+   */
 
   render() {
-    const { isLogout, user } = this.props;
+    const { user } = this.props;
     const { anchorEi, auth } = this.state;
+    // TODO: fix
+    const isLogout = false;
     return (
       <>
         <Header
@@ -67,23 +71,17 @@ class HeaderContainer extends React.PureComponent {
 
 HeaderContainer.propTypes = {
   user: PropTypes.objectOf(PropTypes.any),
-  exitUserSession: PropTypes.func.isRequired,
-  isLogout: PropTypes.bool,
-  hideLogout: PropTypes.func.isRequired
+  logoutUser: PropTypes.func.isRequired
 };
 
 HeaderContainer.defaultProps = {
-  user: null,
-  isLogout: null
+  user: null
 };
 
 const mapStateToProps = state => {
   return {
-    user: state.userDetails.model,
-    isLogout: state.userDetails.logout
+    user: state.userDetails.model
   };
 };
 
-export default connect(mapStateToProps, { exitUserSession, hideLogout })(
-  HeaderContainer
-);
+export default connect(mapStateToProps, { logoutUser })(HeaderContainer);

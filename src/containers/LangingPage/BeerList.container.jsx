@@ -6,9 +6,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { continueBeerList } from "../../braveNewStore/beerList/actions";
 import { setScroll, setPage } from "../../braveNewStore/searchValues/actions";
+import { updateUser } from "../../braveNewStore/userDetails/actions";
 import { addBeer, deleteBeer } from "../../dataAccess/userRepository/helpers";
-import { getBeerDetails } from "../../store/details/actions";
-import { saveUserProgress } from "../../store/user/actions";
 import BeerGrid from "../../components/LandingPage/BeerGrid";
 import Loader from "../../components/Loader";
 
@@ -37,14 +36,17 @@ class BeerListContainer extends React.PureComponent {
   };
 
   handleFavorite = async id => {
-    const { user, rememberMe } = this.props;
+    const { user } = this.props;
     if (user !== null) {
       if (user.beerList.includes(id)) {
         await deleteBeer({ id, userId: user.id });
-        await this.props.saveUserProgress(user, rememberMe);
+        const updatedFavorites = user.beerList.filter(elem => elem !== id);
+        await this.props.updateUser({ beerList: updatedFavorites });
       } else {
         await addBeer({ id, userId: user.id });
-        await this.props.saveUserProgress(user, rememberMe);
+        const updatedFavorites = [...user.beerList];
+        updatedFavorites.push(id);
+        await this.props.updateUser({ beerList: updatedFavorites });
       }
     }
   };
@@ -90,8 +92,7 @@ BeerListContainer.propTypes = {
   bitternessValue: PropTypes.number,
   colorValue: PropTypes.number,
   user: PropTypes.objectOf(PropTypes.any),
-  saveUserProgress: PropTypes.func.isRequired,
-  rememberMe: PropTypes.bool,
+  updateUser: PropTypes.func.isRequired,
   isBusy: PropTypes.bool.isRequired,
   setPage: PropTypes.func.isRequired
 };
@@ -103,8 +104,7 @@ BeerListContainer.defaultProps = {
   hasMoreBeers: true,
   alcoholValue: 2,
   bitternessValue: 0,
-  colorValue: 4,
-  rememberMe: false // rewrite
+  colorValue: 4
 };
 
 const mapStateToProps = state => {
@@ -115,7 +115,8 @@ const mapStateToProps = state => {
     bitternessValue: state.searchValues.model.bitternessValue,
     colorValue: state.searchValues.model.colorValue,
     page: state.searchValues.model.page,
-    value: state.searchValues.model.value
+    value: state.searchValues.model.value,
+    user: state.userDetails.model
   };
 };
 
@@ -125,9 +126,8 @@ const mapStateToProps = state => {
  */
 
 export default connect(mapStateToProps, {
-  getBeerDetails,
-  saveUserProgress,
   continueBeerList,
   setScroll,
-  setPage
+  setPage,
+  updateUser
 })(BeerListContainer);

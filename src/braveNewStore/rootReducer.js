@@ -8,8 +8,6 @@ import otherUser from "./otherUsers/reducer";
 import brewDetails from "./brewDetails/reducer";
 import brewList from "./brewList/reducer";
 
-// TODO: check
-
 const rootReducer = combineReducers({
   beerList,
   searchValues,
